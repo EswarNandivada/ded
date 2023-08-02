@@ -670,6 +670,7 @@ def edit_profile():
         mobile=cursor.fetchone()[0]
         print('mobile',mobile)
         cursor.close()
+        print('all Photos',os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),'static','uploads','photos')))
         for i in os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),'static','uploads','photos')):
             print(i.split('.')[0])
             if i.split('.')[0]==str(mobile):
