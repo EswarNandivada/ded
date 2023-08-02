@@ -664,8 +664,11 @@ def edit_profile():
         eid=session.get('user')
         cursor.execute("select * from register where id =%s",[eid])
         data=cursor.fetchone()
+        print('user id',session.get('user'))
+        print('user data',data)
         cursor.execute("select mobileno from register where id =%s",[eid])
         mobile=cursor.fetchone()[0]
+        print('mobile',mobile)
         cursor.close()
         for i in os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),'static','uploads','photos')):
             print(i.split('.')[0])
