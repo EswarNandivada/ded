@@ -1,0 +1,27 @@
+<!-- templates/payment_form.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eazypay Payment Form</title>
+</head>
+
+<body>
+    <div class="payment-section">
+        <div class="eazypay-payment">
+            <form method="post" name="paymentform">
+                <label for="payername">Name: (Required)</label><br>
+                <input type="text" id="payername" name="payername" required><br>
+                <label for="payerphone">Phone Number: (Optional)</label><br>
+                <input type="text" id="payerphone" name="payerphone"><br>
+                <label for="payeremail">Email ID: (Required)</label><br>
+                <input type="email" id="payeremail" name="payeremail"><br>
+                <label for="payeramount">Amount:</label><br>
+                <input type="number" min="0" id="amount" name="payeramount" required><br><br>
+                <input type="submit" value="Pay Amount">
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -317,7 +317,7 @@
             <div class="media-body ml-4"><br>
               <br>
               <br>
-              <h4 class="font-weight-bold mb-0">{{data[1]}} {{data[2]}} <span class="text-muted font-weight-normal">{{data[3]}}</span></h4>
+              <h4 class="font-weight-bold mb-0">{{data[1]}} {{data[2]}}</h4>
               <div class="text-muted mb-2">ID: {{data[0]}}</div>
               <a href="javascript:void(0)" class="btn btn-primary btn-sm">Profile</a>&nbsp;
 
@@ -343,9 +343,9 @@
             <label>Last Name</label>
             <input type="text" name="lname" value="{{data[2]}}">
             <label>Email</label>
-            <input type="email" name="email" value="{{data[3]}}">
+            <input type="email" name="email" value="{{data[3]}}" readonly>
             <label>Mobile Number</label>
-            <input type="tel" name="mobile" value="{{data[5]}}" pattern="[0-9()#&amp;+*-=.]+" title="Only numbers and phone characters (#, -, *, etc) are accepted.">
+            <input type="tel" name="mobile" value="{{data[5]}}" pattern="[0-9()#&amp;+*-=.]+" title="Only numbers and phone characters (#, -, *, etc) are accepted." readonly>
             <label>Age</label>
             <input type="number" name="age" min="" max="" value="{{data[6]}}">
             <label>Gender</label>
@@ -400,25 +400,18 @@
                 <!-- Options for countries here -->
             </select>
             <label>Degree-MBBS(Compulsory)</label>
-            <select name="degree" value="{{data[13]}}" readonly>
-                <option value="MBBS">MBBS</option>
-                      <option value="MD">MD</option>
-                      <option value="MS">MS</option>
-                      <option value="DNB">DNB</option>
-                      <option value="Diploma">Diploma</option>
-                      <option value="DM">DM</option>
-                      <option value="MCH">MCH</option>
-                                        <option value="{{data[13]}}" selected>{{data[13]}}</option>
+            <select name="degree" >
+                <option>{{data[13]}}</option>
+                     
     
     
             </select>
             <label>State or MCI Registration No</label>
             <input type="text" name="mci"  value="{{data[14]}}" readonly>
             <label>Select Member</label>
-            <select name="selectmember" aria-required="true" value="{{data[15]}}" readonly>
-                                        <option value="IMA Member">IMA Member</option>
-                      <option value="Non IMA Member">Non IMA Member</option>
-                                        <option value="{{data[15]}}" selected>{{data[15]}}</option>
+            <select name="selectmember" aria-required="true"  readonly>
+                                        <option >{{data[15]}}</option>
+                      
             </select>
             <label>Select Shirt Size</label>
             <select name="shirtsize" value="{{data[16]}}">

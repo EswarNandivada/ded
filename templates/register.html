@@ -477,7 +477,7 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 								<div class="elementor-field elementor-select-wrapper remove-before ">
 			<div class="select-caret-down-wrapper">
 				<svg aria-hidden="true" class="e-font-icon-svg e-eicon-caret-down" viewBox="0 0 571.4 571.4" xmlns="http://www.w3.org/2000/svg"><path d="M571 393Q571 407 561 418L311 668Q300 679 286 679T261 668L11 418Q0 407 0 393T11 368 36 357H536Q550 357 561 368T571 393Z"></path></svg>			</div>
-			<select name="selectmember"  id="selectmember" class="elementor-field-textual elementor-size-sm" required="required" aria-required="true">
+			<select name="selectmember" onchange="imember()"  id="selectmember" class="elementor-field-textual elementor-size-sm" required="required" aria-required="true">
 									<option value="">Select Member</option>
 									<option value="IMA Member">IMA Member</option>
 									<option value="Non IMA Member">Non IMA Member</option>
@@ -543,7 +543,7 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 						</div>
 								<div class="elementor-field-type-upload elementor-field-group elementor-column elementor-field-group-field_3634a2d elementor-col-50 elementor-field-required elementor-mark-required">
 												<label id='display-which-certificate' for="form-field-field_3634a2d" class="elementor-field-label">
-								Upload IMA or MBBS certificate							</label>
+								Upload certificate							</label>
 								<input type="file" name="certificate" id="certificate" class="elementor-field elementor-size-sm  elementor-upload-field" required="required" aria-required="true" data-maxsize="5" data-maxsize-message="This file exceeds the maximum allowed size.">
 
 						</div>
@@ -554,18 +554,21 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 			<input type="file" name="photo" id="photo" class="elementor-field elementor-size-sm  elementor-upload-field" required="required" aria-required="true" data-maxsize="5" data-maxsize-message="This file exceeds the maximum allowed size.">
 			<div class="elementor-field-type-upload elementor-field-group elementor-column elementor-field-group-field_224d785 elementor-col-100 elementor-field-required elementor-mark-required" style="margin-left: 300px; margin-top: 0px; margin-bottom: 0px; bottom: 55px;">
 				<label for="form-field-field_224d785" class="elementor-field-label">
-				  Upload Photo
+				  Upload DOB Certificate
 				</label>
 				<input type="file" name="dobfile" id="dobfile" class="elementor-field elementor-size-sm elementor-upload-field" required="required" aria-required="true" data-maxsize="5" data-maxsize-message="This file exceeds the maximum allowed size.">
 			  </div>
+			
 	</div>
-
-						<button id="generateOTP" class="btn btn-danger" >Send OTP</button>
-						<div class="elementor-field-type-number elementor-field-group elementor-column elementor-field-group-field_acc54c8 elementor-col-50 elementor-field-required elementor-mark-required">
-							<label  for="form-field-field_acc54c8" class="otp-css elementor-field-label">
-								OTP							</label>
-							<input name="otp"  id='otp' class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Enter your OTP" required="required" aria-required="true" min="" max="" >
-							</div>
+		
+			
+			<div class="elementor-field-type-number elementor-field-group elementor-column elementor-field-group-field_acc54c8 elementor-col-50 elementor-field-required elementor-mark-required">
+				<div style="display: flex;">
+					<button id="generateOTP" class="btn btn-danger" >Send OTP</button>
+					<input name="otp"  id='otp' class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Enter your OTP" required="required" aria-required="true" min="" max="" >
+				</div>
+			</div>
+						
 						<!-- <button type="button" class="btn btn-primary generateOTP" data-toggle="modal" data-target="#exampleModal">
 							Verify Your Email
 						  </button> -->
@@ -1007,24 +1010,21 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 			
 		<link rel='stylesheet' id='all-css-02da720b356ed5a988a4b8c972adee96' href='https://codegnanprojects.wpcomstaging.com/_static/??-eJyVj0sOwjAMRC9E6qZSK1ggzpKmBoU6cRQ76vXpgqqIz4Ld2GPP6C3ZeE6KSSFTvYUkgIRxnbmAE0EVoDDClZzm4OeyqyaG1HiRw/KZcUfNzs8QeaqEAt4VroIEsoSMxYw1TYR/fz8Nsy3eA2omdtMrwnoAmUWN7frhV99XYpdCdBp49Xe5MV/i2Q6ntrdH23YPoSx66A==' type='text/css' media='all' />
 
-
+			<script>
+				function imember() {
+					
+					var x = document.getElementById("selectmember").value;
+					if(x=="Non IMA Member")
+						document.getElementById("display-which-certificate").innerHTML = "Upload MBBS Certificate";
+					else if(x=="IMA Member")
+						document.getElementById("display-which-certificate").innerHTML = "Upload IMA or MBBS Certificate";
+				  }
+			</script>
 
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
 <script type='text/javascript'  src='https://codegnanprojects.wpcomstaging.com/_static/??-eJytj92KAjEMhV9oO8VdGXYvZB9lqWkYM7ZNN00UfXor/uCV3giBAydfziH76oCLYlFfk01Ump9Ra4DtTf92WCKLD6acgyrBbeNSOB4c5TBh85GaeupJ0hCUuDheN5QdyjC3j/1bax6MazgVSBb7fu7zbygHb+SBBYdM5SmU2dprKkqYprBOr8mWKPann2IXGYwGZYONq1Zgc8VD7KdnloTaQ8zdB04srhJs7zW/ebUYv5eL8efzazwBokKwMg=='></script>
-<script type='text/javascript'>
-	function imember() {
-	var x = document.getElementById("selectmember").value;
-	if (x==='IMA MEMBER'){
-		document.getElementById("display-which-certificate").innerHTML = "Upload " + "IMA or MBBS"+" Certificate";
-	}
-	if (x!=='IMA MEMBER'){
-		document.getElementById("display-which-certificate").innerHTML = "Upload " + "MBBS"+" Certificate";
 
-	}
-  } 
-			  </script>
 </body>
 </html>
 <!--
