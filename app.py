@@ -76,7 +76,7 @@ class Eazypay:
     def generate_payment_url(self, mandatory_field, optional_field, reference_no, amount):
         
         encrypted_url = (
-            f"https://eazypayuat.icicibank.com/EazyPG?merchantid={self.merchant_id}"
+            f"https://eazypay.icicibank.com/EazyPG?merchantid={self.merchant_id}"
             f"&mandatory fields={mandatory_field}&optional fields={optional_field}"
             f"&returnurl={self.get_return_url()}&Reference No={reference_no}"
             f"&submerchantid={self.get_sub_merchant_id()}&transaction amount={amount}"
