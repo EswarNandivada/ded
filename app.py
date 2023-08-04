@@ -1117,6 +1117,7 @@ def response_handler():
             response_msg = get_response_message(response['Response_Code'])
             return f"Transaction failed. Error: {response_msg}"
     else:
+        print(response)
         # 'Response_Code' key is missing in the response
         return "Invalid response received from payment gateway."
 
