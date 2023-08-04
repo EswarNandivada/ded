@@ -6,15 +6,16 @@ import random
 from io import BytesIO
 from key import secret_key, salt, salt2
 from itsdangerous import URLSafeTimedSerializer
-from stoken import token
+from stoken import token,token2
 from cmail import sendmail
 import os
 import uuid
 from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
 import stripe
-from cryptography.fernet import Fernet
 import base64
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad,unpad
 
 app = Flask(__name__)
 app.secret_key = secret_key
@@ -29,7 +30,7 @@ password=os.environ['RDS_PASSWORD']
 host=os.environ['RDS_HOSTNAME']
 port=os.environ['RDS_PORT']
 with mysql.connector.connect(host=host,user=user,password=password,db=db) as conn:
-    cursor=conn.cursor(buffered=True)
+     cursor=conn.cursor(buffered=True)
     cursor.execute("CREATE TABLE if not exists register (ID int NOT NULL AUTO_INCREMENT,FirstName varchar(25) DEFAULT NULL,LastName varchar(25) DEFAULT NULL,Email varchar(50) DEFAULT NULL,PASSWORD longblob,mobileno bigint DEFAULT NULL,age int DEFAULT NULL,gender varchar(10) DEFAULT NULL,DOB date DEFAULT NULL,city text,address text,state text,country text,degree varchar(10) DEFAULT NULL,MCI_ID varchar(20) DEFAULT NULL,member varchar(20) DEFAULT NULL,SHIRT_SIZE enum('S','M','L','XL','XXL','XXXL','XXXXL') DEFAULT NULL,acception varchar(30) DEFAULT 'No',status varchar(20) NOT NULL DEFAULT 'pending',PRIMARY KEY (ID),UNIQUE KEY Email (Email),UNIQUE KEY mobileno (mobileno))")
     cursor.execute("CREATE TABLE if not exists game (ID INT, game enum('ATHLETICS','ARCHERY','BADMINTON','BASKETBALL','BALL BADMINTON','CARROMS','CHESS','CYCLOTHON','JUMPS','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS','CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET','VOLLEY BALL','FOOTBALL','KHO KHO','KABADDI','THROW BALL','TUG OF WAR'),AMOUNT INT UNSIGNED)")
     cursor.execute("create table if not exists games(game_name varchar(30),amount int unsigned,team_count int)")
@@ -52,45 +53,13 @@ bcrypt = Bcrypt(app)
 
 
 
-class Encryptor:
-    def key_create(self):
-        key = Fernet.generate_key()
-        return key
-
-    def key_write(self, key, key_name):
-        with open(key_name, 'wb') as mykey:
-            mykey.write(key)
-
-    def key_load(self, key_name):
-        with open(key_name, 'rb') as mykey:
-            key = mykey.read()
-        return key
-
-    def file_encrypt(self, key, original_file, encrypted_file):
-        f = Fernet(key)
-        with open(original_file, 'rb') as file:
-            original = file.read()
-        encrypted = f.encrypt(original)
-        with open(encrypted_file, 'wb') as file:
-            file.write(encrypted)
-
-    def file_decrypt(self, key, encrypted_file, decrypted_file):
-        f = Fernet(key)
-        with open(encrypted_file, 'rb') as file:
-            encrypted = file.read()
-        decrypted = f.decrypt(encrypted)
-        with open(decrypted_file, 'wb') as file:
-            file.write(decrypted)
-
-
-
 class Eazypay:
-    def __init__(self, encryption_key):
+    def __init__(self):
         self.merchant_id = '600541'
-        self.encryption_key = encryption_key
+        self.encryption_key = b'6000012605405020'
         self.sub_merchant_id = '45'
         self.paymode = '9'
-        self.return_url = ' https://doctorsolympiad.com/purchase-summary/order-received/'
+        self.return_url = 'https://doctorsolympiad.com/purchase-summary/order-received/doctors'
 
     def get_payment_url(self, reference_no, amount,name,email, phone,optional_field=None):
         mandatory_field = self.get_mandatory_field(reference_no, amount,name,email,phone)
@@ -108,11 +77,11 @@ class Eazypay:
     def generate_payment_url(self, mandatory_field, optional_field, reference_no, amount):
         
         encrypted_url = (
-            f"https://eazypay.icicibank.com/EazyPG?merchantid={self.merchant_id}"
-            f"&mandatory fields={mandatory_field.decode('utf-8')}&optional fields={optional_field}"
-            f"&returnurl={self.get_return_url().decode('utf-8')}&Reference No={reference_no.decode('utf-8')}"
-            f"&submerchantid={self.get_sub_merchant_id().decode('utf-8')}&transaction amount={amount.decode('utf-8')}"
-            f"&paymode={self.get_paymode().decode('utf-8')}"
+            f"https://eazypayuat.icicibank.com/EazyPG?merchantid={self.merchant_id}"
+            f"&mandatory fields={mandatory_field}&optional fields={optional_field}"
+            f"&returnurl={self.get_return_url()}&Reference No={reference_no}"
+            f"&submerchantid={self.get_sub_merchant_id()}&transaction amount={amount}"
+            f"&paymode={self.get_paymode()}"
         )
         return encrypted_url
 
@@ -123,19 +92,23 @@ class Eazypay:
     def get_optional_field(self, optional_field=None):
         if optional_field is not None:
             return self.get_encrypted_value(optional_field)
-        return None
+        return ''
 
 
     def get_encrypted_value(self, data):
-            f = Fernet(self.encryption_key)
-            data = data.encode('utf-8')
-            encrypted_data = f.encrypt(data)
-            return encrypted_data
+        cipher = AES.new(self.encryption_key, AES.MODE_ECB)
+        padded_plaintext = pad(data.encode('utf-8'), AES.block_size)
+        ciphertext = cipher.encrypt(padded_plaintext)
+        encrypted_base64 = base64.b64encode(ciphertext)
+        return encrypted_base64.decode('utf-8')
 
-    def decrypt_data(self, encrypted_data):
-        f = Fernet(self.encryption_key)
-        decrypted_data = f.decrypt(encrypted_data)
-        return decrypted_data.decode('utf-8')
+    def decrypt(self, encrypted_data):
+        cipher = AES.new(self.encryption_key, AES.MODE_ECB)
+        encrypted_data_bytes = base64.urlsafe_b64decode(encrypted_data.encode('utf-8'))
+        decrypted_data = cipher.decrypt(encrypted_data_bytes)
+        unpadded_data = unpad(decrypted_data, AES.block_size)
+        return unpadded_data.decode('utf-8')
+
 
     def get_return_url(self):
         return self.get_encrypted_value(self.return_url)
@@ -145,27 +118,6 @@ class Eazypay:
 
     def get_paymode(self):
         return self.get_encrypted_value(self.paymode)
-
-def generate_encryption_key():
-    encryptor = Encryptor()
-    # Convert the 16-byte key to a 32-byte key and base64-encode it
-    key_128_bit = b'6000012605405020'
-    encryption_key_256_bit = base64.urlsafe_b64encode(key_128_bit.ljust(32, b'\x00'))
-
-    # Save the encryption key to the file 'mykey.key'
-    encryptor.key_write(encryption_key_256_bit, 'mykey.key')
-
-    return encryption_key_256_bit
-
-
-
-
-def load_encryption_key():
-    # Load the encryption key from the file 'mykey.key'
-    encryptor = Encryptor()
-    encryption_key = encryptor.key_load('mykey.key')
-    return encryption_key
-
 
 @app.route('/')
 def home():
@@ -289,7 +241,9 @@ def register(user_accept):
             if session['otp']!=otp:
                 message='Invalid OTP'
                 return render_template('register.html',message=message)
-            email=email if session.get('email')==request.form['email'] else session.get('email')
+            if session.get('email')!=request.form['email']:
+                message='Email address changed verify otp again'
+                return render_template('register.html',message=message)
             # Get the uploaded certificate and photo files
             certificate_file = request.files['certificate']
             photo_file = request.files['photo']
@@ -340,7 +294,7 @@ def register(user_accept):
             subject='IMA Doctors Olympiad Registration'
             body=f'Thanks for the registration your unique for future reference is {eid}'
             sendmail(to=email, subject=subject, body=body)
-            return redirect(url_for('payment',eid=eid,game=data['game']))
+            return redirect(url_for('payment',eid=eid,game=data['game'],))
         return render_template('register.html',message='')
     else:
         abort(404,'Page not found')
@@ -413,7 +367,7 @@ def generate_otp():
     subject = 'Email Confirmation'
     body = f"Your One Time Password for Registration is {otp}\n\nThanks & Regards\nIMA Doctors Olympiad"
     sendmail(to=email, subject=subject, body=body)
-    return jsonify({'message': 'OTP has been sent to your email.'})
+    return jsonify({'message': 'OTP has been sent to your email.OTP expires in 15 minutes.'})
 
 
 @app.route('/forgot_password', methods=['GET', 'POST'])
@@ -650,13 +604,9 @@ def edit_profile():
         eid=session.get('user')
         cursor.execute("select * from register where id =%s",[eid])
         data=cursor.fetchone()
-        print('user id',session.get('user'))
-        print('user data',data)
         cursor.execute("select mobileno from register where id =%s",[eid])
         mobile=cursor.fetchone()[0]
-        print('mobile',mobile)
         cursor.close()
-        print('all Photos',os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),'static','uploads','photos')))
         for i in os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),'static','uploads','photos')):
             print(i.split('.')[0])
             if i.split('.')[0]==str(mobile):
@@ -749,24 +699,7 @@ def registeredgame(game):
     email_id=cursor.fetchone()[0]
     cursor.close()
     if game in ('ARCHERY','CHESS','CYCLOTHON','TENNKOIT','THROW','ROWING','ROLLER_SKATING','FENCING'):
-        cursor = mydb.cursor(buffered=True)
-        cursor.execute('select count(*) from sub_games where game=%s and id=%s',[game,session.get('user')])
-        count = cursor.fetchone()[0]
-        cursor.close()
-        if count>=1:
-            flash('Already registered!refer your games profile')
-            return redirect(url_for('individual'))
-        if request.method=='POST':
-            cursor = mydb.cursor(buffered=True)
-            for i in request.form:
-                cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
-                mydb.commit()
-            cursor.close()
-            subject='Doctors Olympiad Games registration'
-            body=f'You are successfully registered to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
-            sendmail(email_id,subject,body)
-            return redirect(url_for('individual'))
-        return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
+        return redirect(url_for('individual'))
     elif game =='JUMPS':
         cursor = mydb.cursor(buffered=True)
         cursor.execute('select count(*) from sub_games where game=%s and id=%s',[game,session.get('user')])
@@ -910,7 +843,7 @@ def registeredgame(game):
         cursor.execute('select category from sub_games where game=%s and id=%s',[game,session.get('user')])
         singles_data=cursor.fetchall()
         cursor = mydb.cursor(buffered=True)
-        cursor.execute('''SELECT status from teams as t inner join sub_games as s on t.teamid=s.team_number where game=%s''',[game])
+        cursor.execute('''SELECT status from teams as t inner join sub_games as s on t.teamid=s.team_number where t.game=%s''',[game])
         cursor.close()
         data=[i[0] for i in cursor.fetchall() if i[0]=='Pending']
         cond=True
@@ -944,7 +877,94 @@ def registeredgame(game):
 
         return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
     else:
-        return render_template(f'/games-individual-team/Team/{game}.html',gender=gender)
+        cursor=mydb.cursor(buffered=True)
+        cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[session.get('user'),game])
+        count=cursor.fetchone()[0]
+        if count==0:
+            if request.method=='POST':
+                for i in request.form:
+                    if request.form[i] in ("Id not found","User Registered to other team" ,'User already Registered in other cricket team','You cannot add yourself.','User already Registered in two teams'):
+                        return jsonify({'message':request.form[i]})
+                else:
+                    return jsonify({'message':'Success'})
+            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
+        else:
+            pass
+
+
+@app.route('/update/<game>', methods=['POST'])
+def update(game):
+    if session.get('user'):
+        input_value = request.form['inputValue']
+        # Here, you can perform any necessary processing with the input data.
+        # For simplicity, we'll just return the input value as the response.
+        if input_value.isdigit():
+            cursor=mydb.cursor(buffered=True)
+            cursor.execute('select count(*) from register where id=%s',[input_value])
+            data=cursor.fetchone()[0]
+            cursor.close()
+            if data==0:
+                message="Id not found"
+            elif int(data)==session.get('user'):
+                message='You cannot add yourself.'
+            else:
+                cond=True
+                cursor=mydb.cursor(buffered=True)
+                cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[input_value,game,'Accept'])
+                count=cursor.fetchone()[0]
+                if count>0:
+                    cond=False
+                    message='User Registered to other team'
+                cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[input_value,'Accept'])
+                count1=cursor.fetchone()[0]
+                if count1>1:
+                    cond=False
+                    message='User already Registered in two teams'
+                if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
+                    cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[input_value,game,'Accept'])
+                    cond=False
+                    message='User already Registered in other cricket team'
+                if cond==True and  message!="You cannot add yourself.":
+                    cursor.execute("SELECT concat_ws(" ",FirstName,LastName) as fullname from register where id=%s",[input_value])
+                    message=cursor.fetchone()[0]
+                cursor.close()
+            
+        else:
+            cursor=mydb.cursor(buffered=True)
+            cursor.execute('select count(*) from register where email=%s',[input_value])
+            data=cursor.fetchone()[0]
+            cursor.close()
+            if data==0:
+                message="User not found with this email id"
+            else:
+                cond=True
+                cursor=mydb.cursor(buffered=True)
+                cursor.execute('SELECT id from register where Email=%s',[input_value])
+                eid=cursor.fetchone()[0]
+                cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
+                count=cursor.fetchone()[0]
+                if eid ==session.get('user'):
+                    message='You cannot add yourself.'
+                if count>0:
+                    cond=False
+                    message='User Registered to other team'
+                cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[eid,'Accept'])
+                count1=cursor.fetchone()[0]
+                if count1>1:
+                    cond=False
+                    message='User already Registered in two teams'
+                if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
+                    cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
+                    cond=False
+                    message='User already Registered in other cricket team'
+                if cond==True and message!='You cannot add yourself.':
+                    cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[eid])
+                    message=cursor.fetchone()[0]
+                cursor.close()
+        response = {'outputValue': message}
+        return jsonify(response)
+    else:
+        return redirect(url_for('login'))
 
 
 if __name__ == '__main__':
