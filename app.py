@@ -1068,7 +1068,7 @@ def registeredgame(game):
 def pays():
     return render_template('eazy.html')
 
-@app.route('/checkout/order-pay')
+@app.route('/checkout/order-pay/<nam>/<int:numbr>')
 def paymentsss():
     return render_template('payment_form.html')
 
