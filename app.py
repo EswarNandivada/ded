@@ -1099,7 +1099,9 @@ def process_payment():
 @app.route('/purchase-summary/order-received/', methods=['POST'])
 def response_handler():
     response = request.form.to_dict()
-    try:
+
+    response_code = response.get('Response_Code', None)
+    if response_code is not None:
         if payment_success_exec(response):
             print(response)
             # Payment is successful
@@ -1108,8 +1110,10 @@ def response_handler():
             # Payment failed, show failure message
             response_msg = response_code(response['Response_Code'])
             return f"Transaction failed. Error: {response_msg}"
-    except Exception as e:
-        print(e)
+    else:
+        # 'Response_Code' key is missing in the response
+        return "Invalid response received from payment gateway."
+
 
 
 if __name__ == '__main__':
