@@ -16,6 +16,7 @@ import stripe
 import base64
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad,unpad
+import hashlib
 
 app = Flask(__name__)
 app.secret_key = secret_key
@@ -120,45 +121,46 @@ class Eazypay:
 def payment_success_exec():
     if request.method == 'POST' and 'Total_Amount' in request.form and request.form['Response_Code'] == 'E000':
         res = request.form
-        
+
         # Same encryption key that we gave for generating the URL
         aes_key_for_payment_success = b'6000012605405020'  # Replace this with the actual key
 
-        data = {
-            'Response_Code': res['Response_Code'],
-            'Unique_Ref_Number': res['Unique_Ref_Number'],
-            'Service_Tax_Amount': res['Service_Tax_Amount'],
-            'Processing_Fee_Amount': res['Processing_Fee_Amount'],
-            'Total_Amount': res['Total_Amount'],
-            'Transaction_Amount': res['Transaction_Amount'],
-            'Transaction_Date': res['Transaction_Date'],
-            'Interchange_Value': res['Interchange_Value'],
-            'TDR': res['TDR'],
-            'Payment_Mode': res['Payment_Mode'],
-            'SubMerchantId': res['SubMerchantId'],
-            'ReferenceNo': res['ReferenceNo'],
-            'ID': res['ID'],
-            'RS': res['RS'],
-            'TPS': res['TPS'],
-        }
-        print(data)
+        # Decrypt the response values
+        response_code = Eazypay().decrypt(res['Response Code'])
+        unique_ref_number = Eazypay().decrypt(res['Unique Ref Number'])
+        service_tax_amount = Eazypay().decrypt(res['Service Tax Amount'])
+        processing_fee_amount = Eazypay().decrypt(res['Processing Fee Amount'])
+        total_amount = Eazypay().decrypt(res['Total Amount'])
+        transaction_amount = Eazypay().decrypt(res['Transaction Amount'])
+        transaction_date = Eazypay().decrypt(res['Transaction Date'])
+        interchange_value = Eazypay().decrypt(res['Interchange Value'])
+        tdr = Eazypay().decrypt(res['TDR'])
+        payment_mode = Eazypay().decrypt(res['Payment Mode'])
+        sub_merchant_id = Eazypay().decrypt(res['SubMerchantId'])
+        reference_no = Eazypay().decrypt(res['ReferenceNo'])
+        id_value = Eazypay().decrypt(res['ID'])
+        rs = Eazypay().decrypt(res['RS'])
+        tps = Eazypay().decrypt(res['TPS'])
+        mandatory_fields = Eazypay().decrypt(res['mandatory fields'])
+        optional_fields = Eazypay().decrypt(res['optional fields'])
+        rsv = Eazypay().decrypt(res['RSV'])
 
-        verification_key = f"{data['ID']}|{data['Response_Code']}|{data['Unique_Ref_Number']}|" \
-                           f"{data['Service_Tax_Amount']}|{data['Processing_Fee_Amount']}|" \
-                           f"{data['Total_Amount']}|{data['Transaction_Amount']}|" \
-                           f"{data['Transaction_Date']}|{data['Interchange_Value']}|" \
-                           f"{data['TDR']}|{data['Payment_Mode']}|{data['SubMerchantId']}|" \
-                           f"{data['ReferenceNo']}|{data['TPS']}|{aes_key_for_payment_success}"
-        
-        print(verification_key)
+        verification_key = f"{id_value}|{response_code}|{unique_ref_number}|" \
+                           f"{service_tax_amount}|{processing_fee_amount}|" \
+                           f"{total_amount}|{transaction_amount}|" \
+                           f"{transaction_date}|{interchange_value}|" \
+                           f"{tdr}|{payment_mode}|{sub_merchant_id}|" \
+                           f"{reference_no}|{tps}|{aes_key_for_payment_success}"
+
         encrypted_message = hashlib.sha512(verification_key.encode()).hexdigest()
-        print(encrypted_message)
-        if encrypted_message == data['RS']:
+
+        if encrypted_message == rs:
             return True
         else:
             return False
     else:
         return False
+
 
 
 def get_response_message(code):
