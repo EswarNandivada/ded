@@ -54,9 +54,9 @@ bcrypt = Bcrypt(app)
 
 class Eazypay:
     def __init__(self):
-        self.merchant_id = '600541'
-        self.encryption_key = b'6000012605405020'
-        self.sub_merchant_id = '45'
+        self.merchant_id = '376890'
+        self.encryption_key = b'3777003168901000'
+        self.sub_merchant_id = '20'
         self.paymode = '9'
         self.return_url = 'https://doctorsolympiad.com/purchase-summary/order-received/'
 
