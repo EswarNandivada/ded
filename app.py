@@ -675,7 +675,7 @@ def success(eid,ref,game):
             # Payment failed, show failure message
             response_msg = get_response_message(response['Response Code'])
             print(response_msg)
-            if response_code_value == 'E008':
+            if response_code_value == 'E000':
                 amount = float(response['Total Amount'])
                 cursor = mydb.cursor(buffered=True)
                 cursor.execute('SELECT status from register WHERE id=%s', [eid])
