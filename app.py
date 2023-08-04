@@ -117,49 +117,45 @@ class Eazypay:
     def get_paymode(self):
         return self.get_encrypted_value(self.paymode)
 
-def payment_success_exec(response):
-    if 'Total_Amount' in response and response['Response_Code'] == 'E000':
-        aes_key_for_payment_success = b'6000012605405020'  # Convert to bytes
+def payment_success_exec():
+    if request.method == 'POST' and 'Total_Amount' in request.form and request.form['Response_Code'] == 'E000':
+        res = request.form
+        
+        # Same encryption key that we gave for generating the URL
+        aes_key_for_payment_success = b'6000012605405020'  # Replace this with the actual key
+
         data = {
-            'Response_Code': response['Response_Code'],
-            'Unique_Ref_Number': response['Unique_Ref_Number'],
-            'Service_Tax_Amount': response['Service_Tax_Amount'],
-            'Processing_Fee_Amount': response['Processing_Fee_Amount'],
-            'Total_Amount': response['Total_Amount'],
-            'Transaction_Amount': response['Transaction_Amount'],
-            'Transaction_Date': response['Transaction_Date'],
-            'Interchange_Value': response['Interchange_Value'],
-            'TDR': response['TDR'],
-            'Payment_Mode': response['Payment_Mode'],
-            'SubMerchantId': response['SubMerchantId'],
-            'ReferenceNo': response['ReferenceNo'],
-            'ID': response['ID'],
-            'RS': response['RS'],
-            'TPS': response['TPS'],
+            'Response_Code': res['Response_Code'],
+            'Unique_Ref_Number': res['Unique_Ref_Number'],
+            'Service_Tax_Amount': res['Service_Tax_Amount'],
+            'Processing_Fee_Amount': res['Processing_Fee_Amount'],
+            'Total_Amount': res['Total_Amount'],
+            'Transaction_Amount': res['Transaction_Amount'],
+            'Transaction_Date': res['Transaction_Date'],
+            'Interchange_Value': res['Interchange_Value'],
+            'TDR': res['TDR'],
+            'Payment_Mode': res['Payment_Mode'],
+            'SubMerchantId': res['SubMerchantId'],
+            'ReferenceNo': res['ReferenceNo'],
+            'ID': res['ID'],
+            'RS': res['RS'],
+            'TPS': res['TPS'],
         }
 
-        # Calculate the verification key
-        verification_key = (
-            data['ID'] + '|' + data['Response_Code'] + '|' + data['Unique_Ref_Number'] + '|' +
-            data['Service_Tax_Amount'] + '|' + data['Processing_Fee_Amount'] + '|' + data['Total_Amount'] + '|' +
-            data['Transaction_Amount'] + '|' + data['Transaction_Date'] + '|' + data['Interchange_Value'] + '|' +
-            data['TDR'] + '|' + data['Payment_Mode'] + '|' + data['SubMerchantId'] + '|' + data['ReferenceNo'] + '|' +
-            data['TPS'] + '|' + aes_key_for_payment_success.decode('utf-8')  # Decode bytes to string
-        )
-          
+        verification_key = f"{data['ID']}|{data['Response_Code']}|{data['Unique_Ref_Number']}|" \
+                           f"{data['Service_Tax_Amount']}|{data['Processing_Fee_Amount']}|" \
+                           f"{data['Total_Amount']}|{data['Transaction_Amount']}|" \
+                           f"{data['Transaction_Date']}|{data['Interchange_Value']}|" \
+                           f"{data['TDR']}|{data['Payment_Mode']}|{data['SubMerchantId']}|" \
+                           f"{data['ReferenceNo']}|{data['TPS']}|{aes_key_for_payment_success}"
 
-        # Encrypt the verification key using sha512
-        eazypay_integration = Eazypay()
-        encrypted_message = eazypay_integration.get_encrypted_value(verification_key)
-        print(verification_key)
-
-        # encrypted_message = Eazypay.get_encrypted_value(verification_key)
-
-        if encrypted_message == data['TPS']:  # Use 'TPS' instead of 'RS'
-            print("Payment Success")
+        encrypted_message = hashlib.sha512(verification_key.encode()).hexdigest()
+        if encrypted_message == data['RS']:
             return True
-
-    return False
+        else:
+            return False
+    else:
+        return False
 
 def get_response_message(code):
     rc = {
