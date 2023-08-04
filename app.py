@@ -1115,7 +1115,7 @@ def process_payment():
 def response_handler():
     response = request.form.to_dict()
     print(response)
-    response_code_value = response.get('ResponseCode','na')
+    response_code_value = response.get('Response Code','na')
     print(response_code_value)
     if response_code_value != 'na':
         if payment_success_exec():
