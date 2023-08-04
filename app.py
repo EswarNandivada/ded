@@ -1124,7 +1124,7 @@ def response_handler():
             return render_template('thank-you.html')
         else:
             # Payment failed, show failure message
-            response_msg = get_response_message(response['Response_Code'])
+            response_msg = get_response_message(response['Response Code'])
             print(response_msg)
             return f"Transaction failed. Error: {response_msg}"
     else:
