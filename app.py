@@ -152,12 +152,14 @@ def payment_success_exec():
         
         print(verification_key)
         encrypted_message = hashlib.sha512(verification_key.encode()).hexdigest()
+        print(encrypted_message)
         if encrypted_message == data['RS']:
             return True
         else:
             return False
     else:
         return False
+
 
 def get_response_message(code):
     rc = {
