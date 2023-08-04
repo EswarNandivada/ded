@@ -945,57 +945,7 @@ def registeredgame(game):
         return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
     else:
         return render_template(f'/games-individual-team/Team/{game}.html',gender=gender)
-    
-
-
-
-
-@app.route('/pays')
-def pays():
-    return render_template('pays.html')
-
-@app.route('/checkout/order-pay')
-def pay_checkout():
-    return render_template('payment_form.html')
-
-def validate_form(amount):
-    if amount < 0:
-        return False
-    return True
-
-
-@app.route('/checkout/order-pay', methods=['POST'])
-def process_payment():
-    session['payer_name'] = request.form['payername']
-    session['payer_phone'] = request.form['payerphone']
-    session['payer_email'] = request.form['payeremail']
-    amount = int(request.form['payeramount'])
-    name = session['payer_name']
-    email = session['payer_email']
-    phone = session['payer_phone']
-
-    if not validate_form(amount):
-        return "Amount should be greater than Rs.10"
-
-    # Check if the encryption key file exists
-    if not os.path.exists('mykey.key'):
-        # If the key file doesn't exist, generate and save the encryption key
-        encryption_key = generate_encryption_key()
-    else:
-        # If the key file exists, load the encryption key from the file
-        encryption_key = load_encryption_key()
-
-    # Create an instance of Eazypay with the encryption key
-    eazypay_integration = Eazypay(encryption_key)
-
-    # reference_no = 8001  # You can use a random number generator if you prefer
-    reference_no = str(random.randint(100000, 999999))
-
-    payment_url = eazypay_integration.get_payment_url(reference_no, amount,name,email, phone)
-    print(payment_url)
-    
-    return redirect(payment_url)
 
 
 if __name__ == '__main__':
-    app.run(use_reloader=True,debug=True)
+    app.run()
