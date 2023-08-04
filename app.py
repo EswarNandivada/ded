@@ -147,6 +147,8 @@ def payment_success_exec(response):
             data['TPS'] + '|' + aes_key_for_payment_success.decode('utf-8')  # Decode bytes to string
         )
 
+         print(verification_key)
+
         # Encrypt the verification key using sha512
         eazypay_integration = Eazypay()
         encrypted_message = eazypay_integration.get_encrypted_value(verification_key)
