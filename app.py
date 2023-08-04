@@ -32,13 +32,16 @@ host=os.environ['RDS_HOSTNAME']
 port=os.environ['RDS_PORT']
 with mysql.connector.connect(host=host,user=user,password=password,db=db) as conn:
      cursor=conn.cursor(buffered=True)
+     cursor.execute("DROP TABLE games")
      cursor.execute("CREATE TABLE if not exists register (ID int NOT NULL AUTO_INCREMENT,FirstName varchar(25) DEFAULT NULL,LastName varchar(25) DEFAULT NULL,Email varchar(50) DEFAULT NULL,PASSWORD longblob,mobileno bigint DEFAULT NULL,age int DEFAULT NULL,gender varchar(10) DEFAULT NULL,DOB date DEFAULT NULL,city text,address text,state text,country text,degree varchar(10) DEFAULT NULL,MCI_ID varchar(20) DEFAULT NULL,member varchar(20) DEFAULT NULL,SHIRT_SIZE enum('S','M','L','XL','XXL','XXXL','XXXXL') DEFAULT NULL,acception varchar(30) DEFAULT 'No',status varchar(20) NOT NULL DEFAULT 'pending',PRIMARY KEY (ID),UNIQUE KEY Email (Email),UNIQUE KEY mobileno (mobileno))")
      cursor.execute("CREATE TABLE if not exists game (ID INT, game enum('ATHLETICS','ARCHERY','BADMINTON','BASKETBALL','BALL BADMINTON','CARROMS','CHESS','CYCLOTHON','JUMPS','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS','CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET','VOLLEY BALL','FOOTBALL','KHO KHO','KABADDI','THROW BALL','TUG OF WAR'),AMOUNT INT UNSIGNED)")
      cursor.execute("create table if not exists games(game_name varchar(30),amount int unsigned,team_count int)")
-     #cursor.execute("insert into games values('ATHLETICS',1500,1),('ARCHERY',1500,1),('BADMINTON',1500,2),('BASKETBALL',10000,9),('BALL BADMINTON',10000,7),('CARROMS',1500,2),('CHESS',1500,1),('CYCLOTHON',1500,1),('JUMPS',1500,1),('SWIMMING',1500,1),('THROW',1500,1),('ROWING',1500,1),('SHOOTING',1500,1),('ROLLER SKATING',1500,1),('FENCING',1500,1),('TENNIKOIT',1500,1),('TABLE TENNIS',1500,2),('LAWN TENNIS',1500,2),('CRICKET WHITE BALL',30000,14),('HARD TENNIS CRICKET',20000,14),('WOMEN BOX CRICKET',10000,7),('VOLLEY BALL',10000,9),('FOOTBALL',10000,11),('KHO KHO',10000,12),('KABADDI',10000,10),('THROWBALL',10000,10),('TUG OF WAR',5000,10)")
+     cursor.execute("insert into games values('ATHLETICS',1500,1),('ARCHERY',30,1),('BADMINTON',1500,2),('BASKETBALL',10000,9),('BALL BADMINTON',10000,7),('CARROMS',1500,2),('CHESS',30,1),('CYCLOTHON',30,1),('JUMPS',1500,1),('SWIMMING',1500,1),('THROW',1500,1),('ROWING',1500,1),('SHOOTING',1500,1),('ROLLER SKATING',1500,1),('FENCING',1500,1),('TENNIKOIT',1500,1),('TABLE TENNIS',1500,2),('LAWN TENNIS',1500,2),('CRICKET WHITE BALL',30000,14),('HARD TENNIS CRICKET',20000,14),('WOMEN BOX CRICKET',10000,7),('VOLLEY BALL',10000,9),('FOOTBALL',10000,11),('KHO KHO',10000,12),('KABADDI',10000,10),('THROWBALL',10000,10),('TUG OF WAR',5000,10)")
      cursor.execute("create table if not exists payments(ordid varchar(36),id int,game enum('ATHLETICS','ARCHERY','BADMINTON','BASKETBALL','BALL BADMINTON','CARROMS','CHESS','CYCLOTHON','JUMPS','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS','CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET','VOLLEY BALL','FOOTBALL','KHO KHO','KABADDI','THROW BALL','TUG OF WAR'),amount int unsigned,date timestamp default now() on update now(),foreign key(id) references register(id))")
      cursor.execute("CREATE TABLE if not exists sub_games (game enum('ATHLETICS','ARCHERY','BADMINTON','BASKETBALL','BALL BADMINTON','CARROMS','CHESS','CYCLOTHON','JUMPS','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS','CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET','VOLLEY BALL','FOOTBALL','KHO KHO','KABADDI','THROW BALL','TUG OF WAR'),id int ,category varchar(50),team_number int unique, date timestamp default current_timestamp on update current_timestamp,foreign key(id) references register(id))")
      cursor.execute("create table if not exists teams(teamid int,id int,status enum('Accept','Pending'),foreign key(teamid) references sub_games(team_number),foreign key(id) references register(id))")
+     cursor.execute("alter table payments modify ordid int unsigned")
+     cursor.execute("alter table payments modify amount decimal(8,3)")
      cursor.close()
 mydb=mysql.connector.connect(host=host,user=user,password=password,db=db,pool_name='DED',pool_size=30)
 
@@ -53,12 +56,15 @@ app.config['UPLOAD_FOLDERSS'] = os.path.join(os.path.dirname(os.path.abspath(__f
 bcrypt = Bcrypt(app)
 
 class Eazypay:
-    def __init__(self):
+    def __init__(self,eid,game,ref):
         self.merchant_id = '600541'
         self.encryption_key = b'6000012605405020'
         self.sub_merchant_id = '45'
         self.paymode = '9'
-        self.return_url = 'https://doctorsolympiad.com/purchase-summary/order-received/'
+        self.ref=ref
+        self.eid=eid
+        self.game=game
+        self.return_url = 'https://doctorsolympiad.com/purchase-summary/order-received/{eid}/{game}/{ref}'
 
     def get_payment_url(self, reference_no, amount,name,email, phone,optional_field=None):
         mandatory_field = self.get_mandatory_field(reference_no, amount,name,email,phone)
@@ -593,13 +599,17 @@ def reset_password(token):
     return render_template('reset_password.html', token=token)
 
 
-@app.route('/payment/<eid>/<game>', methods=['GET', 'POST'])
+@app.route('/checkout-order-pay/<eid>/<game>', methods=['GET', 'POST'])
 def payment(eid,game):
     cursor = mydb.cursor(buffered=True)
     cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member FROM register WHERE id=%s", [eid])
     data1 = cursor.fetchall()
     cursor.execute('SELECT status from register WHERE id=%s', [eid])
     status=cursor.fetchone()[0]
+    cursor.execute('SELECT email from register where id=%s',[eid])
+    email=cursor.fetchone()[0]
+    cursor.execute("select CONCAT(FirstName, ' ', LastName) AS FullName from register where id=%s",[eid])
+    name=cursor.fetchone()[0]
     if status=='pending':
         cursor.execute("SELECT game, amount FROM game WHERE id=%s", [eid])
         cursor.close()
@@ -608,67 +618,98 @@ def payment(eid,game):
         cursor.execute('select amount from games where game_name=%s',[game])
         amount=cursor.fetchone()[0]
         cursor.close()
-    ref=uuid.uuid4()
-    return render_template('payment.html', data1=data1,game=game,amount=amount,eid=eid,ref=ref)
+    ref=random.randint(1000000,99999999)
+    eazypay_integration = Eazypay(eid,game,ref)
+    payment_url=eazypay_integration.get_payment_url(ref,amount,name,email,data1[0][3])
+    print(data1[0][2])
+    print(payment_url)
+    if request.method=='POST':
+        return redirect(payment_url)
+    return render_template('payment.html', data1=data1,game=game,amount=amount,eid=eid,ref=ref,name=name,email=email,payment_url=payment_url)
 
 
-@app.route('/pay/<eid>/<game>/<ref>',methods=['POST'])
-def pay(eid,game,ref):
-    cursor = mydb.cursor(buffered=True)
-    cursor.execute('SELECT status from register WHERE id=%s', [eid])
-    status=cursor.fetchone()[0]
-    if status=='pending':
-        cursor.execute('SELECT amount FROM game WHERE id=%s', [eid])
-        amount = cursor.fetchone()[0]
-        cursor.close()
+# @app.route('/pay/<eid>/<game>/<ref>',methods=['POST'])
+# def pay(eid,game,ref):
+#     cursor = mydb.cursor(buffered=True)
+#     cursor.execute('SELECT status from register WHERE id=%s', [eid])
+#     status=cursor.fetchone()[0]
+#     if status=='pending':
+#         cursor.execute('SELECT amount FROM game WHERE id=%s', [eid])
+#         amount = cursor.fetchone()[0]
+#         cursor.close()
+#     else:
+#         cursor.execute('select amount from games where game_name=%s',[game])
+#         amount=cursor.fetchone()[0]
+#         #q=int(request.form['qty'])
+#     q = 1
+#     checkout_session=stripe.checkout.Session.create(
+#         success_url=url_for('success',eid=eid,game=game,amount=amount,ref=ref,_external=True),
+#         line_items=[
+#             {
+#                 'price_data': {
+#                     'product_data': {
+#                         'name': game,
+#                     },
+#                     'unit_amount': amount*100,
+#                     'currency': 'inr',
+#                 },
+#                 'quantity':q
+#             },
+#             ],
+#         mode="payment",)
+#     return redirect(checkout_session.url)
+
+
+@app.route('/purchase-summary/order-received/<eid>/<game>/<ref>',methods=['POST'])
+def success(eid,ref,game):
+    response = request.form.to_dict()
+    print(response)
+    response_code_value = response.get('Response Code','na')
+    print(response_code_value)
+    if response_code_value != 'na':
+        if payment_success_exec():
+            print(response)
+            # Payment is successful
+            return render_template('thank-you.html')
+        else:
+            # Payment failed, show failure message
+            response_msg = get_response_message(response['Response Code'])
+            print(response_msg)
+            if response_code_value == 'E008':
+                amount = float(response['Total Amount'])
+                cursor = mydb.cursor(buffered=True)
+                cursor.execute('SELECT status from register WHERE id=%s', [eid])
+                status=cursor.fetchone()[0]
+                cursor.execute('select gender from register where id=%s',[eid])
+                gender=cursor.fetchone()[0]
+                if status=='pending':
+                    cursor.execute('update register set status=%s WHERE ID=%s',['success',eid])
+                    cursor.execute('INSERT into payments (ordid,id,game,amount) VALUES (%s,%s,%s,%s)',[ref,eid,game,amount])
+                    if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
+                            category="Men's singles" if gender=='Male' else "Women's singles"
+                            cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                    mydb.commit()
+                    cursor.close()
+                    flash('Payment Successful ! Login in to continue.')
+                    return redirect(url_for('dashboard'))
+                else:
+                    cursor.execute('INSERT into payments (ordid,id,game,amount) VALUES (%s,%s,%s,%s)',[ref,eid,game,amount])
+                    cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,game,amount])
+                    if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
+                            category="Men's singles" if gender=='Male' else "Women's singles"
+                            cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                    mydb.commit()
+                    cursor.close()
+                    flash('Payment Successful')
+                    return redirect(url_for('dashboard'))
+            else:
+                return f"<h1>Transaction failed. Error: {response_msg}</h1>"
     else:
-        cursor.execute('select amount from games where game_name=%s',[game])
-        amount=cursor.fetchone()[0]
-        #q=int(request.form['qty'])
-    q = 1
-    checkout_session=stripe.checkout.Session.create(
-        success_url=url_for('success',eid=eid,game=game,amount=amount,ref=ref,_external=True),
-        line_items=[
-            {
-                'price_data': {
-                    'product_data': {
-                        'name': game,
-                    },
-                    'unit_amount': amount*100,
-                    'currency': 'inr',
-                },
-                'quantity':q
-            },
-            ],
-        mode="payment",)
-    return redirect(checkout_session.url)
-@app.route('/success/<eid>/<ref>/<game>/<amount>')
-def success(eid,ref,game,amount):
-    cursor = mydb.cursor(buffered=True)
-    cursor.execute('SELECT status from register WHERE id=%s', [eid])
-    status=cursor.fetchone()[0]
-    cursor.execute('select gender from register where id=%s',[eid])
-    gender=cursor.fetchone()[0]
-    if status=='pending':
-        cursor.execute('update register set status=%s WHERE ID=%s',['success',eid])
-        cursor.execute('INSERT into payments (ordid,id,game,amount) VALUES (%s,%s,%s,%s)',[ref,eid,game,amount])
-        if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
-                category="Men's singles" if gender=='Male' else "Women's singles"
-                cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
-        mydb.commit()
-        cursor.close()
-        flash('Payment Successful ! Login in to continue.')
-        return redirect(url_for('dashboard'))
-    else:
-        cursor.execute('INSERT into payments (ordid,id,game,amount) VALUES (%s,%s,%s,%s)',[ref,eid,game,amount])
-        cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,game,amount])
-        if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
-                category="Men's singles" if gender=='Male' else "Women's singles"
-                cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
-        mydb.commit()
-        cursor.close()
-        flash('Payment Successful')
-        return redirect(url_for('dashboard'))
+        # 'Response_Code' key is missing in the response
+        return "Invalid response received from payment gateway."
+
+
+
 '''@app.route('/dashboard')
 def dashboard():
     if session.get('user'):
