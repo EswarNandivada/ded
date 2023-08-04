@@ -1105,7 +1105,7 @@ def process_payment():
 @app.route('/purchase-summary/order-received/', methods=['POST'])
 def response_handler():
     response = request.form.to_dict()
-
+    print(response)
     response_code_value = response.get('Response_Code', None)
     if response_code_value is not None:
         if payment_success_exec(response):
