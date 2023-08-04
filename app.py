@@ -119,7 +119,7 @@ class Eazypay:
 
 def payment_success_exec(response):
     if 'Total_Amount' in response and response['Response_Code'] == 'E000':
-        aes_key_for_payment_success = '6000012605405020'
+        aes_key_for_payment_success = b'6000012605405020'  # Convert to bytes
         data = {
             'Response_Code': response['Response_Code'],
             'Unique_Ref_Number': response['Unique_Ref_Number'],
@@ -144,7 +144,7 @@ def payment_success_exec(response):
             data['Service_Tax_Amount'] + '|' + data['Processing_Fee_Amount'] + '|' + data['Total_Amount'] + '|' +
             data['Transaction_Amount'] + '|' + data['Transaction_Date'] + '|' + data['Interchange_Value'] + '|' +
             data['TDR'] + '|' + data['Payment_Mode'] + '|' + data['SubMerchantId'] + '|' + data['ReferenceNo'] + '|' +
-            data['TPS'] + '|' + aes_key_for_payment_success
+            data['TPS'] + '|' + aes_key_for_payment_success.decode('utf-8')  # Decode bytes to string
         )
 
         # Encrypt the verification key using sha512
@@ -153,9 +153,9 @@ def payment_success_exec(response):
 
         # encrypted_message = Eazypay.get_encrypted_value(verification_key)
 
-        if encrypted_message == data['RS']:
-             print('success')
-             return True
+        if encrypted_message == data['TPS']:  # Use 'TPS' instead of 'RS'
+            print("Payment Success")
+            return True
 
     return False
 
@@ -1090,7 +1090,14 @@ def process_payment():
     # reference_no = 8001  # You can use a random number generator if you prefer
     reference_no = str(random.randint(100000, 999999))
 
-    payment_url = eazypay_integration.get_payment_url(reference_no, amount,name,email, phone)
+    # Store the necessary data in the session to verify the payment later
+    session['reference_no'] = reference_no
+    session['amount'] = amount
+    session['name'] = name
+    session['email'] = email
+    session['phone'] = phone
+
+    payment_url = eazypay_integration.get_payment_url(reference_no, amount, name, email, phone)
     print(payment_url)
     
     return redirect(payment_url)
@@ -1101,8 +1108,8 @@ def process_payment():
 def response_handler():
     response = request.form.to_dict()
 
-    response_code = response.get('Response_Code', None)
-    if response_code is not None:
+    response_code_value = response.get('Response_Code', None)
+    if response_code_value is not None:
         if payment_success_exec(response):
             print(response)
             # Payment is successful
@@ -1114,6 +1121,7 @@ def response_handler():
     else:
         # 'Response_Code' key is missing in the response
         return "Invalid response received from payment gateway."
+
 
 
 
