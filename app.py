@@ -159,7 +159,7 @@ def payment_success_exec(response):
 
     return False
 
-def response_code(code):
+def get_response_message(code):
     rc = {
         'E000': 'Payment Successful.',
         'E001': 'Unauthorized Payment Mode',
@@ -1116,7 +1116,7 @@ def response_handler():
             return render_template('thank-you.html')
         else:
             # Payment failed, show failure message
-            response_msg = response_code(response['Response_Code'])
+            response_msg = get_response_message(response['Response_Code'])
             return f"Transaction failed. Error: {response_msg}"
     else:
         # 'Response_Code' key is missing in the response
