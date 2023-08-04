@@ -1111,6 +1111,7 @@ def response_handler():
     response = request.form.to_dict()
     print(response)
     response_code_value = response.get('Response_Code', None)
+    print(response_code_value)
     if response_code_value is not None:
         if payment_success_exec(response):
             print(response)
@@ -1118,12 +1119,12 @@ def response_handler():
             return render_template('thank-you.html')
         else:
             # Payment failed, show failure message
-            response_msg = get_response_message(response['Response_Code'])
+            response_msg = get_response_message(response_code_value)
+            print(response_msg)
             return f"Transaction failed. Error: {response_msg}"
     else:
-        print(response)
         # 'Response_Code' key is missing in the response
-        return "Invalid response received from payment gateway."
+        return "Invalid response received from the payment gateway."
 
 
 
