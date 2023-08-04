@@ -333,7 +333,7 @@ def privacy_policy():
 
 @app.route('/refund_returns')
 def refund_returns():
-    return render_template('refund-schedule.html')
+    return render_template('refund-returns.html')
 
 
 
