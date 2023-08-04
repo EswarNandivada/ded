@@ -141,6 +141,7 @@ def payment_success_exec():
             'RS': res['RS'],
             'TPS': res['TPS'],
         }
+        print(data)
 
         verification_key = f"{data['ID']}|{data['Response_Code']}|{data['Unique_Ref_Number']}|" \
                            f"{data['Service_Tax_Amount']}|{data['Processing_Fee_Amount']}|" \
@@ -148,7 +149,8 @@ def payment_success_exec():
                            f"{data['Transaction_Date']}|{data['Interchange_Value']}|" \
                            f"{data['TDR']}|{data['Payment_Mode']}|{data['SubMerchantId']}|" \
                            f"{data['ReferenceNo']}|{data['TPS']}|{aes_key_for_payment_success}"
-
+        
+        print(verification_key)
         encrypted_message = hashlib.sha512(verification_key.encode()).hexdigest()
         if encrypted_message == data['RS']:
             return True
