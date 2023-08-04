@@ -1099,15 +1099,17 @@ def process_payment():
 @app.route('/purchase-summary/order-received/', methods=['POST'])
 def response_handler():
     response = request.form.to_dict()
-
-    if payment_success_exec(response):
-        print(response)
-        # Payment is successful
-        return render_template('thank-you.html')
-    else:
-        # Payment failed, show failure message
-        response_msg = response_code(response['Response_Code'])
-        return f"Transaction failed. Error: {response_msg}"
+    try:
+        if payment_success_exec(response):
+            print(response)
+            # Payment is successful
+            return render_template('thank-you.html')
+        else:
+            # Payment failed, show failure message
+            response_msg = response_code(response['Response_Code'])
+            return f"Transaction failed. Error: {response_msg}"
+    except Exception as e:
+        print(e)
 
 
 if __name__ == '__main__':
