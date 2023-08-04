@@ -167,20 +167,6 @@ def load_encryption_key():
     return encryption_key
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/')
 def home():
     return render_template('index.html')
