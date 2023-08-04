@@ -121,23 +121,23 @@ class Eazypay:
 def payment_success_exec():
     print(request.form)
     
-    if request.method == 'POST' and 'Total_Amount' in request.form and request.form['Response_Code'] == 'E000':
+    if request.method == 'POST' and 'Total Amount' in request.form and request.form['Response Code'] == 'E000':
         res = request.form
         
         # Same encryption key that we gave for generating the URL
         aes_key_for_payment_success = b'6000012605405020'  # Replace this with the actual key
 
         data = {
-            'Response_Code': res['Response_Code'],
-            'Unique_Ref_Number': res['Unique_Ref_Number'],
-            'Service_Tax_Amount': res['Service_Tax_Amount'],
-            'Processing_Fee_Amount': res['Processing_Fee_Amount'],
-            'Total_Amount': res['Total_Amount'],
-            'Transaction_Amount': res['Transaction_Amount'],
-            'Transaction_Date': res['Transaction_Date'],
-            'Interchange_Value': res['Interchange_Value'],
+            'Response_Code': res['Response Code'],
+            'Unique_Ref_Number': res['Unique Ref Number'],
+            'Service_Tax_Amount': res['Service Tax Amount'],
+            'Processing_Fee_Amount': res['Processing Fee Amount'],
+            'Total_Amount': res['Total Amount'],
+            'Transaction_Amount': res['Transaction Amount'],
+            'Transaction_Date': res['Transaction Date'],
+            'Interchange_Value': res['Interchange Value'],
             'TDR': res['TDR'],
-            'Payment_Mode': res['Payment_Mode'],
+            'Payment_Mode': res['Payment Mode'],
             'SubMerchantId': res['SubMerchantId'],
             'ReferenceNo': res['ReferenceNo'],
             'ID': res['ID'],
@@ -162,6 +162,7 @@ def payment_success_exec():
             return False
     else:
         return False
+
 
 
 
@@ -1114,7 +1115,7 @@ def process_payment():
 def response_handler():
     response = request.form.to_dict()
     print(response)
-    response_code_value = response.get('Response_Code', 'na')
+    response_code_value = response.get('ResponseCode','na')
     print(response_code_value)
     if response_code_value != 'na':
         if payment_success_exec():
@@ -1128,8 +1129,7 @@ def response_handler():
             return f"Transaction failed. Error: {response_msg}"
     else:
         # 'Response_Code' key is missing in the response
-        return "Invalid response received from the payment gateway."
-
+        return "Invalid response received from payment gateway."
 
 
 
