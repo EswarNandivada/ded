@@ -64,7 +64,7 @@ class Eazypay:
         self.ref=ref
         self.eid=eid
         self.game=game
-        self.return_url = 'https://doctorsolympiad.com/purchase-summary/order-received/{eid}/{game}/{ref}'
+        self.return_url = f'https://doctorsolympiad.com/purchase-summary/order-received/{eid}/{game}/{ref}'
 
     def get_payment_url(self, reference_no, amount,name,email, phone,optional_field=None):
         mandatory_field = self.get_mandatory_field(reference_no, amount,name,email,phone)
