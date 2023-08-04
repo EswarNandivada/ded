@@ -154,7 +154,8 @@ def payment_success_exec(response):
         # encrypted_message = Eazypay.get_encrypted_value(verification_key)
 
         if encrypted_message == data['RS']:
-            return True
+             print('success')
+             return True
 
     return False
 
