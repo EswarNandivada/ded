@@ -1069,7 +1069,7 @@ def pays():
     return render_template('eazy.html')
 
 @app.route('/checkout/order-pay/<nam>/<int:numbr>')
-def paymentsss():
+def paymentsss(nam,numbr):
     return render_template('payment_form.html')
 
 def validate_form(amount):
