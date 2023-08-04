@@ -1078,8 +1078,8 @@ def validate_form(amount):
     return True
 
 
-@app.route('/checkout/order-pay', methods=['POST'])
-def process_payment():
+@app.route('/checkout/order-pay/<str:nam>/<int:numbr>', methods=['POST'])
+def process_payment(nam,numbr):
     session['payer_name'] = request.form['payername']
     session['payer_phone'] = request.form['payerphone']
     session['payer_email'] = request.form['payeremail']
