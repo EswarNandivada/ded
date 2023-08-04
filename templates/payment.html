@@ -93,7 +93,7 @@
     <center><h1 style="color:aliceblue;">*Once payment is done,no refund can be issued</h1></center>
     <div class="container">
         {% for i in data1 %}
-        <form autocomplete="off" action="{{url_for('pay',eid=eid,ref=ref,game=game)}}" method="POST">
+        <form autocomplete="off"  method="POST">
             <div>
                 <label for="fullName"><i class="fa-regular fa-address-card"></i> ID</label>
                 <input type="text" name="id" id="id" value="{{i[0]}}" readonly>
