@@ -690,12 +690,12 @@ def success():
             ref = int(response['ReferenceNo'])
             amount = float(response['Total Amount'])
             cursor = mydb.cursor(buffered=True)
+            cursor.execute('SELECT id,game from payments where ordid=%s',[ref])
+            eid,game=cursor.fetchone()
             cursor.execute('SELECT status from register WHERE id=%s', [eid])
             status=cursor.fetchone()[0]
             cursor.execute('select gender from register where id=%s',[eid])
             gender=cursor.fetchone()[0]
-            cursor.execute('SELECT id,game from payments where ordid=%s',[ref])
-            eid,game=cursor.fetchone()
             if status=='pending':
                 cursor.execute('update register set status=%s WHERE ID=%s',['success',eid])
                 cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
