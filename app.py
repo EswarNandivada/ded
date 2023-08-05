@@ -679,8 +679,8 @@ def payment(eid,game):
 #     return redirect(checkout_session.url)
 
 
-@app.route('/purchase-summary/order-received/<eid>/<game>/<ref>',methods=['POST'])
-def success(eid,ref,game):
+@app.route('/purchase-summary/order-received/',methods=['POST'])
+def success():
     response = request.form.to_dict()
     print(response)
     response_code_value = response.get('Response Code','na')
