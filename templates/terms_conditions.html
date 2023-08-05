@@ -2436,115 +2436,124 @@
               class="elementor-nav-menu--dropdown elementor-nav-menu__container"
               aria-hidden="true"
             >
-              <ul id="menu-2-ffd9dd4" class="elementor-nav-menu">
-                <li
-                  class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1295"
-                >
-                  <a
-                    href="https://codegnanprojects.wpcomstaging.com"
-                    class="elementor-item"
-                    tabindex="-1"
-                    >Home</a
+              <ul id="menu-1-6114902" class="elementor-nav-menu">
+                  <li
+                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1295"
                   >
-                </li>
-                <li
-                  class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2263"
-                >
-                  <a class="elementor-item" tabindex="-1">Managing Committee</a>
-                  <ul class="sub-menu elementor-nav-menu--dropdown">
-                    <li
-                      class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2265"
+                    <a href="{{url_for('home')}}" class="elementor-item"
+                      >Home</a
                     >
-                      <a
-                        href="https://codegnanprojects.wpcomstaging.com/national-committe/"
-                        class="elementor-sub-item"
-                        tabindex="-1"
-                        >NATIONAL COMMITTEE</a
+                  </li>
+                  <li
+                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2263"
+                  >
+                    <a class="elementor-item">Managing Committee</a>
+                    <ul class="sub-menu elementor-nav-menu--dropdown">
+                      <li
+                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2265"
                       >
-                    </li>
-                    <li
-                      class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2264"
+                        <a
+                          href="{{url_for('national_committee')}}"
+                          class="elementor-sub-item"
+                          >NATIONAL COMMITTEE</a
+                        >
+                      </li>
+                      <li
+                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2264"
+                      >
+                        <a
+                          href="{{url_for('ima_ap_state_committee')}}"
+                          class="elementor-sub-item"
+                          >IMA AP STATE COMMITTEE</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  <li
+                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1045"
+                  >
+                    <a
+                      href="{{url_for('mission_statement')}}"
+                      class="elementor-item"
+                      >Mission Statement</a
                     >
-                      <a
-                        href="https://codegnanprojects.wpcomstaging.com/ima-ap-state-committee/"
-                        class="elementor-sub-item"
-                        tabindex="-1"
-                        >IMA AP STATE COMMITTEE</a
+                  </li>
+                  <li
+                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1383"
+                  >
+                    <a href="{{url_for('rules_nav')}}" class="elementor-item"
+                      >Rules</a
+                    >
+                  </li>
+                  <li
+                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1896"
+                  >
+                    <a href="{{url_for('contact')}}" class="elementor-item"
+                      >Contact</a
+                    >
+                  </li>
+                  <li
+                    class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1992 current_page_item menu-item-1994"
+                  >
+                    <a
+                      href="{{url_for('venue_sports_schedule')}}"
+                      aria-current="page"
+                      class="elementor-item elementor-item-active"
+                      >Venue / Sports Schedule</a
+                    >
+                  </li>
+                  <li
+                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1093"
+                  >
+                    <a
+                      href="{{url_for('games_subgames')}}"
+                      class="elementor-item"
+                      >Games &#038; Subgames</a
+                    >
+                  </li>
+                  {% if 'user' in session%}
+                  <li
+                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2263"
+                  >
+                    <a class="elementor-item">Dashboard</a>
+                    <ul class="sub-menu elementor-nav-menu--dropdown">
+                      <li
+                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2265"
                       >
-                    </li>
-                  </ul>
-                </li>
-                <li
-                  class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1045"
-                >
-                  <a
-                    href="https://codegnanprojects.wpcomstaging.com/mission-statement/"
-                    class="elementor-item"
-                    tabindex="-1"
-                    >Mission Statement</a
+                        <a
+                          href="{{url_for('dashboard')}}"
+                          class="elementor-sub-item"
+                          >Profile</a
+                        >
+                      </li>
+                      <li
+                        class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2264"
+                      >
+                        <a
+                          href="{{url_for('logout')}}"
+                          class="elementor-sub-item"
+                          >Logout</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                  {% else %}
+                  <li
+                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2762"
                   >
-                </li>
-                <li
-                  class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1383"
-                >
-                  <a
-                    href="https://codegnanprojects.wpcomstaging.com/rules/"
-                    class="elementor-item"
-                    tabindex="-1"
-                    >Rules</a
+                    <a href="{{url_for('login')}}" class="elementor-item"
+                      >Log In</a
+                    >
+                  </li>
+                  <li
+                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2764"
                   >
-                </li>
-                <li
-                  class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1896"
-                >
-                  <a
-                    href="https://codegnanprojects.wpcomstaging.com/contact/"
-                    class="elementor-item"
-                    tabindex="-1"
-                    >Contact</a
-                  >
-                </li>
-                <li
-                  class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1994"
-                >
-                  <a
-                    href="https://codegnanprojects.wpcomstaging.com/venue-sports-schedule-2/"
-                    class="elementor-item"
-                    tabindex="-1"
-                    >Venue / Sports Schedule</a
-                  >
-                </li>
-                <li
-                  class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1093"
-                >
-                  <a
-                    href="https://codegnanprojects.wpcomstaging.com/games/"
-                    class="elementor-item"
-                    tabindex="-1"
-                    >Games &#038; Subgames</a
-                  >
-                </li>
-                <li
-                  class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2762"
-                >
-                  <a
-                    href="https://codegnanprojects.wpcomstaging.com/login?redirect_to=https://codegnanprojects.wpcomstaging.com/my-account"
-                    class="elementor-item"
-                    tabindex="-1"
-                    >Log In</a
-                  >
-                </li>
-                <li
-                  class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2764"
-                >
-                  <a
-                    href="https://codegnanprojects.wpcomstaging.com/register"
-                    class="elementor-item"
-                    tabindex="-1"
-                    >Register</a
-                  >
-                </li>
-              </ul>
+                    <a href="#" class="elementor-item"
+                      >Register</a
+                    >
+                  </li>
+                  {% endif %}
+                </ul>
             </nav>
           </div>
         </div>
