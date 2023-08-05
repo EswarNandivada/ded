@@ -42,7 +42,7 @@ with mysql.connector.connect(host=host,user=user,password=password,db=db) as con
      cursor.execute("create table if not exists teams(teamid int,id int,status enum('Accept','Pending'),foreign key(teamid) references sub_games(team_number),foreign key(id) references register(id))")
      # cursor.execute("alter table payments modify ordid int unsigned")
      # cursor.execute("alter table payments modify amount decimal(8,3)")
-     # cursor.execute("ALTER TABLE payments modify status enum('pending','Successfull')  default 'pending' after amount")
+     cursor.execute("ALTER TABLE payments ADD status enum('pending','Successfull')  default 'pending' after amount")
      cursor.close()
 mydb=mysql.connector.connect(host=host,user=user,password=password,db=db,pool_name='DED',pool_size=30)
 
