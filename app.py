@@ -42,7 +42,7 @@ with mysql.connector.connect(host=host,user=user,password=password,db=db) as con
      cursor.execute("create table if not exists teams(teamid int,id int,status enum('Accept','Pending'),foreign key(teamid) references sub_games(team_number),foreign key(id) references register(id))")
      # cursor.execute("alter table payments modify ordid int unsigned")
      # cursor.execute("alter table payments modify amount decimal(8,3)")
-     cursor.execute("ALTER TABLE payments modify status enum('pending','Successfull')  default 'pending' after amount")
+     # cursor.execute("ALTER TABLE payments modify status enum('pending','Successfull')  default 'pending' after amount")
      cursor.close()
 mydb=mysql.connector.connect(host=host,user=user,password=password,db=db,pool_name='DED',pool_size=30)
 
@@ -58,9 +58,9 @@ bcrypt = Bcrypt(app)
 
 class Eazypay:
     def __init__(self):
-        self.merchant_id = '376890'
-        self.encryption_key = b'3777003168901000'
-        self.sub_merchant_id = '20'
+        self.merchant_id = '600541'
+        self.encryption_key = b'6000012605405020'
+        self.sub_merchant_id = '45'
         self.paymode = '9'
         self.return_url = f'https://doctorsolympiad.com/purchase-summary/order-received/'
 
@@ -86,7 +86,7 @@ class Eazypay:
         merchant_ids = self.decrypt(self.get_sub_merchant_id())
         pay_modes = self.decrypt(self.get_paymode())
         encrypted_url = (
-            f"https://eazypay.icicibank.com/EazyPG?merchantid={self.merchant_id}"
+            f"https://eazypayuat.icicibank.com/EazyPG?merchantid={self.merchant_id}"
             f"&mandatory fields={mandatory_field}&optional fields={optional_field}"
             f"&returnurl={self.get_return_url()}&Reference No={reference_no}"
             f"&submerchantid={self.get_sub_merchant_id()}&transaction amount={amount}"
