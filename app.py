@@ -80,15 +80,32 @@ class Eazypay:
         return payment_url
 
     def generate_payment_url(self, mandatory_field, optional_field, reference_no, amount):
-        
+        mandatory_fields = self.decrypt(mandatory_field)
+        # optional_fields = self.decrypt(optional_field)
+        amounts = self.decrypt(amount)
+        reference_nos = self.decrypt(reference_no)
+        return_urls = self.decrypt(self.get_return_url())
+        merchant_ids = self.decrypt(self.get_sub_merchant_id())
+        pay_modes = self.decrypt(self.get_paymode())
         encrypted_url = (
-            f"https://eazypay.icicibank.com/EazyPG?merchantid={self.merchant_id}"
+            f"https://eazypayuat.icicibank.com/EazyPG?merchantid={self.merchant_id}"
             f"&mandatory fields={mandatory_field}&optional fields={optional_field}"
             f"&returnurl={self.get_return_url()}&Reference No={reference_no}"
             f"&submerchantid={self.get_sub_merchant_id()}&transaction amount={amount}"
             f"&paymode={self.get_paymode()}"
         )
+        decrypted_url = (
+            f"https://eazypayuat.icicibank.com/EazyPG?merchantid={self.merchant_id}"
+            f"&mandatory fields={mandatory_fields}&optional fields={optional_field}"
+            f"&returnurl={return_urls}&Reference No={reference_nos}"
+            f"&submerchantid={merchant_ids}&transaction amount={amounts}"
+            f"&paymode={pay_modes}"
+        )
+        print(decrypted_url)
+        print(encrypted_url)
+
         return encrypted_url
+
 
     def get_mandatory_field(self, reference_no, amount,name,email,phone):
         data = f'{reference_no}|{self.sub_merchant_id}|{amount}|{name}|{email}|{phone}'
