@@ -679,7 +679,7 @@ def payment(eid,game):
 #     return redirect(checkout_session.url)
 
 
-@app.route('/purchase-summary/order-received/',methods=['POST'])
+@app.route('/purchase-summary/order-received/<eid>/<game>/<ref>',methods=['POST'])
 def success(eid,ref,game):
     response = request.form.to_dict()
     print(response)
@@ -687,45 +687,47 @@ def success(eid,ref,game):
     print(response_code_value)
     if response_code_value != 'na':
         if payment_success_exec():
-            print(response)
+            ref = int(response['ReferenceNo'])
+            amount = float(response['Total Amount'])
+            cursor = mydb.cursor(buffered=True)
+            cursor.execute('SELECT status from register WHERE id=%s', [eid])
+            status=cursor.fetchone()[0]
+            cursor.execute('select gender from register where id=%s',[eid])
+            gender=cursor.fetchone()[0]
+            cursor.execute('SELECT id,game from payments where ordid=%s',[ref])
+            eid,game=cursor.fetchone()
+            if status=='pending':
+                cursor.execute('update register set status=%s WHERE ID=%s',['success',eid])
+                cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
+                if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
+                        category="Men's singles" if gender=='Male' else "Women's singles"
+                        cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                mydb.commit()
+                cursor.close()
+                flash('Payment Successful !')
+                return redirect(url_for('dashboard'))
+            else:
+                cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
+                cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,game,amount])
+                if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
+                        category="Men's singles" if gender=='Male' else "Women's singles"
+                        cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                mydb.commit()
+                cursor.close()
+                flash('Payment Successful')
+                return redirect(url_for('dashboard'))
+            # print(response)
             # Payment is successful
-            return render_template('thank-you.html')
+            # return render_template('thank-you.html')
         else:
             # Payment failed, show failure message
             response_msg = get_response_message(response['Response Code'])
             print(response_msg)
-            if response_code_value == 'E000':
-                amount = float(response['Total Amount'])
-                cursor = mydb.cursor(buffered=True)
-                cursor.execute('SELECT status from register WHERE id=%s', [eid])
-                status=cursor.fetchone()[0]
-                cursor.execute('select gender from register where id=%s',[eid])
-                gender=cursor.fetchone()[0]
-                if status=='pending':
-                    cursor.execute('update register set status=%s WHERE ID=%s',['success',eid])
-                    cursor.execute('INSERT into payments (ordid,id,game,amount) VALUES (%s,%s,%s,%s)',[ref,eid,game,amount])
-                    if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
-                            category="Men's singles" if gender=='Male' else "Women's singles"
-                            cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
-                    mydb.commit()
-                    cursor.close()
-                    flash('Payment Successful ! Login in to continue.')
-                    return redirect(url_for('dashboard'))
-                else:
-                    cursor.execute('INSERT into payments (ordid,id,game,amount) VALUES (%s,%s,%s,%s)',[ref,eid,game,amount])
-                    cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,game,amount])
-                    if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
-                            category="Men's singles" if gender=='Male' else "Women's singles"
-                            cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
-                    mydb.commit()
-                    cursor.close()
-                    flash('Payment Successful')
-                    return redirect(url_for('dashboard'))
-            else:
-                return f"<h1>Transaction failed. Error: {response_msg}</h1>"
+            return f"<h1>Transaction failed. Error: {response_msg}</h1>"
     else:
         # 'Response_Code' key is missing in the response
         return "Invalid response received from payment gateway."
+
 
 
 
