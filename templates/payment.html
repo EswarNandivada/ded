@@ -78,6 +78,18 @@
             }
         }
     </style>
+        <style>
+            /* Center the buffering animation in the middle of the page */
+            #buffering {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                display: none;
+            }
+        </style>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <script src="https://kit.fontawesome.com/942547a0cd.js" crossorigin="anonymous"></script>
 </head>
 
@@ -91,6 +103,10 @@
 
 <body>
     <center><h1 style="color:aliceblue;">*Once payment is done,no refund can be issued</h1></center>
+    <div id="buffering">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+    </div>
+    
     <div class="container">
         {% for i in data1 %}
         <form autocomplete="off"  method="POST">
@@ -121,11 +137,55 @@
             <div>
                 <label for="salary"><i class="fa-solid fa-sack-dollar"></i> Amount</label>
                 <input type="text" name="amount" id="amount" value="{{amount}}" readonly><br />
-                <button>Pay Now</button>
+                <button id="generateOTP">Pay Now</button>
             </div>
             {% endfor %}
         </form>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            // Handle form submission using AJAX
+            $("#generateOTP").click(function (e) {
+                e.preventDefault()
+                //var name = $("#name").val();
+                //var address = $("#address").val();
+
+                // Disable the "Generate OTP" button
+                $("#generateOTP").prop("disabled", true);
+                // Disable the email field
+                //$("#email").prop("disabled", true);
+
+                // Show buffering animation
+                $("#buffering").show();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{url_for('payment',eid=eid,game=game)}}",
+                    success: function (response) {
+                        // Hide buffering animation
+                        $("#buffering").hide();
+                        if (response.status == 'success') {
+                            window.location.href = response.payment_url;
+
+                        }
+
+
+                        // Enable the "Generate OTP" button
+                    },
+                    error: function (err) {
+                        // Hide buffering animation
+                        $("#buffering").hide();
+                        alert('Error in generating payment link,try again');
+                        $("#generateOTP").prop("disabled", false);
+
+                        // Enable the "Generate OTP" button
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
