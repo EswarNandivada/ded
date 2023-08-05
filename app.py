@@ -57,9 +57,9 @@ bcrypt = Bcrypt(app)
 
 class Eazypay:
     def __init__(self,eid,game,ref):
-        self.merchant_id = '600541'
-        self.encryption_key = b'6000012605405020'
-        self.sub_merchant_id = '45'
+        self.merchant_id = '376890'
+        self.encryption_key = b'3777003168901000'
+        self.sub_merchant_id = '20'
         self.paymode = '9'
         self.ref=ref
         self.eid=eid
@@ -148,7 +148,7 @@ def payment_success_exec():
         res = request.form
         
         # Same encryption key that we gave for generating the URL
-        aes_key_for_payment_success = b'6000012605405020'  # Replace this with the actual key
+        aes_key_for_payment_success = b'3777003168901000'  # Replace this with the actual key
 
         data = {
             'Response_Code': res['Response Code'],
