@@ -42,6 +42,7 @@ with mysql.connector.connect(host=host,user=user,password=password,db=db) as con
      cursor.execute("create table if not exists teams(teamid int,id int,status enum('Accept','Pending'),foreign key(teamid) references sub_games(team_number),foreign key(id) references register(id))")
      # cursor.execute("alter table payments modify ordid int unsigned")
      # cursor.execute("alter table payments modify amount decimal(8,3)")
+     cursor.execute("ALTER TABLE payments modify status enum('pending','Successfull')  default 'pending' after amount")
      cursor.close()
 mydb=mysql.connector.connect(host=host,user=user,password=password,db=db,pool_name='DED',pool_size=30)
 
@@ -56,15 +57,12 @@ app.config['UPLOAD_FOLDERSS'] = os.path.join(os.path.dirname(os.path.abspath(__f
 bcrypt = Bcrypt(app)
 
 class Eazypay:
-    def __init__(self,eid,game,ref):
+    def __init__(self):
         self.merchant_id = '376890'
         self.encryption_key = b'3777003168901000'
         self.sub_merchant_id = '20'
         self.paymode = '9'
-        self.ref=ref
-        self.eid=eid
-        self.game=game
-        self.return_url = f'https://doctorsolympiad.com/purchase-summary/order-received/{eid}/{game}/{ref}'
+        self.return_url = f'https://doctorsolympiad.com/purchase-summary/order-received/'
 
     def get_payment_url(self, reference_no, amount,name,email, phone,optional_field=None):
         mandatory_field = self.get_mandatory_field(reference_no, amount,name,email,phone)
@@ -148,7 +146,7 @@ def payment_success_exec():
         res = request.form
         
         # Same encryption key that we gave for generating the URL
-        aes_key_for_payment_success = b'3777003168901000'  # Replace this with the actual key
+        aes_key_for_payment_success = '6000012605405020'  # Replace this with the actual key
 
         data = {
             'Response_Code': res['Response Code'],
@@ -635,14 +633,18 @@ def payment(eid,game):
         cursor.execute('select amount from games where game_name=%s',[game])
         amount=cursor.fetchone()[0]
         cursor.close()
-    ref=random.randint(1000000,99999999)
-    eazypay_integration = Eazypay(eid,game,ref)
-    payment_url=eazypay_integration.get_payment_url(ref,amount,name,email,data1[0][3])
-    print(data1[0][2])
-    print(payment_url)
+    # print(payment_url)
     if request.method=='POST':
-        return redirect(payment_url)
-    return render_template('payment.html', data1=data1,game=game,amount=amount,eid=eid,ref=ref,name=name,email=email,payment_url=payment_url)
+        ref=random.randint(1000000,99999999)
+        eazypay_integration = Eazypay()
+        payment_url=eazypay_integration.get_payment_url(ref,amount,name,email,data1[0][3])
+        cursor  = mydb.cursor(buffered=True)
+        cursor.execute('select count(*) from games where game_name=%s',[game])
+        cursor.execute('insert into payments (ordid,id,game,amount) values(%s,%s,%s,%s)',[ref,eid,game,amount])
+        mydb.commit()
+        cursor.close()
+        return jsonify({'status':'success','payment_url':payment_url})
+    return render_template('payment.html', data1=data1,game=game,amount=amount,eid=eid,name=name,email=email)
 
 
 # @app.route('/pay/<eid>/<game>/<ref>',methods=['POST'])
@@ -685,32 +687,64 @@ def success(eid,ref,game):
     print(response_code_value)
     if response_code_value != 'na':
         if payment_success_exec():
-            print(response)
+            ref = int(response['ReferenceNo'])
+            amount = float(response['Total Amount'])
+            cursor = mydb.cursor(buffered=True)
+            cursor.execute('SELECT status from register WHERE id=%s', [eid])
+            status=cursor.fetchone()[0]
+            cursor.execute('select gender from register where id=%s',[eid])
+            gender=cursor.fetchone()[0]
+            cursor.execute('SELECT id,game from payments where ordid=%s',[ref])
+            eid,game=cursor.fetchone()
+            if status=='pending':
+                cursor.execute('update register set status=%s WHERE ID=%s',['success',eid])
+                cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
+                if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
+                        category="Men's singles" if gender=='Male' else "Women's singles"
+                        cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                mydb.commit()
+                cursor.close()
+                flash('Payment Successful !')
+                return redirect(url_for('dashboard'))
+            else:
+                cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
+                cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,game,amount])
+                if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
+                        category="Men's singles" if gender=='Male' else "Women's singles"
+                        cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                mydb.commit()
+                cursor.close()
+                flash('Payment Successful')
+                return redirect(url_for('dashboard'))
+            # print(response)
             # Payment is successful
-            return render_template('thank-you.html')
+            # return render_template('thank-you.html')
         else:
             # Payment failed, show failure message
             response_msg = get_response_message(response['Response Code'])
             print(response_msg)
             if response_code_value == 'E000':
+                ref = int(response['ReferenceNo'])
                 amount = float(response['Total Amount'])
                 cursor = mydb.cursor(buffered=True)
                 cursor.execute('SELECT status from register WHERE id=%s', [eid])
                 status=cursor.fetchone()[0]
                 cursor.execute('select gender from register where id=%s',[eid])
                 gender=cursor.fetchone()[0]
+                cursor.execute('SELECT id,game from payments where ordid=%s',[ref])
+                eid,game=cursor.fetchone()
                 if status=='pending':
                     cursor.execute('update register set status=%s WHERE ID=%s',['success',eid])
-                    cursor.execute('INSERT into payments (ordid,id,game,amount) VALUES (%s,%s,%s,%s)',[ref,eid,game,amount])
+                    cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
                     if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
                             category="Men's singles" if gender=='Male' else "Women's singles"
                             cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
                     mydb.commit()
                     cursor.close()
-                    flash('Payment Successful ! Login in to continue.')
+                    flash('Payment Successful !')
                     return redirect(url_for('dashboard'))
                 else:
-                    cursor.execute('INSERT into payments (ordid,id,game,amount) VALUES (%s,%s,%s,%s)',[ref,eid,game,amount])
+                    cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
                     cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,game,amount])
                     if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
                             category="Men's singles" if gender=='Male' else "Women's singles"
