@@ -702,6 +702,9 @@ def success():
                 if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
                         category="Men's singles" if gender=='Male' else "Women's singles"
                         cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                        cursor.execute('select * from payments')
+                        details = cursor.fetchall()
+                        print(details)
                 mydb.commit()
                 cursor.close()
                 flash('Payment Successful !')
@@ -712,6 +715,9 @@ def success():
                 if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
                         category="Men's singles" if gender=='Male' else "Women's singles"
                         cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                        cursor.execute('select * from payments')
+                        details = cursor.fetchall()
+                        print(details)
                 mydb.commit()
                 cursor.close()
                 flash('Payment Successful')
