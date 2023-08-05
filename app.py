@@ -679,7 +679,7 @@ def payment(eid,game):
 #     return redirect(checkout_session.url)
 
 
-@app.route('/purchase-summary/order-received/<eid>/<game>/<ref>',methods=['POST'])
+@app.route('/purchase-summary/order-received/',methods=['POST'])
 def success(eid,ref,game):
     response = request.form.to_dict()
     print(response)
@@ -1156,72 +1156,72 @@ def registeredgame(game):
         return render_template(f'/games-individual-team/Team/{game}.html',gender=gender)
 
 
-@app.route('/pays')
-def pays():
-    return render_template('eazy.html')
+# @app.route('/pays')
+# def pays():
+#     return render_template('eazy.html')
 
-@app.route('/checkout/order-pay/<nam>/<int:numbr>')
-def paymentsss(nam,numbr):
-    return render_template('payment_form.html')
+# @app.route('/checkout/order-pay/<nam>/<int:numbr>')
+# def paymentsss(nam,numbr):
+#     return render_template('payment_form.html')
 
-def validate_form(amount):
-    if amount < 0:
-        return False
-    return True
+# def validate_form(amount):
+#     if amount < 0:
+#         return False
+#     return True
 
 
-@app.route('/checkout/order-pay/<nam>/<int:numbr>', methods=['POST'])
-def process_payment(nam,numbr):
-    session['payer_name'] = request.form['payername']
-    session['payer_phone'] = request.form['payerphone']
-    session['payer_email'] = request.form['payeremail']
-    amount = int(request.form['payeramount'])
-    name = session['payer_name']
-    email = session['payer_email']
-    phone = session['payer_phone']
+# @app.route('/checkout/order-pay/<nam>/<int:numbr>', methods=['POST'])
+# def process_payment(nam,numbr):
+#     session['payer_name'] = request.form['payername']
+#     session['payer_phone'] = request.form['payerphone']
+#     session['payer_email'] = request.form['payeremail']
+#     amount = int(request.form['payeramount'])
+#     name = session['payer_name']
+#     email = session['payer_email']
+#     phone = session['payer_phone']
 
-    if not validate_form(amount):
-        return "Amount should be greater than Rs.10"
+#     if not validate_form(amount):
+#         return "Amount should be greater than Rs.10"
 
-    # Create an instance of Eazypay with the encryption key
-    eazypay_integration = Eazypay()
+#     # Create an instance of Eazypay with the encryption key
+#     eazypay_integration = Eazypay()
 
-    # reference_no = 8001  # You can use a random number generator if you prefer
-    reference_no = str(random.randint(100000, 999999))
+#     # reference_no = 8001  # You can use a random number generator if you prefer
+#     reference_no = str(random.randint(100000, 999999))
 
-    # Store the necessary data in the session to verify the payment later
-    session['reference_no'] = reference_no
-    session['amount'] = amount
-    session['name'] = name
-    session['email'] = email
-    session['phone'] = phone
+#     # Store the necessary data in the session to verify the payment later
+#     session['reference_no'] = reference_no
+#     session['amount'] = amount
+#     session['name'] = name
+#     session['email'] = email
+#     session['phone'] = phone
 
-    payment_url = eazypay_integration.get_payment_url(reference_no, amount, name, email, phone)
-    print(payment_url)
+#     payment_url = eazypay_integration.get_payment_url(reference_no, amount, name, email, phone)
+#     print(payment_url)
     
-    return redirect(payment_url)
+#     return redirect(payment_url)
 
 
 
-@app.route('/purchase-summary/order-received/', methods=['POST'])
-def response_handler():
-    response = request.form.to_dict()
-    print(response)
-    response_code_value = response.get('Response Code','na')
-    print(response_code_value)
-    if response_code_value != 'na':
-        if payment_success_exec():
-            print(response)
-            # Payment is successful
-            return render_template('thank-you.html')
-        else:
-            # Payment failed, show failure message
-            response_msg = get_response_message(response['Response Code'])
-            print(response_msg)
-            return f"Transaction failed. Error: {response_msg}"
-    else:
-        # 'Response_Code' key is missing in the response
-        return "Invalid response received from payment gateway."
+# @app.route('/purchase-summary/order-received/', methods=['POST'])
+# def response_handler():
+#     response = request.form.to_dict()
+#     print(response)
+#     response_code_value = response.get('Response Code','na')
+#     print(response_code_value)
+#     if response_code_value != 'na':
+#         if payment_success_exec():
+#             print(response)
+#             # Payment is successful
+#             return render_template('thank-you.html')
+#         else:
+#             # Payment failed, show failure message
+#             response_msg = get_response_message(response['Response Code'])
+#             print(response_msg)
+#             return f"Transaction failed. Error: {response_msg}"
+#     else:
+#         # 'Response_Code' key is missing in the response
+#         return "Invalid response received from payment gateway."
 
 
 
