@@ -693,8 +693,10 @@ def success():
             gender,email=cursor.fetchone()
             cursor.execute('insert into register (FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) select FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception from temporary where id=%s',[eid])
             mydb.commit()
-            cursor.execute('SELECT concat(FirstName," ",LastName) as name ,id from register where email=%s',[email])
-            name,uid=cursor.fetchone()
+            cursor.execute('SELECT id from register where email=%s',[email])
+            uid=cursor.fetchone()[0]
+            cursor.execute('SELECT concat(FirstName," ",LastName) as name from register where email=%s',[email])
+            name=cursor.fetchone()[0]
             cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s,transactionid=%s WHERE ordid=%s',['Successfull',amount,uid,ref,transaction_id])
             cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
             cursor.execute('DELETE FROM temporary where id=%s',[eid])
