@@ -1,0 +1,260 @@
+<style>
+
+/*headerrrrrrrrr*/
+.new-navbar .nav-bar {
+display: flex;
+align-items: center;
+/* Align items vertically centered */
+justify-content: space-between;
+/* Distribute items horizontally */
+list-style: none;
+color: black;
+font-weight: 500;
+padding: 12px 20px;
+box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.4);
+}
+
+.logoimage {
+flex: 0 0 30%;
+/* Set the width of the logo container */
+}
+
+.new-navbar .logoimage img {
+width: 100%;
+display: block;
+/* Remove any extra spacing around the image */
+}
+
+
+.menu .logo {
+display: none;
+}
+
+.new-navbar .menu {
+display: flex;
+}
+
+.new-navbar .menu li {
+padding-left: 10px;
+}
+
+.new-navbar .menu li a {
+display: inline-block;
+text-decoration: none;
+color: var(--color1);
+text-align: center;
+transition: 0.15s ease-in-out;
+position: relative;
+text-transform: uppercase;
+}
+
+.new-navbar .menu li a::after {
+content: "";
+position: absolute;
+bottom: 0;
+left: 0;
+width: 0;
+height: 1px;
+background-color: var(--color1);
+transition: 0.15s ease-in-out;
+}
+
+.new-navbar .menu li a:hover:after {
+width: 100%;
+}
+
+.new-navbar .open-menu,
+.close-menu {
+position: absolute;
+color: var(--color1);
+cursor: pointer;
+font-size: 1.5rem;
+display: none;
+}
+
+.new-navbar a:hover {
+text-decoration: underline !important;
+padding: 2% !important;
+}
+
+.new-navbar .open-menu {
+top: 50%;
+right: 20px;
+transform: translateY(-50%);
+}
+
+.new-navbar select {
+width: 20%;
+margin: 0% 2%;
+font-weight: 500;
+border: none;
+margin-top: -1%;
+}
+
+.new-navbar .close-menu {
+top: 20px;
+right: 20px;
+}
+
+.new-navbar #check {
+display: none;
+}
+
+.new-navbar .registerBtn {
+margin-top: -1%;
+margin-left: 10%;
+display: inline-block;
+padding: 5px 20px;
+justify-content: center;
+text-align: center;
+text-decoration: none;
+color: #000;
+background-color: #003B7D;
+color: white !important;
+border-radius: 2px;
+animation: scaleAnimation 2s infinite;
+}
+
+@keyframes scaleAnimation {
+
+0%,
+100% {
+transform: scale(1);
+}
+
+50% {
+transform: scale(1.1);
+/* You can adjust the scale factor as per your preference */
+}
+}
+
+@media (max-width: 480px) {
+    .new-navbar .logoimage img {
+        width: 210% !important;
+    }
+}
+@media (max-width: 992px) {
+.new-navbar select {
+width: 70%;
+margin-left: 8%;
+}
+
+.new-navbar a {
+color: white !important;
+}
+
+.new-navbar .registerBtn {
+background-color: transparent;
+border: 1px solid white
+}
+
+.new-navbar .nav-bar {
+
+width: 100%;
+display: flex;
+flex-wrap: wrap;
+list-style: none;
+position: relative;
+color: black;
+font-weight: 700;
+padding: 12px 20px;
+}
+
+.logoimage {
+width: 30%
+}
+
+.new-navbar .logoimage img {
+width: 150%;
+}
+
+.new-navbar .menu {
+flex-direction: column;
+align-items: flex-start;
+width: 60%;
+height: 100vh;
+position: fixed;
+top: 0;
+right: -100%;
+z-index: 100;
+background-color: #003B7D;
+transition: all 0.2s ease-in-out;
+}
+
+
+.new-navbar .menu li {
+margin-top: 10px;
+}
+
+.new-navbar .menu li a {
+padding: 10px;
+}
+
+.new-navbar .open-menu,
+.close-menu {
+display: block;
+}
+
+.new-navbar .close-menu {
+color: white !important;
+}
+
+#check:checked~.menu {
+right: 0;
+}
+
+.menu .logo {
+display: none;
+}
+
+.new-navbar #home {
+margin-top: 100%
+}
+
+}
+
+.subFooter a {
+text-decoration: none;
+font-size: 1rem !important;
+color: white
+}
+
+.form-label {
+font-weight: 500;
+}
+</style>
+
+
+
+<!--navbar-->
+<header>
+    <nav class="new-navbar">
+        <div class='nav-bar'>
+            <li class="logoimage"><a href="#"><img src="{{url_for('static', filename='images/logo.webp')}}" /></a></li>
+            <div>
+                <input type='checkbox' id='check' />
+                <span class="menu">
+                    <li class='logo'><a href='#'><img src="{{url_for('static', filename='images/logo.webp')}}" /></a></li>
+                    <li><a id="home" href="">Home</a></li>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected value="Managing commitee">COMMITTEE</option>
+                        <option>National Committee</option>
+                        <option value="India">IMA AP State Committee</option>
+
+                    </select>
+
+                    <li><a href="">Rules</a></li>
+                    <li><a href="">Contact</a></li>
+                    <li><a href="">Schedule</a></li>
+                    <li><a href="">Games</a></li>
+                    <li><a href="">Login</a></li>
+                    <li><a href="">Games</a></li>
+                    <li><a href="">Login</a></li>
+                    <li><a class="registerBtn">Register</a></li>
+                    <label for="check" class="close-menu"><i class="fas fa-times"></i></label>
+                </span>
+                <label for="check" class="open-menu"><i class="fas fa-bars"></i></label>
+            </div>
+        </div>
+    </nav>
+</header>
