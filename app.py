@@ -708,6 +708,7 @@ def success():
                  print(details)
             cursor.close()
             session['user']=uid
+            
             flash('Payment Successful')
             return redirect(url_for('dashboard'))
             # print(response)
@@ -914,7 +915,7 @@ def buyaddon(game):
     if session.get('user'):
          sport =game
          cursor=mydb.cursor(buffered=True)
-         cursor.execute("SELECT amount from games where game=%s",[sport])
+         cursor.execute("SELECT amount from games where game_name=%s",[sport])
          amount=cursor.fetchone()[0]
          cursor.close()
          return redirect(url_for('payment',eid=session.get('user'),game=game,amount=amount))
