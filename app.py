@@ -33,7 +33,7 @@ port=os.environ['RDS_PORT']
 with mysql.connector.connect(host=host,user=user,password=password,db=db) as conn:
      cursor=conn.cursor(buffered=True)              
      #cursor.execute("DROP TABLE games")
-     cursor.execute("ALTER TABLE payments drop foreign key payments_ibfk_1")
+     #cursor.execute("ALTER TABLE payments drop foreign key payments_ibfk_1")
      cursor.execute("CREATE TABLE if not exists register (ID int NOT NULL AUTO_INCREMENT,FirstName varchar(25) DEFAULT NULL,LastName varchar(25) DEFAULT NULL,Email varchar(50) DEFAULT NULL,PASSWORD longblob,mobileno bigint DEFAULT NULL,age int DEFAULT NULL,gender varchar(10) DEFAULT NULL,DOB date DEFAULT NULL,city text,address text,state text,country text,degree varchar(10) DEFAULT NULL,MCI_ID varchar(20) DEFAULT NULL,member varchar(20) DEFAULT NULL,SHIRT_SIZE enum('S','M','L','XL','XXL','XXXL','XXXXL') DEFAULT NULL,acception varchar(30) DEFAULT 'No',status varchar(20) NOT NULL DEFAULT 'pending',PRIMARY KEY (ID),UNIQUE KEY Email (Email),UNIQUE KEY mobileno (mobileno))")
      cursor.execute("CREATE TABLE if not exists game (ID INT, game enum('ATHLETICS','ARCHERY','BADMINTON','BASKETBALL','BALL BADMINTON','CARROMS','CHESS','CYCLOTHON','JUMPS','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS','CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET','VOLLEY BALL','FOOTBALL','KHO KHO','KABADDI','THROW BALL','TUG OF WAR'),AMOUNT INT UNSIGNED)")
      cursor.execute("create table if not exists games(game_name varchar(30),amount int unsigned,team_count int)")
@@ -471,7 +471,7 @@ def register(user_accept):
             cursor=mydb.cursor(buffered=True)
             cursor.execute('INSERT INTO temporary(FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', [data['fname'], data['lname'], data['email'], data['password'], data['mobile'], data['age'], data['gender'], data['dob'], data['city'], data['address'], data['state'], data['country'], data['degree'], data['mci'], data['selectmember'],data['shirtsize'], data['acception']])
             mydb.commit()
-            cursor.execute('select id from temporary where email=%s', [data['email']])
+            cursor.execute('select id from temporary where FirstName =%s and LastName=%s and Email=%s and mobileno=%s and address=%s and MCI_ID=%s and shirt_size=%s,acception=%s', [data['fname'], data['lname'], data['email'], data['mobile'], data['address'],data['mci'],data['shirtsize'], data['acception']])
             eid=cursor.fetchone()[0]
 
             #updated code------------------------- --------------------------------
