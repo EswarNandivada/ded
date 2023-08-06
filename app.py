@@ -913,7 +913,11 @@ def team():
 @app.route('/buyaddon/<game>')
 def buyaddon(game):
     if session.get('user'):
-        return redirect(url_for('payment',eid=session.get('user'),game=game))
+         cursor=mydb.cursor(buffered=True)
+         cursor.execute("SELECT amount from games where game=%s",[game])
+         amount=cursor.fetchone()[0]
+         cursor.close()
+        return redirect(url_for('payment',eid=session.get('user'),game=game,amount=amount))
     else:
         return redirect(url_for('login'))
 @app.route('/registeredgame/<game>',methods=['GET','POST'])
