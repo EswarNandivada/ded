@@ -731,9 +731,15 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 														dobfile:dobfile,
 													},
 													success: function(response) {
+														if (response.message!='success'){
+															alert(response);
+										                                  			}
+														else{
+															window.location.href=response.payment_url
+														}
 														
 														// Hide buffering animation
-														alert(response);
+														
 														
 													},
 													error: function(err) {
