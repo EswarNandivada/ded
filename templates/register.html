@@ -95,7 +95,7 @@
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" for="firstName">Password<span
+                                <label class="form-label" for="firstName">Password - must be 8 characters<span
                                         style="color: red;">*</span></label>
                                 <input type="password" name="password" id="password" class="form-control form-control-lg"
                                     placeholder="Enter Password" required/>
@@ -242,8 +242,8 @@
                                         style="color: red;">*</span></label>
                                 <select class="form-select" aria-label="Default select example" name="degree"
                                     id="degree" required>
-                                    <option selected>Select Degree-MBBS</option>
-
+                                    <option selected>Select Degree</option>
+                                    <option value="MBBS">MBBS</option>
                                     <option value="MD">MD</option>
                                     <option value="MS">MS</option>
                                     <option value="DNB">DNB</option>
@@ -298,7 +298,6 @@
                                     <option value="CYCLOTHON">CYCLOTHON</option>
                                     <option value="FENCING">FENCING</option>
                                     <option value="FOOTBALL">FOOTBALL</option>
-                                    <option value="JUMPS">JUMPS</option>
                                     <option value="KABADDI">KABADDI</option>
                                     <option value="KHO KHO">KHO KHO</option>
                                     <option value="LAWN TENNIS">LAWN TENNIS</option>
@@ -346,7 +345,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label for="formFile" class="form-label" id="display-which-certificate" >Upload
-                                    certificate</label>
+                                    certificate (max 5mb)</label>
                                 <input class="form-control" type="file" name="certificate" id="certificate" required>
 
                             </div>
@@ -357,7 +356,7 @@
 
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label for="formFile" class="form-label">Upload Photo</label>
+                                <label for="formFile" class="form-label">Upload Photo (max 5mb)</label>
                                 <input class="form-control" type="file" name="photo" id="photo" required>
 
                             </div>
@@ -365,7 +364,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
 
-                                <label for="formFile" class="form-label">Upload DOB Certificate</label>
+                                <label for="formFile" class="form-label">Upload DOB Certificate (max 5mb)</label>
                                 <input class="form-control" type="file" name="dobfile" id="dobfile" required>
 
                             </div>
