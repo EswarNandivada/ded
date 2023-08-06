@@ -816,6 +816,7 @@ def sport(game):
         return redirect(url_for('login'))
 @app.route('/dashboard')
 def dashboard():
+    print(session.get('user'))
     if session.get('user'):
         cursor = mydb.cursor(buffered=True)
         cursor.execute('SELECT game_name from games where game_name not in (select game from game where id=%s)',[session.get('user')])
