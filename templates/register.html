@@ -1,11 +1,49 @@
 {% extends "base.html" %}
 
 {% block style %}
+<style>
+    .shirt-dropdown {
+        position: relative;
+        top: 300px;
+        left: 20px;
+    }
 
+    .shirt-image {
+        display: none;
+    }
 
+    .shirt-image-show {
+        display: block;
+        width: 30vw;
+        position: absolute;
+        top: 800px;
+        left: 50px;
+    }
 
+    @media(max-width:576px) {
+        .shirt-image {
+            width: 90%;
+        }
+
+        .shirt-image-show {
+            top: 1800px;
+        }
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    /* Center the buffering animation in the middle of the page */
+    #buffering {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+    }
+</style>
 {% endblock %}
-
 
 {% block content %}
 <div class="container">
@@ -17,7 +55,7 @@
       </div>
       <div class="col-12 col-md-6">
         <h1 align="center" style="color:navy;margin-top: 2%;">REGISTER</h1>
-        <form class="register-new" style="background-color: rgba(206,238,255,0.7)">
+        <form class="register-new" style="background-color: rgba(206,238,255,0.7)" enctype="multipart/form-data">
           <div class="container w-100 h-100">
             <div class="row">
 
@@ -265,7 +303,7 @@
               <div class="col-md-6 mb-4">
                 <div class="form-outline">
                   <label class="form-label" for="firstName">Select Shirt Size<span style="color: red;">*</span></label>
-                  <select class="form-select" onclick="showShirt()" id="shirt-dropdown-id"
+                  <select class="form-select" onclick="showShirt()" id="shirtsize"
                     aria-label="Default select example">
                     <option selected>Select Shirt Size</option>
                     <option value="S">S</option>
@@ -346,75 +384,60 @@
 
 
 {% block script %}
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-    crossorigin="anonymous"></script>
-
-    <script>
-      function imember() {
-          
-          var x = document.getElementById("selectmember").value;
-          if(x=="Non IMA Member")
-              document.getElementById("display-which-certificate").innerHTML = "Upload MBBS Certificate";
-          else if(x=="IMA Member")
-              document.getElementById("display-which-certificate").innerHTML = "Upload IMA or MBBS Certificate";
-        }
-  </script>
-		      <script>
-                      $(document).ready(function() {
-                          // Handle form submission using AJAX
-                          $("#generateOTP").click(function(e) {
-                              e.preventDefault()
-                              //var name = $("#name").val();
-                              var email = $("#email").val();
-                              //var address = $("#address").val();
-                              if(email==""){
-                                  alert("Enter email id");
-                                  return false
-                              }
-                              // Disable the "Generate OTP" button
-                          $("#generateOTP").prop("disabled", true);
-                              // Disable the email field
-                              //$("#email").prop("disabled", true);
-              
-                              // Show buffering animation
-                              $("#buffering").show();
-              
-                              $.ajax({
-                                  type: "POST",
-                                  url: "/generate_otp",
-                                  data: {
-              
-                                      email: email,
-                                     
-                                  },
-                                  success: function(response) {
-                                      // Hide buffering animation
-                                      $("#buffering").hide();
-                                      
-                                      alert(response.message);
-                                      $("#generateOTP").prop("disabled", false);
-
-              
-                                      // Enable the "Generate OTP" button
-                                  },
-                                  error: function(err) {
-                                      // Hide buffering animation
-                                      $("#buffering").hide();
-                                      alert('Error in sending otp,try again');
-                                      $("#generateOTP").prop("disabled", false);
-              
-                                      // Enable the "Generate OTP" button
-                                  }
-                              });
-                          });
-                      });
-                  </script>
 <script>
-    $(document).ready(function() {
+    let s = true;
+    function showShirt() {
+        //alert();
+
+        var shirtValue = document.getElementById("shirtsize").value;
+        console.log(shirtValue, s)
+        if (shirtValue == "" && s == true || shirtValue != "" && s == true) {
+            document.getElementById("shirt").classList.add("shirt-image-show");
+            s = false;
+        }
+        else if (shirtValue != "" && s == false) {
+            document.getElementById("shirt").classList.remove("shirt-image-show");
+            s = true;
+        }
+    }
+
+</script>
+<script>
+    function valid() {
+        var password = document.getElementById("password").value
+        var mobile = document.getElementById("mobile").value;
+        var email = document.getElementById("email").value
+        var mobileCheck = /^[0-9]{10}$/
+        var emailCheck = /^[a-zA-Z0-9.]+@[a-z]+\.[a-z]{2,3}$/
+        if (password == "" || password.length < 8) {
+            alert("Password must carry 8 characters")
+            return false;
+        }
+        if (!mobile.match(mobileCheck)) {
+            alert("Mobile number must carry 10 digits")
+            return false
+        }
+        if (!email.match(emailCheck)) {
+            alert("Please provide proper email id")
+            return false
+        }
+        return false;
+    }
+</script>
+
+<script>
+    // JavaScript code to display the alert
+    var message = "{{ message }}";
+    if (!message == '') {
+        alert(message);
+    }
+</script>
+
+
+<script>
+    $(document).ready(function () {
         // Handle form submission using AJAX
-        $("#formregister").click(function() {
+        $("#formregister").click(function () {
 
             var email = $("#email").val();
             var fname = $('#fname').val();
@@ -424,58 +447,58 @@
             var age = $('#age').val();
             var gender = $('#gender').val();
             var dob = $('#dob').val();
-            var city = $('#city').val(); 
-            var address = $('#address').val(); 
-            var state = $('#state').val(); 
-            var country = $('#country').val(); 
-            var degree = $('#degree').val(); 
-            var mci = $('#mci').val(); 
+            var city = $('#city').val();
+            var address = $('#address').val();
+            var state = $('#state').val();
+            var country = $('#country').val();
+            var degree = $('#degree').val();
+            var mci = $('#mci').val();
             var game = $('#game').val();
-            var selectmember = $('#selectmember').val(); 
-            var shirtsize = $('#shirtsize').val(); 
-            var otp= $('#otp').val();
-            var certificate =$('#certificate')[0].files[0]; 
+            var selectmember = $('#selectmember').val();
+            var shirtsize = $('#shirtsize').val();
+            var otp = $('#otp').val();
+            var certificate = $('#certificate')[0].files[0];
             var photo = $('#photo')[0].files[0];
             var dobfile = $('#dobfile')[0].files[0];
 
 
-            if(otp==""){
+            if (otp == "") {
                 alert("Please enter the otp");
                 return false
-                    }
+            }
             $.ajax({
                 type: "POST",
                 url: "/register/Yes",
                 data: {
-                    fname : fname,
-                    email : email,
-                    lname:lname,
-                    password : password,
-                    mobile : mobile,
-                    gender : gender,
-                    dob : dob,
+                    fname: fname,
+                    email: email,
+                    lname: lname,
+                    password: password,
+                    mobile: mobile,
+                    gender: gender,
+                    dob: dob,
                     age: age,
-                    city : city,
-                    state : state,
-                    country : country,
-                    degree :degree,
-                    mci:mci,
-                    game:game,
-                    shirtsize:shirtsize,
-                    otp:otp,
-                    certificate:certificate,
-                    photo:photo,
-                    selectmember:selectmember,
-                    address:address,
-                    dobfile:dobfile,
+                    city: city,
+                    state: state,
+                    country: country,
+                    degree: degree,
+                    mci: mci,
+                    game: game,
+                    shirtsize: shirtsize,
+                    otp: otp,
+                    certificate: certificate,
+                    photo: photo,
+                    selectmember: selectmember,
+                    address: address,
+                    dobfile: dobfile,
                 },
-                success: function(response) {
-                    
+                success: function (response) {
+
                     // Hide buffering animation
                     alert(response);
-                    
+
                 },
-                error: function(err) {
+                error: function (err) {
                     // Hide buffering animation
                     $("#buffering").hide();
                     console.log(err);
@@ -487,9 +510,66 @@
         });
     });
 </script>
+<script>
+    $(document).ready(function () {
+        // Handle form submission using AJAX
+        $("#generateOTP").click(function (e) {
+            e.preventDefault()
+            //var name = $("#name").val();
+            var email = $("#email").val();
+            //var address = $("#address").val();
+            if (email == "") {
+                alert("Enter email id");
+                return false
+            }
+            // Disable the "Generate OTP" button
+            $("#generateOTP").prop("disabled", true);
+            // Disable the email field
+            //$("#email").prop("disabled", true);
+
+            // Show buffering animation
+            $("#buffering").show();
+
+            $.ajax({
+                type: "POST",
+                url: "/generate_otp",
+                data: {
+
+                    email: email,
+
+                },
+                success: function (response) {
+                    // Hide buffering animation
+                    $("#buffering").hide();
+
+                    alert(response.message);
+                    $("#generateOTP").prop("disabled", false);
 
 
+                    // Enable the "Generate OTP" button
+                },
+                error: function (err) {
+                    // Hide buffering animation
+                    $("#buffering").hide();
+                    alert('Error in sending otp,try again');
+                    $("#generateOTP").prop("disabled", false);
 
+                    // Enable the "Generate OTP" button
+                }
+            });
+        });
+    });
+</script>
+<script>
+    function imember() {
+
+        var x = document.getElementById("selectmember").value;
+        if (x == "Non IMA Member")
+            document.getElementById("display-which-certificate").innerHTML = "Upload MBBS Certificate";
+        else if (x == "IMA Member")
+            document.getElementById("display-which-certificate").innerHTML = "Upload IMA or MBBS Certificate";
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 {% endblock %}
