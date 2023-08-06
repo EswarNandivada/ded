@@ -469,6 +469,7 @@ def register(user_accept):
             }
             cursor=mydb.cursor(buffered=True)
             cursor.execute('INSERT INTO temporary(FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', [data['fname'], data['lname'], data['email'], data['password'], data['mobile'], data['age'], data['gender'], data['dob'], data['city'], data['address'], data['state'], data['country'], data['degree'], data['mci'], data['selectmember'],data['shirtsize'], data['acception']])
+            mydb.commit()
             cursor.execute('select id from temporary where email=%s', [data['email']])
             eid=cursor.fetchone()[0]
 
@@ -476,7 +477,6 @@ def register(user_accept):
             #cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,data['game'],data['amount']])
             #print(game)
             
-            mydb.commit()
             cursor.close()
             session.pop('otp')
             session.pop('email')
@@ -687,12 +687,13 @@ def success():
             #status=cursor.fetchone()[0]
             cursor.execute('select gender,email from temporary where id=%s',[eid])
             gender,email=cursor.fetchone()[0]
-            cursor.execute('insert into register select * from temporary where id=%s',[eid])
+            cursor.execute('insert into register select FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception from temporary where id=%s',[eid])
             mydb.commit()
             cursor.execute('SELECT id from register where email=%s',[email])
             uid=cursor.fetchone()[0]
             cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s WHERE ordid=%s',['Successfull',amount,uid,ref])
             cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
+            cursor.execute('DELETE FROM temporary where id=%s',[eid])
             mydb.commit()
             if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
                  category="Men's singles" if gender=='Male' else "Women's singles"
