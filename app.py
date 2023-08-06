@@ -699,13 +699,14 @@ def success():
             if status=='pending':
                 cursor.execute('update register set status=%s WHERE ID=%s',['success',eid])
                 cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
+                mydb.commit()
                 if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
                         category="Men's singles" if gender=='Male' else "Women's singles"
                         cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                        mydb.commit()
                         cursor.execute('select * from payments')
                         details = cursor.fetchall()
                         print(details)
-                mydb.commit()
                 cursor.close()
                 session['user']=eid
                 flash('Payment Successful !')
@@ -713,13 +714,14 @@ def success():
             else:
                 cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
                 cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,game,amount])
+                mydb.commit()
                 if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
                         category="Men's singles" if gender=='Male' else "Women's singles"
                         cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
+                        mydb.commit()
                         cursor.execute('select * from payments')
                         details = cursor.fetchall()
                         print(details)
-                mydb.commit()
                 cursor.close()
                 session['user']=eid
                 flash('Payment Successful')
