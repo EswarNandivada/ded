@@ -1020,106 +1020,109 @@ def registeredgame(game):
         return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
 
     elif game=='ATHLETICS':
-        cursor = mydb.cursor(buffered=True)
-        cursor.execute('select count(*) from sub_games where game=%s and id=%s',[game,session.get('user')])
-        count = cursor.fetchone()[0]
-        cursor.execute('select gender from register where id=%s',[session.get('user')])
-        gender=cursor.fetchone()[0]
-        cursor.close()
-        if count>=1:
-            flash('Already registered!refer your games profile')
-            return redirect(url_for('dashboard'))
-        if request.method=='POST':
-            print(request.form)
-            a_styles={'Sprint', 'Pole Vault', 'Walkathon','Marathon'}
-            styles={i for i in request.form.keys() if i in a_styles}
-            values=set(request.form.values())
-            form_values=values.difference(a_styles)
-            print(form_values)
-            s_styles={'100m Sprint', 'Sprint', '200m Sprint', '400m Sprint', '800m Sprint'}
-            p_styles={'100 m Hurdles Pole Vault', '4 x 100 m Relay Pole Vault'}
-            d_styles={"Men's 10 km Walkathon","Women's 10 km Walkathon"}
-            f_styles={"Men's 10 km Marathon", "Men's 21 km Marathon","Women's 10 km Marathon", "Women's 21 km-Marathon"}
+        return "<center><h1> Updates are on the Way!</h1></center>"
+        # cursor = mydb.cursor(buffered=True)
+        # cursor.execute('select count(*) from sub_games where game=%s and id=%s',[game,session.get('user')])
+        # count = cursor.fetchone()[0]
+        # cursor.execute('select gender from register where id=%s',[session.get('user')])
+        # gender=cursor.fetchone()[0]
+        # cursor.close()
+        # if count>=1:
+        #     flash('Already registered!refer your games profile')
+        #     return redirect(url_for('dashboard'))
+        # if request.method=='POST':
+        #     print(request.form)
+        #     a_styles={'Sprint', 'Pole Vault', 'Walkathon','Marathon'}
+        #     styles={i for i in request.form.keys() if i in a_styles}
+        #     values=set(request.form.values())
+        #     form_values=values.difference(a_styles)
+        #     print(form_values)
+        #     s_styles={'100m Sprint', 'Sprint', '200m Sprint', '400m Sprint', '800m Sprint'}
+        #     p_styles={'100 m Hurdles Pole Vault', '4 x 100 m Relay Pole Vault'}
+        #     d_styles={"Men's 10 km Walkathon","Women's 10 km Walkathon"}
+        #     f_styles={"Men's 10 km Marathon", "Men's 21 km Marathon","Women's 10 km Marathon", "Women's 21 km-Marathon"}
         
 
-            if len(styles)==0:
-                flash('Select a category')
-                return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
-            for i in styles:
-                if i=='Sprint':
-                    result1=s_styles.difference(form_values)
-                    if len(result1)==len(s_styles):
-                        flash('Select atleast one of the sub category')
-                        break
-                elif i=='Pole Vault':
-                    result2=p_styles.difference(form_values)
-                    if len(result2)==len(p_styles):
-                        flash('Select atleast one of the sub category')
-                        break
-                elif i=='Walkathon':
-                    result3=d_styles.difference(form_values)
-                    if len(result3)==len(d_styles):
-                        flash('Select atleast one of the sub category')
-                        break
-                elif i=='Marathon':
-                    result4=f_styles.difference(form_values)
-                    if len(result4)==len(f_styles):
-                        flash('Select atleast one of the sub category')
-                        break
-            else:
-                cursor = mydb.cursor(buffered=True)
-                for i in form_values:
-                    cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
-                    mydb.commit()
-                cursor.close()
-                flash('Details Registered Successfully ')
-                subject='Doctors Olympiad Games registration'
-                body=f'You are successfully registered to {" ".join(values)}\n\nThanks and regards\nDoctors Olympiad 2023'
-                sendmail(email_id,subject,body)
-                return redirect(url_for('dashboard'))
-        return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
+        #     if len(styles)==0:
+        #         flash('Select a category')
+        #         return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
+        #     for i in styles:
+        #         if i=='Sprint':
+        #             result1=s_styles.difference(form_values)
+        #             if len(result1)==len(s_styles):
+        #                 flash('Select atleast one of the sub category')
+        #                 break
+        #         elif i=='Pole Vault':
+        #             result2=p_styles.difference(form_values)
+        #             if len(result2)==len(p_styles):
+        #                 flash('Select atleast one of the sub category')
+        #                 break
+        #         elif i=='Walkathon':
+        #             result3=d_styles.difference(form_values)
+        #             if len(result3)==len(d_styles):
+        #                 flash('Select atleast one of the sub category')
+        #                 break
+        #         elif i=='Marathon':
+        #             result4=f_styles.difference(form_values)
+        #             if len(result4)==len(f_styles):
+        #                 flash('Select atleast one of the sub category')
+        #                 break
+        #     else:
+        #         cursor = mydb.cursor(buffered=True)
+        #         for i in form_values:
+        #             cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
+        #             mydb.commit()
+        #         cursor.close()
+        #         flash('Details Registered Successfully ')
+        #         subject='Doctors Olympiad Games registration'
+        #         body=f'You are successfully registered to {" ".join(values)}\n\nThanks and regards\nDoctors Olympiad 2023'
+        #         sendmail(email_id,subject,body)
+        #         return redirect(url_for('dashboard'))
+        # return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
+     
     
     elif game in ('BADMINTON','TABLETENNIS','LAWNTENNIS','CARROMS'):
-        singles=["Women's Single","Men's Single"]
-        cursor = mydb.cursor(buffered=True)
-        cursor.execute('select category from sub_games where game=%s and id=%s',[game,session.get('user')])
-        singles_data=cursor.fetchall()
-        cursor = mydb.cursor(buffered=True)
-        cursor.execute('''SELECT status from teams as t inner join sub_games as s on t.teamid=s.team_number where game=%s''',[game])
-        cursor.close()
-        data=[i[0] for i in cursor.fetchall() if i[0]=='Pending']
-        cond=True
+        return "<center><h1> Updates are on the way </h1></center>"
+        # singles=["Women's Single","Men's Single"]
+    #     cursor = mydb.cursor(buffered=True)
+    #     cursor.execute('select category from sub_games where game=%s and id=%s',[game,session.get('user')])
+    #     singles_data=cursor.fetchall()
+    #     cursor = mydb.cursor(buffered=True)
+    #     cursor.execute('''SELECT status from teams as t inner join sub_games as s on t.teamid=s.team_number where game=%s''',[game])
+    #     cursor.close()
+    #     data=[i[0] for i in cursor.fetchall() if i[0]=='Pending']
+    #     cond=True
         
-        if len(singles_data)==1:
-            if singles_data[0] in singles:
-                cond=False
-        else:
-            cond=False
-        if len(data)==0 and cond:
-            flash('Already registered refer to games section')
-            return redirect(url_for('dashboard'))
-        if len(data)!=0:
-            pass
+    #     if len(singles_data)==1:
+    #         if singles_data[0] in singles:
+    #             cond=False
+    #     else:
+    #         cond=False
+    #     if len(data)==0 and cond:
+    #         flash('Already registered refer to games section')
+    #         return redirect(url_for('dashboard'))
+    #     if len(data)!=0:
+    #         pass
 
-        if request.method=='POST':
-            if len(request.form.keys())==1:
-                if list(request.form.keys())[0] in singles:
-                    cursor = mydb.cursor(buffered=True)
-                    for i in request.form.values():
-                        cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
-                        mydb.commit()
-                    cursor.close()
-                    flash('Details Registered Successfully ')
-                    subject='Doctors Olympiad Games registration'
-                    body=f'You are successfully registered to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
-                    sendmail(email_id,subject,body)
-                    return redirect(url_for('dashboard'))
-            else:
-                pass
+    #     if request.method=='POST':
+    #         if len(request.form.keys())==1:
+    #             if list(request.form.keys())[0] in singles:
+    #                 cursor = mydb.cursor(buffered=True)
+    #                 for i in request.form.values():
+    #                     cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
+    #                     mydb.commit()
+    #                 cursor.close()
+    #                 flash('Details Registered Successfully ')
+    #                 subject='Doctors Olympiad Games registration'
+    #                 body=f'You are successfully registered to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
+    #                 sendmail(email_id,subject,body)
+    #                 return redirect(url_for('dashboard'))
+    #         else:
+    #             pass
 
-        return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
-    else:
-        return render_template(f'/games-individual-team/Team/{game}.html',gender=gender)
+    #     return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
+    # else:
+    #     return render_template(f'/games-individual-team/Team/{game}.html',gender=gender)
 
 
 # @app.route('/pays')
