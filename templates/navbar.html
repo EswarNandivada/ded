@@ -236,10 +236,10 @@ font-weight: 500;
                 <span class="menu">
                     <li class='logo'><a href="{{url_for('home')}}"><img src="{{url_for('static', filename='images/logo.webp')}}" /></a></li>
                     <li><a id="home" href="{{url_for('home')}}">Home</a></li>
-                    <select class="form-select" aria-label="Default select example">
+                    <select class="form-select" onchange="location = this.value;" aria-label="Default select example">
                         <option selected value="Managing commitee">COMMITTEE</option>
-                        <a href="{{url_for('ima_ap_state_committee')}}"><option>National Committee</option></a>
-                        <a href="{{url_for('national_committee')}}"><option value="India">IMA AP State Committee</option></a>
+                        <option value="{{url_for('ima_ap_state_committee')}}">National Committee</option>
+                        <option value="{{url_for('national_committee')}}">IMA AP State Committee</option>
 
                     </select>
 
