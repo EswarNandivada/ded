@@ -471,7 +471,7 @@ def register(user_accept):
             cursor=mydb.cursor(buffered=True)
             cursor.execute('INSERT INTO temporary(FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', [data['fname'], data['lname'], data['email'], data['password'], data['mobile'], data['age'], data['gender'], data['dob'], data['city'], data['address'], data['state'], data['country'], data['degree'], data['mci'], data['selectmember'],data['shirtsize'], data['acception']])
             mydb.commit()
-            cursor.execute('select id from temporary where FirstName =%s and LastName=%s and Email=%s and mobileno=%s and address=%s and MCI_ID=%s and shirt_size=%s and acception=%s', [data['fname'], data['lname'], data['email'], data['mobile'], data['address'],data['mci'],data['shirtsize'], data['acception']])
+            cursor.execute('select id from temporary where Email=%s and mobileno=%s', [data['email'], data['mobile']])
             eid=cursor.fetchone()[0]
 
             #updated code------------------------- --------------------------------
