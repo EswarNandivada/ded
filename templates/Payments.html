@@ -1030,8 +1030,9 @@
 										<div class="cell">ID</div>
 										<div class="cell">GAME</div>
 										<div class="cell">AMOUNT</div>
+										<div class="cell">STATUS</div>
 										<div class="cell">DATE</div>
-										<div class="cell">Transaction Id</div>
+										<div class="cell">TRANSACTION ID </div>
 									</div>
 									{% for i in payment %}
 									<div class="row">
@@ -1042,6 +1043,7 @@
 										<div class="cell">{{i[3]}}</div>
 										<div class="cell">{{i[4]}}</div>
 										<div class="cell">{{i[5]}}</div>
+										<div class="cell">{{i[6]}}</div>
 										
 									</div>
 									{% endfor %}
