@@ -242,8 +242,8 @@
                                         style="color: red;">*</span></label>
                                 <select class="form-select" aria-label="Default select example" name="degree"
                                     id="degree" required >
-                                    <option selected>Select Degree-MBBS</option>
-
+                                    <option selected>Select Degree</option>
+                                    <option selected>MBBS</option>
                                     <option value="MD">MD</option>
                                     <option value="MS">MS</option>
                                     <option value="DNB">DNB</option>
@@ -514,6 +514,8 @@
                     address: address,
                     dobfile: dobfile,
                 },
+                processData:false,
+                contentType:false,
                 success: function (response) {
 
                     // Hide buffering animation
