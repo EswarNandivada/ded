@@ -484,7 +484,7 @@ def register(user_accept):
             #body=f'Thanks for the registration your unique for future reference is {eid}'
             #sendmail(to=email, subject=subject, body=body)
             #---------------------------------------------------------------
-            link=url_for('payment',eid=eid,game=data['game'],_external=True)
+            link=url_for('payment',eid=eid,game=data['game'],amount=amount,_external=True)
             return jsonify({'message':'success','payment_url':link})
         return render_template('register.html',message='')
     else:
@@ -607,8 +607,8 @@ def reset_password(token):
     return render_template('reset_password.html', token=token)
 
 
-@app.route('/checkout-order-pay/<eid>/<game>', methods=['GET', 'POST'])
-def payment(eid,game):
+@app.route('/checkout-order-pay/<eid>/<game>/<amount>', methods=['GET', 'POST'])
+def payment(eid,game,amount):
     cursor = mydb.cursor(buffered=True)
     cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member FROM register WHERE id=%s", [eid])
     data1 = cursor.fetchall()
@@ -618,14 +618,6 @@ def payment(eid,game):
     email=cursor.fetchone()[0]
     cursor.execute("select CONCAT(FirstName, ' ', LastName) AS FullName from register where id=%s",[eid])
     name=cursor.fetchone()[0]
-    if status=='pending':
-        cursor.execute("SELECT game, amount FROM game WHERE id=%s", [eid])
-        cursor.close()
-        game,amount = cursor.fetchone()
-    else:
-        cursor.execute('select amount from games where game_name=%s',[game])
-        amount=cursor.fetchone()[0]
-        cursor.close()
     # print(payment_url)
     if request.method=='POST':
         ref=random.randint(1000000,99999999)
