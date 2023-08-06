@@ -485,7 +485,7 @@ def register(user_accept):
             #sendmail(to=email, subject=subject, body=body)
             #---------------------------------------------------------------
             link=url_for('payment',eid=eid,game=data['game'],_external=True)
-            return jsonify({'message':'success',payment_url:link})
+            return jsonify({'message':'success','payment_url':link})
         return render_template('register.html',message='')
     else:
         abort(404,'Page not found')
