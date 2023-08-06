@@ -506,8 +506,9 @@ def login():
         if user:
             # Check the hashed password with the entered password
             if bcrypt.check_password_hash(user[4], password):
+                session['user'] = user[0]
                 # Log the user in by setting the 'user' in the session
-                    return redirect(url_for('dashboard'))
+                return redirect(url_for('dashboard'))
                     # return('Ram ram')
             else:
                 flash('Invalid password! Please try again.', 'error')
@@ -515,6 +516,7 @@ def login():
             flash('User not found! Please check your email and try again.', 'error')
 
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
