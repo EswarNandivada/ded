@@ -618,11 +618,11 @@ def reset_password(token):
 @app.route('/checkout-order-pay/<eid>/<game>/<amount>', methods=['GET', 'POST'])
 def payment(eid,game,amount):
     cursor = mydb.cursor(buffered=True)
-    cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member FROM register WHERE id=%s", [eid])
+    cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member FROM temporary WHERE id=%s", [eid])
     data1 = cursor.fetchall()
-    cursor.execute('SELECT email from register where id=%s',[eid])
+    cursor.execute('SELECT email from temporary where id=%s',[eid])
     email=cursor.fetchone()[0]
-    cursor.execute("select CONCAT(FirstName, ' ', LastName) AS FullName from register where id=%s",[eid])
+    cursor.execute("select CONCAT(FirstName, ' ', LastName) AS FullName from temporary where id=%s",[eid])
     name=cursor.fetchone()[0]
     # print(payment_url)
     if request.method=='POST':
