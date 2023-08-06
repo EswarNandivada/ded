@@ -10,11 +10,11 @@ def sendmail(to,subject,body):
     msg.set_content(body)
     server.send_message(msg)
     server.quit()
-def mail_with_atc(to,subject,body,html):
+def mail_with_atc(to,subject,html):
     email_message = MIMEMultipart()
-    email_message['From'] = email_from
-    email_message['To'] = email_to
-    email_message['Subject'] = f'Report email - {date_str}'
+    email_message['From'] = 'docolympiad2023@gmail.com'
+    email_message['To'] = to
+    email_message['Subject'] = subject
 
     # Attach the html doc defined earlier, as a MIMEText html content type to the MIME message
     email_message.attach(MIMEText(html, "html"))
