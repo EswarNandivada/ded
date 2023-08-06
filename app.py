@@ -43,7 +43,7 @@ with mysql.connector.connect(host=host,user=user,password=password,db=db) as con
      # cursor.execute("alter table payments modify ordid int unsigned")
      # cursor.execute("alter table payments modify amount decimal(8,3)")
      # cursor.execute("ALTER TABLE payments ADD status enum('pending','Successfull')  default 'pending' after amount")
-     cursor.execute("ALTER TABLE payments add transactionid bigint unsigned")
+     # cursor.execute("ALTER TABLE payments add transactionid bigint unsigned")
      cursor.close()
 mydb=mysql.connector.connect(host=host,user=user,password=password,db=db,pool_name='DED',pool_size=30)
 
@@ -473,7 +473,6 @@ def register(user_accept):
             cursor.close()
             session.pop('otp')
             session.pop('email')
-            session['user']=eid
             flash ('Registration successful! Complete the payment process.')
             subject='IMA Doctors Olympiad Registration'
             body=f'Thanks for the registration your unique for future reference is {eid}'
@@ -708,6 +707,7 @@ def success():
                         print(details)
                 mydb.commit()
                 cursor.close()
+                session['user']=eid
                 flash('Payment Successful !')
                 return redirect(url_for('dashboard'))
             else:
@@ -721,6 +721,7 @@ def success():
                         print(details)
                 mydb.commit()
                 cursor.close()
+                session['user']=eid
                 flash('Payment Successful')
                 return redirect(url_for('dashboard'))
             # print(response)
