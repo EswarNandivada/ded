@@ -32,6 +32,12 @@ host=os.environ['RDS_HOSTNAME']
 port=os.environ['RDS_PORT']
 with mysql.connector.connect(host=host,user=user,password=password,db=db) as conn:
      cursor=conn.cursor(buffered=True)
+     cursor.execute('drop table payments')
+     cursor.execute('drop table game')
+     cursor.execute('drop table teams')
+     cursor.execute('drop table sub_games')
+     cursor.execute('drop table register')
+     cursor.execute('drop table temporary')
      #cursor.execute('ALTER TABLE register drop column status')
      #cursor.execute('ALTER TABLE temporary drop column status')
      # cursor.execute("DROP TABLE games")
