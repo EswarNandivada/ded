@@ -325,7 +325,7 @@
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">Select Shirt Size<span
                                         style="color: red;">*</span></label>
-                                <select class="form-select" onclick="showShirt()" id="shirt-dropdown-id shirtsize"
+                                <select class="form-select" onclick="showShirt()" id="shirtsize" name="shirtsize"
                                     aria-label="Default select example">
                                     <option selected>Select Shirt Size</option>
                                     <option value="S">S</option>
@@ -410,7 +410,7 @@
     function showShirt() {
         //alert();
 
-        var shirtValue = document.getElementById("shirt-dropdown-id").value;
+        var shirtValue = document.getElementById("shirtsize").value;
         console.log(shirtValue, s)
         if (shirtValue == "" && s == true || shirtValue != "" && s == true) {
             document.getElementById("shirt").classList.add("shirt-image-show");
