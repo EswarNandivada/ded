@@ -687,7 +687,7 @@ def success():
             #cursor.execute('SELECT status from register WHERE id=%s', [eid])
             #status=cursor.fetchone()[0]
             cursor.execute('select gender,email from temporary where id=%s',[eid])
-            gender,email=cursor.fetchone()[0]
+            gender,email=cursor.fetchone()
             cursor.execute('insert into register select FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception from temporary where id=%s',[eid])
             mydb.commit()
             cursor.execute('SELECT id from register where email=%s',[email])
