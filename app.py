@@ -693,8 +693,8 @@ def success():
             gender,email=cursor.fetchone()
             cursor.execute('insert into register (FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) select FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception from temporary where id=%s',[eid])
             mydb.commit()
-            cursor.execute('SELECT id from register where email=%s',[email])
-            uid=cursor.fetchone()[0]
+            cursor.execute('SELECT concat(FirstName," ",LastName) as name ,id from register where email=%s',[email])
+            name,uid=cursor.fetchone()
             cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s,transactionid=%s WHERE ordid=%s',['Successfull',amount,uid,ref,transaction_id])
             cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
             cursor.execute('DELETE FROM temporary where id=%s',[eid])
@@ -707,7 +707,73 @@ def success():
                  details = cursor.fetchall()
                  print(details)
             cursor.close()
+            
+            html = '''
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Document</title>
+                <style>
+                    table{
+                        margin: auto;
+                    }
+                    img{
+                        margin-left: 30%;
+                    }
+                    h1{
+                        text-align: center;
+                    }
+                    table,tr,th,td{
+                        border:1px solid black;
+                        border-collapse: collapse;
+                    }
+                    th{
+                        text-align: left;
+                    }
+                    td{
+                        width:60%
+                    }
+                    @media (max-width:576px){
+                        h1{
+                            font-size: 1rem;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <img src="{{url_for('static',filename='images/logo.webp'))}}" width="40%"/>
+                <h1>Thank you for Registering your details regarding Games</h1>
+                <table cellpadding="10">
+                <tr>
+                        <th>ID</th>
+                        <td>{0}</td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td>{1}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{2}</td>
+                    </tr>
+                    <tr>
+                        <th>Game</th>
+                        <td>{3}</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <td>{4}</td>
+                    </tr>
+                    <tr>
+                        <th>Payment</th>
+                        <td>{5}</td>
+                    </tr>
+                </table>
+            </body>
+            </html>'''.format(uid,name,email,game,transaction_id,amount)
             session['user']=uid
+
             
             flash('Payment Successful')
             return redirect(url_for('dashboard'))
