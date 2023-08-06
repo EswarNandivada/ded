@@ -694,10 +694,10 @@ def success():
                  cursor.execute('select * from payments')
                  details = cursor.fetchall()
                  print(details)
-             cursor.close()
-             session['user']=eid
-             flash('Payment Successful')
-             return redirect(url_for('dashboard'))
+            cursor.close()
+            session['user']=eid
+            flash('Payment Successful')
+            return redirect(url_for('dashboard'))
             # print(response)
             # Payment is successful
             # return render_template('thank-you.html')
