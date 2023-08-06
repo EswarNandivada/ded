@@ -418,20 +418,20 @@ def register(user_accept):
             cursor.close()
             if count2 == 1:
                 message='Mobile number already exists.'
-                return jsonify({'message':message})
+                return render_template('register.html',message=message)
             if count1 == 1:
                 message='Email already in use'
-                return jsonify({'message':message})
+                return render_template('register.html',message=message)
             cond=True if session.get('email') else False
             if cond!=True:
                 message='Please verify your email'
-                return jsonify({'message':message})
+                return render_template('register.html',message=message)
             if session['otp']!=otp:
                 message='Invalid OTP'
-                return jsonify({'message':message})
+                return render_template('register.html',message=message)
             if session.get('email')!=request.form['email']:
                 message='Email address changed verify otp again'
-                return jsonify({'message':message})
+                return render_template('register.html',message=message)
             # Get the uploaded certificate and photo files
             certificate_file = request.files['certificate']
             photo_file = request.files['photo']
@@ -485,7 +485,7 @@ def register(user_accept):
             #sendmail(to=email, subject=subject, body=body)
             #---------------------------------------------------------------
             link=url_for('payment',eid=eid,game=data['game'],amount=amount,_external=True)
-            return jsonify({'message':'success','payment_url':link})
+            return redirect(link)
         return render_template('register.html',message='')
     else:
         abort(404,'Page not found')
