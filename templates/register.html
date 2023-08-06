@@ -67,7 +67,7 @@
                                 <label class="form-label" for="firstName">First Name<span
                                         style="color: red;">*</span></label>
                                 <input type="text" name="fname" id="fname" class="form-control form-control-lg"
-                                    placeholder="Enter First Name" />
+                                    placeholder="Enter First Name" required/>
 
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                                 <label class="form-label" for="firstName">Last Name<span
                                         style="color: red;">*</span></label>
                                 <input type="text" name="lname" id="lname" class="form-control form-control-lg"
-                                    placeholder="Enter Last Name" />
+                                    placeholder="Enter Last Name"  required />
 
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                                 <label class="form-label" for="firstName">Email<span
                                         style="color: red;">*</span></label>
                                 <input type="email" name="email" id="email" class="form-control form-control-lg"
-                                    placeholder="Enter Email" />
+                                    placeholder="Enter Email"  required />
 
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                                 <label class="form-label" for="firstName">Password<span
                                         style="color: red;">*</span></label>
                                 <input type="text" name="password" id="password" type="password" class="form-control form-control-lg"
-                                    placeholder="Enter Password" />
+                                    placeholder="Enter Password" required />
 
                             </div>
                         </div>
@@ -112,7 +112,7 @@
                                 <label class="form-label" for="firstName">Mobile Number<span
                                         style="color: red;">*</span></label>
                                 <input type="text" name="mobile" id="mobile" class="form-control form-control-lg"
-                                    placeholder="Enter Mobile Number" />
+                                    placeholder="Enter Mobile Number" required />
 
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">Age<span style="color: red;">*</span></label>
                                 <input type="text" name="age" id="age" class="form-control form-control-lg"
-                                    placeholder="Enter Age" />
+                                    placeholder="Enter Age"  required />
 
                             </div>
                         </div>
@@ -135,11 +135,11 @@
                                 <label class="form-label" for="firstName">Gender<span
                                         style="color: red;">*</span></label>
                                 <select class="form-select" aria-label="Default select example" name="gender"
-                                    id="gender">
+                                    id="gender" required   >
                                     <option selected>Select Gender</option>
-                                    <option value="1">Male</option>
-                                    <option value="2">Female</option>
-                                    <option value="3">Other</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
                         </div>
@@ -148,7 +148,7 @@
                                 <label class="form-label" for="firstName">Date Of Birth<span
                                         style="color: red;">*</span></label>
                                 <input type="date" name="dob" id="dob" class="form-control form-control-lg"
-                                    placeholder="Enter Date of Birth" />
+                                    placeholder="Enter Date of Birth" required />
 
                             </div>
                         </div>
@@ -161,7 +161,7 @@
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">City<span style="color: red;">*</span></label>
                                 <input type="text" name="city" id="city" class="form-control form-control-lg"
-                                    placeholder="Enter City" />
+                                    placeholder="Enter City" required/>
 
                             </div>
                         </div>
@@ -171,7 +171,7 @@
                                 <label class="form-label" for="firstName">Address<span
                                         style="color: red;">*</span></label>
                                 <input type="text" name="address" id="address" class="form-control form-control-lg"
-                                    placeholder="Enter Address" />
+                                    placeholder="Enter Address" required/>
 
                             </div>
                         </div>
@@ -184,7 +184,7 @@
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">State<span
                                         style="color: red;">*</span></label>
-                                <select class="form-select" aria-label="Default select example" name="state" id="state">
+                                <select class="form-select" aria-label="Default select example" name="state" id="state" required>
                                     <option selected>Select State</option>
                                     <option value="" disabled selected>Select Your state</option>
                                     <option value="Andhra Pradesh">Andhra Pradesh</option>
@@ -225,8 +225,7 @@
                                 <label class="form-label" for="firstName">Country<span
                                         style="color: red;">*</span></label>
                                 <select class="form-select" aria-label="Default select example" name="country"
-                                    id="country">
-                                    <option selected>Select Country</option>
+                                    id="country" required >
                                     <option value="India">India</option>
 
                                 </select>
@@ -242,7 +241,7 @@
                                 <label class="form-label" for="firstName">Degree-MBBS(Compulsory)<span
                                         style="color: red;">*</span></label>
                                 <select class="form-select" aria-label="Default select example" name="degree"
-                                    id="degree">
+                                    id="degree" required >
                                     <option selected>Select Degree-MBBS</option>
 
                                     <option value="MD">MD</option>
@@ -260,7 +259,7 @@
                                         style="color: red;">*</span></label>
 
                                 <input type="text" name="mci" id="mci" class="form-control form-control-lg"
-                                    placeholder="Enter Registration No" />
+                                    placeholder="Enter Registration No" required />
 
                             </div>
                         </div>
@@ -271,7 +270,7 @@
 
 
                                 <select class="form-select" aria-label="Default select example" name="selectmember"
-                                    onchange="imember()" id="selectmember">
+                                    onchange="imember()" id="selectmember" required >
                                     <option selected>Select Member</option>
 
                                     <option value="IMA Member">IMA Member-3500/</option>
@@ -284,7 +283,7 @@
                                 <label class="form-label" for="firstName">Select Game<span
                                         style="color: red;">*</span></label>
 
-                                <select class="form-select" aria-label="Default select example" name="game" id="game">
+                                <select class="form-select" aria-label="Default select example" name="game" id="game" required>
                                     <option value="" disabled selected>Select game</option>
                                     <option value="ATHLETICS">ATHLETICS</option>
                                     <option value="ARCHERY">ARCHERY</option>
@@ -345,7 +344,7 @@
                             <div class="form-outline">
                                 <label for="formFile" class="form-label" id="display-which-certificate">Upload
                                     certificate below 5MB</label>
-                                <input class="form-control" type="file" name="certificate" id="certificate">
+                                <input class="form-control" type="file" name="certificate" id="certificate" required>
 
                             </div>
                         </div>
@@ -356,7 +355,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label for="formFile" class="form-label">Upload Photo below 5MB .jpg png jpeg</label>
-                                <input class="form-control" type="file" name="photo" id="photo">
+                                <input class="form-control" type="file" name="photo" id="photo" required>
 
                             </div>
                         </div>
@@ -364,7 +363,7 @@
                             <div class="form-outline">
 
                                 <label for="formFile" class="form-label">Upload DOB Certificate below 5MB</label>
-                                <input class="form-control" type="file" name="dobfile" id="dobfile">
+                                <input class="form-control" type="file" name="dobfile" id="dobfile" required>
 
                             </div>
                         </div>
@@ -379,7 +378,7 @@
                         </div>
                         <div class="col-md-9 mb-4">
                             <div class="form-outline">
-                                <input class="form-control" placeholder="Enter your OTP" name="otp" id='otp'>
+                                <input class="form-control" placeholder="Enter your OTP" name="otp" id='otp' required>
                             </div>
                             <div id="buffering">
                                 <i class="fas fa-spinner fa-spin fa-3x"></i>
@@ -429,6 +428,7 @@
         var password = document.getElementById("password").value
         var mobile = document.getElementById("mobile").value;
         var email = document.getElementById("email").value
+        var 
         var mobileCheck = /^[0-9]{10}$/
         var emailCheck = /^[a-zA-Z0-9.]+@[a-z]+\.[a-z]{2,3}$/
         if (password == "" || password.length < 8) {
