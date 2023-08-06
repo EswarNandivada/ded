@@ -704,7 +704,7 @@ def success():
                  details = cursor.fetchall()
                  print(details)
             cursor.close()
-            session['user']=eid
+            session['user']=uid
             flash('Payment Successful')
             return redirect(url_for('dashboard'))
             # print(response)
