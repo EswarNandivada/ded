@@ -710,48 +710,51 @@ def success():
                  print(details)
             cursor.close()
             
-            html = '''
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Document</title>
+            # html = '''
+            # <html lang="en">
+            # <head>
+            #     <meta charset="UTF-8">
+            #     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            #     <title>Document</title>
                 
-            </head>
-            <body>
-                <img src="{{url_for('static',filename='images/logo.webp'))}}" width="40%"/>
-                <h1>Thank you for Registering your details regarding Games</h1>
-                <table cellpadding="10">
-                <tr>
-                        <th>ID</th>
-                        <td>%(id)s</td>
-                    </tr>
-                    <tr>
-                        <th>Name</th>
-                        <td>%(name)s</td>
-                    </tr>
-                    <tr>
-                        <th>Email</th>
-                        <td>%(email)s</td>
-                    </tr>
-                    <tr>
-                        <th>Game</th>
-                        <td>%(game)s</td>
-                    </tr>
-                    <tr>
-                        <th>Transaction ID</th>
-                        <td>%(transaction_id)s</td>
-                    </tr>
-                    <tr>
-                        <th>Payment</th>
-                        <td>%(amount)s</td>
-                    </tr>
-                </table>
-            </body>
-            </html>'''%(uid,name,email,game,transaction_id,amount)
-            session['user']=uid
-            subject = 'Payment Successful! From Doctors Olympiad 2023'
-            mail_with_atc(email,subject,html)
+            # </head>
+            # <body>
+            #     <img src="{{url_for('static',filename='images/logo.webp'))}}" width="40%"/>
+            #     <h1>Thank you for Registering your details regarding Games</h1>
+            #     <table cellpadding="10">
+            #     <tr>
+            #             <th>ID</th>
+            #             <td>%(id)s</td>
+            #         </tr>
+            #         <tr>
+            #             <th>Name</th>
+            #             <td>%(name)s</td>
+            #         </tr>
+            #         <tr>
+            #             <th>Email</th>
+            #             <td>%(email)s</td>
+            #         </tr>
+            #         <tr>
+            #             <th>Game</th>
+            #             <td>%(game)s</td>
+            #         </tr>
+            #         <tr>
+            #             <th>Transaction ID</th>
+            #             <td>%(transaction_id)s</td>
+            #         </tr>
+            #         <tr>
+            #             <th>Payment</th>
+            #             <td>%(amount)s</td>
+            #         </tr>
+            #     </table>
+            # </body>
+            # </html>'''%(uid,name,email,game,transaction_id,amount)
+            # session['user']=uid
+            # subject = 'Payment Successful! From Doctors Olympiad 2023'
+            # mail_with_atc(email,subject,html)
+            subject='IMA Doctors Olympiad Registration'
+            body=f'Thanks for the registration your unique id for future reference is {uid}'
+            sendmail(to=email, subject=subject, body=body)
             
             flash('Payment Successful')
             return redirect(url_for('dashboard'))
