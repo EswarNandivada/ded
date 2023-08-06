@@ -416,20 +416,20 @@ def register(user_accept):
             if count2 == 1:
                 message='Mobile number already exists.'
 
-                return render_template('register.html',message=message)
+                return jsonify({'message':message})
             if count1 == 1:
                 message='Email already in use'
-                return render_template('register.html',message=message)
+                return jsonify({'message':message})
             cond=True if session.get('email') else False
             if cond!=True:
                 message='Please verify your email'
-                return render_template('register.html',message=message)
+                 return jsonify({'message':message})
             if session['otp']!=otp:
                 message='Invalid OTP'
-                return render_template('register.html',message=message)
+                return jsonify({'message':message})
             if session.get('email')!=request.form['email']:
                 message='Email address changed verify otp again'
-                return render_template('register.html',message=message)
+                return jsonify({'message':message})
             # Get the uploaded certificate and photo files
             certificate_file = request.files['certificate']
             photo_file = request.files['photo']
@@ -465,21 +465,25 @@ def register(user_accept):
                 'acception': acception, 'amount': amount,'shirtsize': shirtsize,
             }
             cursor=mydb.cursor(buffered=True)
-            cursor.execute('INSERT INTO register(FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', [data['fname'], data['lname'], data['email'], data['password'], data['mobile'], data['age'], data['gender'], data['dob'], data['city'], data['address'], data['state'], data['country'], data['degree'], data['mci'], data['selectmember'],data['shirtsize'], data['acception']])
-            cursor.execute('select id from register where email=%s', [data['email']])
+            cursor.execute('INSERT INTO temporary(FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', [data['fname'], data['lname'], data['email'], data['password'], data['mobile'], data['age'], data['gender'], data['dob'], data['city'], data['address'], data['state'], data['country'], data['degree'], data['mci'], data['selectmember'],data['shirtsize'], data['acception']])
+            cursor.execute('select id from temporary where email=%s', [data['email']])
             eid=cursor.fetchone()[0]
-            cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,data['game'],data['amount']])
-            print(game)
+
+            #updated code------------------------- --------------------------------
+            #cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,data['game'],data['amount']])
+            #print(game)
             
             mydb.commit()
             cursor.close()
             session.pop('otp')
             session.pop('email')
-            flash ('Registration successful! Complete the payment process.')
-            subject='IMA Doctors Olympiad Registration'
-            body=f'Thanks for the registration your unique for future reference is {eid}'
-            sendmail(to=email, subject=subject, body=body)
-            return redirect(url_for('payment',eid=eid,game=data['game'],))
+            #flash ('Registration successful! Complete the payment process.')
+            #subject='IMA Doctors Olympiad Registration'
+            #body=f'Thanks for the registration your unique for future reference is {eid}'
+            #sendmail(to=email, subject=subject, body=body)
+            #---------------------------------------------------------------
+            link=url_for('payment',eid=eid,game=data['game'],_external=True)
+            return jsonify({'message':'success',payment_url:link})
         return render_template('register.html',message='')
     else:
         abort(404,'Page not found')
