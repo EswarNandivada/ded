@@ -7,7 +7,7 @@ from io import BytesIO
 from key import secret_key, salt, salt2
 from itsdangerous import URLSafeTimedSerializer
 from stoken import token
-from cmail import sendmail
+from cmail import sendmail,mail_with_atc
 import os
 import uuid
 from werkzeug.utils import secure_filename
@@ -747,33 +747,34 @@ def success():
                 <table cellpadding="10">
                 <tr>
                         <th>ID</th>
-                        <td>{0}</td>
+                        <td>%(id)s</td>
                     </tr>
                     <tr>
                         <th>Name</th>
-                        <td>{1}</td>
+                        <td>%(name)s</td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>{2}</td>
+                        <td>%(email)s</td>
                     </tr>
                     <tr>
                         <th>Game</th>
-                        <td>{3}</td>
+                        <td>%(game)s</td>
                     </tr>
                     <tr>
                         <th>Transaction ID</th>
-                        <td>{4}</td>
+                        <td>%(transaction_id)s</td>
                     </tr>
                     <tr>
                         <th>Payment</th>
-                        <td>{5}</td>
+                        <td>%(amount)s</td>
                     </tr>
                 </table>
             </body>
             </html>'''.format(uid,name,email,game,transaction_id,amount)
             session['user']=uid
-
+            subject = 'Payment Successful! From Doctors Olympiad 2023'
+            mail_with_atc(email,subject,html)
             
             flash('Payment Successful')
             return redirect(url_for('dashboard'))
