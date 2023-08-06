@@ -48,7 +48,7 @@ with mysql.connector.connect(host=host,user=user,password=password,db=db) as con
      #cursor.execute("ALTER TABLE temporary auto_increment=1000")
      #cursor.execute('ALTER TABLE register drop column status')
      #cursor.execute('ALTER TABLE temporary drop column status')
-     cursor.execute('alter table register auto_increment=230001')
+     #cursor.execute('alter table register auto_increment=230001')
      cursor.close()
 mydb=mysql.connector.connect(host=host,user=user,password=password,db=db,pool_name='DED',pool_size=30)
 
