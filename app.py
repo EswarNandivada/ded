@@ -771,7 +771,7 @@ def success():
                     </tr>
                 </table>
             </body>
-            </html>'''.format(uid,name,email,game,transaction_id,amount)
+            </html>'''%(uid,name,email,game,transaction_id,amount)
             session['user']=uid
             subject = 'Payment Successful! From Doctors Olympiad 2023'
             mail_with_atc(email,subject,html)
