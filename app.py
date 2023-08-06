@@ -44,8 +44,8 @@ with mysql.connector.connect(host=host,user=user,password=password,db=db) as con
      # cursor.execute("alter table payments modify amount decimal(8,3)")
      # cursor.execute("ALTER TABLE payments ADD status enum('pending','Successfull')  default 'pending' after amount")
      # cursor.execute("ALTER TABLE payments add transactionid bigint unsigned")
-     cursor.execute("create table temporary like register")
-     cursor.execute("ALTER TABLE temporary auto_increment=1000")
+     #cursor.execute("create table temporary like register")
+     #cursor.execute("ALTER TABLE temporary auto_increment=1000")
      cursor.close()
 mydb=mysql.connector.connect(host=host,user=user,password=password,db=db,pool_name='DED',pool_size=30)
 
