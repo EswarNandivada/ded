@@ -620,8 +620,6 @@ def payment(eid,game,amount):
     cursor = mydb.cursor(buffered=True)
     cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member FROM register WHERE id=%s", [eid])
     data1 = cursor.fetchall()
-    cursor.execute('SELECT status from register WHERE id=%s', [eid])
-    status=cursor.fetchone()[0]
     cursor.execute('SELECT email from register where id=%s',[eid])
     email=cursor.fetchone()[0]
     cursor.execute("select CONCAT(FirstName, ' ', LastName) AS FullName from register where id=%s",[eid])
