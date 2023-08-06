@@ -162,7 +162,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{url_for('payment',eid=eid,game=game)}}",
+                    url: "{{url_for('payment',eid=eid,game=game,amount=amount)}}",
                     success: function (response) {
                         // Hide buffering animation
                         $("#buffering").hide();
