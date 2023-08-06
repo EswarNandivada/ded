@@ -20,7 +20,7 @@
         margin-top: 50% !important;
     }
     .gap-2 .btn{
-        width:50%
+        width:50% !important;
     }
 }
 
@@ -100,22 +100,22 @@
                         <h3 class="text-center" id="hello">Login</h3>
                     </div>
                     <div class="card-body">
-                        <form>
+                        <form method="POST">
                             <div class="mb-3">
                                 <label for="email" class="form-label">User Name or Email address</label>
-                                <input type="email" class="form-control" id="email" required>
+                                <input type="email" name="email" class="form-control" id="email" required>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" required>
-                            </div><br />
+                                <input type="password" name="password" class="form-control" id="password" required>
+<!--                             </div><br />
                             <div>
                                 <input type="checkbox" /> Remember Me
-                            </div><br />
+                            </div><br /> -->
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn">Login</button>
                             </div><br />
-                            <a href="" class="link">
+                            <a href="{{url_for('forgot_password')}}" class="link">
                                 <p>Lost Your Password ?</p>
                             </a>
                         </form>
