@@ -230,27 +230,30 @@ font-weight: 500;
 <header>
     <nav class="new-navbar">
         <div class='nav-bar'>
-            <li class="logoimage"><a href="#"><img src="{{url_for('static', filename='images/logo.webp')}}" /></a></li>
+            <li class="logoimage"><a href="{{url_for('home')}}"><img src="{{url_for('static', filename='images/logo.webp')}}" /></a></li>
             <div>
                 <input type='checkbox' id='check' />
                 <span class="menu">
-                    <li class='logo'><a href='#'><img src="{{url_for('static', filename='images/logo.webp')}}" /></a></li>
-                    <li><a id="home" href="">Home</a></li>
+                    <li class='logo'><a href="{{url_for('home')}}"><img src="{{url_for('static', filename='images/logo.webp')}}" /></a></li>
+                    <li><a id="home" href="{{url_for('home')}}">Home</a></li>
                     <select class="form-select" aria-label="Default select example">
                         <option selected value="Managing commitee">COMMITTEE</option>
-                        <option>National Committee</option>
-                        <option value="India">IMA AP State Committee</option>
+                        <a href="{{url_for('ima_ap_state_committee')}}"><option>National Committee</option></a>
+                        <a href="{{url_for('national_committee')}}"><option value="India">IMA AP State Committee</option></a>
 
                     </select>
 
-                    <li><a href="">Rules</a></li>
-                    <li><a href="">Contact</a></li>
-                    <li><a href="">Schedule</a></li>
-                    <li><a href="">Games</a></li>
-                    <li><a href="">Login</a></li>
-                    <li><a href="">Games</a></li>
-                    <li><a href="">Login</a></li>
-                    <li><a class="registerBtn">Register</a></li>
+                    <li><a href="{{url_for('rules_nav')}}">Rules</a></li>
+                    <li><a href="{{url_for('contact')}}">Contact</a></li>
+                    <li><a href="{{url_for('venue_sports_schedule')}}">Schedule</a></li>
+                    <li><a href="{{url_for('games_subgames')}}">Games</a></li>
+                    {% if 'user' in session%}
+                    <li><a href="{{url_for('dashboard')}}">Dashboard</a></li>
+                    <li><a href="{{url_for('logout')}}">Logout</a></li>
+                    {% else %}
+                    <li><a href="{{url_for('login')}}">Login</a></li>
+                    <li><a class="registerBtn" href="#">Register</a></li>
+                    {% endif %}
                     <label for="check" class="close-menu"><i class="fas fa-times"></i></label>
                 </span>
                 <label for="check" class="open-menu"><i class="fas fa-bars"></i></label>
