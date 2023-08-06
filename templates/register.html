@@ -704,7 +704,7 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 													alert("Please enter the otp");
 													return false
 														}
-												$("#formregister").prop("disabled", true);
+												//$("#formregister").prop("disabled", true);
 												$("#buffering").show();
 												$.ajax({
 													type: "POST",
@@ -732,12 +732,12 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 														address:address,
 														dobfile:dobfile,
 													},
-													 processData: false,
-													contentType: false,
+													
 													success: function(response) {
+														alert("success fun")
 														console.log("respppppppppppppppppppppppppppppp",reponse,reponse.message,reponse.payment_url)
-														$("#buffering").hide();
-														$("#formregister").prop("disabled", false);
+														//$("#buffering").hide();
+														//$("#formregister").prop("disabled", false);
 														if (response.message!='success'){
 															alert(response.message);
 										                                  			}
