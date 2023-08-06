@@ -417,7 +417,6 @@ def register(user_accept):
             cursor.close()
             if count2 == 1:
                 message='Mobile number already exists.'
-
                 return jsonify({'message':message})
             if count1 == 1:
                 message='Email already in use'
@@ -425,7 +424,7 @@ def register(user_accept):
             cond=True if session.get('email') else False
             if cond!=True:
                 message='Please verify your email'
-                 return jsonify({'message':message})
+                return jsonify({'message':message})
             if session['otp']!=otp:
                 message='Invalid OTP'
                 return jsonify({'message':message})
