@@ -32,6 +32,8 @@ host=os.environ['RDS_HOSTNAME']
 port=os.environ['RDS_PORT']
 with mysql.connector.connect(host=host,user=user,password=password,db=db) as conn:
      cursor=conn.cursor(buffered=True)
+     cursor.execute('ALTER TABLE register drop column status')
+     cursor.execute('ALTER TABLE temporary drop column status')
      # cursor.execute("DROP TABLE games")
      cursor.execute("CREATE TABLE if not exists register (ID int NOT NULL AUTO_INCREMENT,FirstName varchar(25) DEFAULT NULL,LastName varchar(25) DEFAULT NULL,Email varchar(50) DEFAULT NULL,PASSWORD longblob,mobileno bigint DEFAULT NULL,age int DEFAULT NULL,gender varchar(10) DEFAULT NULL,DOB date DEFAULT NULL,city text,address text,state text,country text,degree varchar(10) DEFAULT NULL,MCI_ID varchar(20) DEFAULT NULL,member varchar(20) DEFAULT NULL,SHIRT_SIZE enum('S','M','L','XL','XXL','XXXL','XXXXL') DEFAULT NULL,acception varchar(30) DEFAULT 'No',status varchar(20) NOT NULL DEFAULT 'pending',PRIMARY KEY (ID),UNIQUE KEY Email (Email),UNIQUE KEY mobileno (mobileno))")
      cursor.execute("CREATE TABLE if not exists game (ID INT, game enum('ATHLETICS','ARCHERY','BADMINTON','BASKETBALL','BALL BADMINTON','CARROMS','CHESS','CYCLOTHON','JUMPS','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS','CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET','VOLLEY BALL','FOOTBALL','KHO KHO','KABADDI','THROW BALL','TUG OF WAR'),AMOUNT INT UNSIGNED)")
@@ -503,23 +505,8 @@ def login():
             # Check the hashed password with the entered password
             if bcrypt.check_password_hash(user[4], password):
                 # Log the user in by setting the 'user' in the session
-
-                # Check if the status is 'success'
-                if user[18] == 'success':
-                    session['user'] = user[0]
-                    flash('Login successful!', 'success')
                     return redirect(url_for('dashboard'))
                     # return('Ram ram')
-                else:
-                    cursor = mydb.cursor(buffered=True)
-                    cursor.execute('select id from register where email=%s', [email])
-                    eid=cursor.fetchone()[0]
-                    cursor.execute('SELECT game,amount FROM game where id=%s', [eid])
-                    game,amount=cursor.fetchone()
-                    cursor.close()
-                    # If the status is not 'success', redirect to the payment page
-                    return redirect(url_for('payment',game=game,eid=eid))
-
             else:
                 flash('Invalid password! Please try again.', 'error')
         else:
