@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+h{% extends "base.html" %}
 
 {% block style %}
 <style>
@@ -55,7 +55,7 @@
       </div>
       <div class="col-12 col-md-6">
         <h1 align="center" style="color:navy;margin-top: 2%;">REGISTER</h1>
-        <form class="register-new" style="background-color: rgba(206,238,255,0.7)" enctype="multipart/form-data">
+        <form method="POST" class="register-new" style="background-color: rgba(206,238,255,0.7)" enctype="multipart/form-data">
           <div class="container w-100 h-100">
             <div class="row">
 
@@ -88,7 +88,7 @@
               <div class="col-md-6 mb-4">
                 <div class="form-outline">
                   <label class="form-label" for="firstName">Password<span style="color: red;">*</span></label>
-                  <input type="text" name="password" id="password" class="form-control form-control-lg" placeholder="Enter Password" />
+                  <input type="password" name="password" id="password" class="form-control form-control-lg" placeholder="Enter Password" />
 
                 </div>
               </div>
