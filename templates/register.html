@@ -732,7 +732,7 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 													},
 													success: function(response) {
 														if (response.message!='success'){
-															alert(response);
+															alert(response.message);
 										                                  			}
 														else{
 															window.location.href=response.payment_url
