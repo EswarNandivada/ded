@@ -677,40 +677,28 @@ def success():
             cursor = mydb.cursor(buffered=True)
             cursor.execute('SELECT id,game from payments where ordid=%s',[ref])
             eid,game=cursor.fetchone()
-            cursor.execute('SELECT status from register WHERE id=%s', [eid])
-            status=cursor.fetchone()[0]
-            cursor.execute('select gender from register where id=%s',[eid])
-            gender=cursor.fetchone()[0]
-            if status=='pending':
-                cursor.execute('update register set status=%s WHERE ID=%s',['success',eid])
-                cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
-                mydb.commit()
-                if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
-                        category="Men's singles" if gender=='Male' else "Women's singles"
-                        cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
-                        mydb.commit()
-                        cursor.execute('select * from payments')
-                        details = cursor.fetchall()
-                        print(details)
-                cursor.close()
-                session['user']=eid
-                flash('Payment Successful !')
-                return redirect(url_for('dashboard'))
-            else:
-                cursor.execute('UPDATE  payments SET status=%s and amount=%s WHERE ordid=%s',['Successfull',amount,ref])
-                cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,game,amount])
-                mydb.commit()
-                if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
-                        category="Men's singles" if gender=='Male' else "Women's singles"
-                        cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,eid,category])
-                        mydb.commit()
-                        cursor.execute('select * from payments')
-                        details = cursor.fetchall()
-                        print(details)
-                cursor.close()
-                session['user']=eid
-                flash('Payment Successful')
-                return redirect(url_for('dashboard'))
+            #cursor.execute('SELECT status from register WHERE id=%s', [eid])
+            #status=cursor.fetchone()[0]
+            cursor.execute('select gender,email from temporary where id=%s',[eid])
+            gender,email=cursor.fetchone()[0]
+            cursor.execute('insert into register select * from temporary where id=%s',[eid])
+            mydb.commit()
+            cursor.execute('SELECT id from register where email=%s',[email])
+            uid=cursor.fetchone()[0]
+            cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s WHERE ordid=%s',['Successfull',amount,uid,ref])
+            cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
+            mydb.commit()
+            if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
+                 category="Men's singles" if gender=='Male' else "Women's singles"
+                 cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,uid,category])
+                 mydb.commit()
+                 cursor.execute('select * from payments')
+                 details = cursor.fetchall()
+                 print(details)
+             cursor.close()
+             session['user']=eid
+             flash('Payment Successful')
+             return redirect(url_for('dashboard'))
             # print(response)
             # Payment is successful
             # return render_template('thank-you.html')
