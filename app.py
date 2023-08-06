@@ -529,22 +529,29 @@ def generate_otp():
     # Handle the form data and generate OTP
     data = request.form
     email = data['email']
-    #address = data['address']
-    # Generate a random OTP (For simplicity, using a 6-digit OTP)
-    otp = ''.join(random.choices('0123456789', k=6))
-    print(otp)
-    if 'email' in session:
-        session.pop('email')
-        session.pop('otp')
-        session['email']=email
-        session['otp']=otp
+    cursor=mydb.cursor(buffered=True)
+    cursor.execute('select count(*) from register where email=%s',[email])
+    count=cursor.fetchone()[0]
+    cursor.close()
+    if count==0:
+        #address = data['address']
+        # Generate a random OTP (For simplicity, using a 6-digit OTP)
+        otp = ''.join(random.choices('0123456789', k=6))
+        print(otp)
+        if 'email' in session:
+            session.pop('email')
+            session.pop('otp')
+            session['email']=email
+            session['otp']=otp
+        else:
+            session['email']=email
+            session['otp']=otp
+        subject = 'Email Confirmation'
+        body = f"Your One Time Password for Registration is {otp}\n\nThanks & Regards\nIMA Doctors Olympiad"
+        sendmail(to=email, subject=subject, body=body)
+        return jsonify({'message': 'OTP has been sent to your email.OTP expires in 15 minutes.'})
     else:
-        session['email']=email
-        session['otp']=otp
-    subject = 'Email Confirmation'
-    body = f"Your One Time Password for Registration is {otp}\n\nThanks & Regards\nIMA Doctors Olympiad"
-    sendmail(to=email, subject=subject, body=body)
-    return jsonify({'message': 'OTP has been sent to your email.OTP expires in 15 minutes.'})
+        return jsonify({'message': 'Email already in use'})
 
 
 @app.route('/forgot_password', methods=['GET', 'POST'])
