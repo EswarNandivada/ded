@@ -683,6 +683,7 @@ def success():
         if payment_success_exec():
             ref = int(response['ReferenceNo'])
             amount = float(response['Total Amount'])
+            transaction_id = int(response['Unique Ref Number'])
             cursor = mydb.cursor(buffered=True)
             cursor.execute('SELECT id,game from payments where ordid=%s',[ref])
             eid,game=cursor.fetchone()
@@ -694,7 +695,7 @@ def success():
             mydb.commit()
             cursor.execute('SELECT id from register where email=%s',[email])
             uid=cursor.fetchone()[0]
-            cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s WHERE ordid=%s',['Successfull',amount,uid,ref])
+            cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s,transactionid=%s WHERE ordid=%s',['Successfull',amount,uid,ref,transaction_id])
             cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
             cursor.execute('DELETE FROM temporary where id=%s',[eid])
             mydb.commit()
