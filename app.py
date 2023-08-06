@@ -388,6 +388,7 @@ def register(user_accept):
     if user_accept=='Yes':
 
         if request.method == 'POST':
+            print(request.form)
             acception = user_accept
             fname = request.form['fname']
             lname = request.form['lname']
