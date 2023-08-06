@@ -704,6 +704,8 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 													alert("Please enter the otp");
 													return false
 														}
+												$("#formregister").prop("disabled", true);
+												$("#buffering").show();
 												$.ajax({
 													type: "POST",
 													url: "/register/Yes",
@@ -731,6 +733,8 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 														dobfile:dobfile,
 													},
 													success: function(response) {
+														$("#buffering").hide();
+														$("#formregister").prop("disabled", false);
 														if (response.message!='success'){
 															alert(response.message);
 										                                  			}
