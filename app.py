@@ -714,32 +714,7 @@ def success():
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Document</title>
-                <style>
-                    table{
-                        margin: auto;
-                    }
-                    img{
-                        margin-left: 30%;
-                    }
-                    h1{
-                        text-align: center;
-                    }
-                    table,tr,th,td{
-                        border:1px solid black;
-                        border-collapse: collapse;
-                    }
-                    th{
-                        text-align: left;
-                    }
-                    td{
-                        width:60%
-                    }
-                    @media (max-width:576px){
-                        h1{
-                            font-size: 1rem;
-                        }
-                    }
-                </style>
+                
             </head>
             <body>
                 <img src="{{url_for('static',filename='images/logo.webp'))}}" width="40%"/>
