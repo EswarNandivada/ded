@@ -710,51 +710,77 @@ def success():
                  print(details)
             cursor.close()
             
-            # html = '''
-            # <html lang="en">
-            # <head>
-            #     <meta charset="UTF-8">
-            #     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            #     <title>Document</title>
-                
-            # </head>
-            # <body>
-            #     <img src="{{url_for('static',filename='images/logo.webp'))}}" width="40%"/>
-            #     <h1>Thank you for Registering your details regarding Games</h1>
-            #     <table cellpadding="10">
-            #     <tr>
-            #             <th>ID</th>
-            #             <td>%(id)s</td>
-            #         </tr>
-            #         <tr>
-            #             <th>Name</th>
-            #             <td>%(name)s</td>
-            #         </tr>
-            #         <tr>
-            #             <th>Email</th>
-            #             <td>%(email)s</td>
-            #         </tr>
-            #         <tr>
-            #             <th>Game</th>
-            #             <td>%(game)s</td>
-            #         </tr>
-            #         <tr>
-            #             <th>Transaction ID</th>
-            #             <td>%(transaction_id)s</td>
-            #         </tr>
-            #         <tr>
-            #             <th>Payment</th>
-            #             <td>%(amount)s</td>
-            #         </tr>
-            #     </table>
-            # </body>
-            # </html>'''%(uid,name,email,game,transaction_id,amount)
+            html = f"""
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Registration Confirmation</title>
+                <style>
+                    table {{
+                        margin: auto;
+                    }}
+                    img {{
+                        margin-left: 30%;
+                    }}
+                    h1 {{
+                        text-align: center;
+                    }}
+                    table, tr, th, td {{
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                    }}
+                    th {{
+                        text-align: left;
+                    }}
+                    td {{
+                        width: 60%;
+                    }}
+                </style>
+            </head>
+            <body>
+                <img src="{{ url_for('static', filename='images/asdf.jpeg') }}" width="40%"/>
+                <h1>Thank you for Registering your details regarding Games</h1>
+                <table cellpadding="10">
+                    <tr>
+                        <th>ID</th>
+                        <td>{id}</td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td>{name}</td>
+                    </tr>
+                    <tr>
+                        <th>email</th>
+                        <td>{email}</td>
+                    </tr>
+                    <tr>
+                        <th>Game</th>
+                        <td>{game}</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <td>{transaction_id}</td>
+                    </tr>
+                    <tr>
+                        <th>Payment</th>
+                        <td>{amount}</td>
+                    </tr>
+                    <tr>
+                        <th>Payment ID</th>
+                        <td>{payment_id}</td>
+                    </tr>
+                </table>
+            </body>
+            </html>
+            """
             session['user']=uid
             # subject = 'Payment Successful! From Doctors Olympiad 2023'
             # mail_with_atc(email,subject,html)
             subject='Registration Successful for Doctors Olympiad 2023'
-            body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\nRegistered game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
-            sendmail(to=email, subject=subject, body=body)
+            # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\nRegistered game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
+            mail_with_atc(to=email, subject=subject, html=html)
             
             flash('Payment Successful')
             return redirect(url_for('dashboard'))
