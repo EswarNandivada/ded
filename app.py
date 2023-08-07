@@ -1245,10 +1245,109 @@ def registeredgame(game):
                 return "Updates are on the way"
             return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
           
+@app.route('/acceptrequest/<token>')
+def accept(token):
+    return "Updates are on the way"
+@app.route('/individualupdate/<game>',methods=['POST'])
+def individual_update(game): 
+    if session.get('user'):
+        input_value = request.form["inputValue"]
+        category=request.form['category']
+        print(category)
+        gender=request.form['gender']
+        message=check_individual(gender,input_value,game,category)
+        response = {'outputValue': message}
+        return jsonify(response)
+    else:
+        return redirect(url_for('login'))
 
+def update_teams(input_value,game,add_gender):
+    cursor=mydb.cursor(buffered=True)
+    if input_value.isdigit():
+        cursor.execute('select count(*) from register where id=%s',[input_value])
+        data=cursor.fetchone()[0]
+        message=''
+        if data==0:
+            message="Id not found"
+        else:
+            cond=True
+            cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[input_value,game,'Accept'])
+            count=cursor.fetchone()[0]
+            cursor.execute('SELECT gender from register where id=%s',[input_value])
+            gend=cursor.fetchone()[0]
+            if gend!=add_gender:
+                cond=False
+                message='User Gender doesnot match'
+            if int(input_value)==session.get('user'):
+                message='You cannot add yourself.'
+            if count>0:
+                cond=False
+                message='User Registered to other team'
+            cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[input_value,'Accept'])
+            count1=cursor.fetchone()[0]
+            if count1>1:
+                cond=False
+                message='User already Registered in two teams'
+            if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
+                cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[input_value,game,'Accept'])
+                cond=False
+                message='User already Registered in other cricket team'
+            if cond==True and  message!="You cannot add yourself.":
+                cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[input_value])
+                message=cursor.fetchone()[0]
+            
+        
+    else:
+        cursor=mydb.cursor(buffered=True)
+        cursor.execute('select count(*) from register where email=%s',[input_value])
+        data=cursor.fetchone()[0]
+        cursor.close()
+        message=''
+        if data==0:
+            message="User not found with this email id"
+        else:
+            cond=True
+            cursor.execute('SELECT id from register where Email=%s',[input_value])
+            eid=cursor.fetchone()[0]
+            cursor.execute('SELECT gender from register where id=%s',[input_value])
+            gend=cursor.fetchone()[0]
+            cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
+            count=cursor.fetchone()[0]
+            if gend!=add_gender:
+                cond=False
+                message='User Gender doesnot match'
+            if eid ==session.get('user'):
+                message='You cannot add yourself.'
+            if count>0:
+                cond=False
+                message='User Registered to other team'
+            cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[eid,'Accept'])
+            count1=cursor.fetchone()[0]
+            if count1>1:
+                cond=False
+                message='User already Registered in two teams'
+            if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
+                cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
+                cond=False
+                message='User already Registered in other cricket team'
+            if cond==True and message!='You cannot add yourself.':
+                cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[eid])
+                message=cursor.fetchone()[0]
+    cursor.close()
+    return message
 
-
-
+@app.route('/update/<game>', methods=['POST'])
+def update(game):
+    if session.get('user'):
+        input_value = request.form['inputValue']
+        add_gender=request.form['gender']
+        message=update_teams(input_value,game,add_gender)
+        # Here, you can perform any necessary processing with the input data.
+        # For simplicity, we'll just return the input value as the response.
+        response = {'outputValue': message}
+        return jsonify(response)
+    else:
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run()
