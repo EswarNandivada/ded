@@ -149,7 +149,7 @@ class Eazypay:
 def payment_success_exec():
     print(request.form)
     
-    if request.method == 'POST' and 'Total Amount' in request.form and request.form['Response Code'] == 'E008':
+    if request.method == 'POST' and 'Total Amount' in request.form and request.form['Response Code'] == 'E000':
         res = request.form
         
         # Same encryption key that we gave for generating the URL
