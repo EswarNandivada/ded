@@ -1237,9 +1237,9 @@ def registeredgame(game):
                                         subject=f'Team Request for {game}'
                                         body=f"Hello,\n\n Register to doctors olympiad and join our team by using this using the below url.\nPlease click on this link to join -{link}"
                                         sendmail(request.form[i],subject=subject,body=body)
-                         else:
-                             cursor.close()
-                             return jsonify({'message':'Success','url':url_for('dashboard',_external=True)})
+                        else:
+                            cursor.close()
+                            return jsonify({'message':'Success','url':url_for('dashboard',_external=True)})
             return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
         else:
             if request.method=='POST':
