@@ -6,7 +6,7 @@ import random
 from io import BytesIO
 from key import secret_key, salt, salt2
 from itsdangerous import URLSafeTimedSerializer
-from stoken import token
+from stoken import token,token2
 from cmail import sendmail,mail_with_atc
 import os
 import uuid
