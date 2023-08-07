@@ -27,4 +27,4 @@ def mail_with_atc(to,subject,html):
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
         server.login('datta@codegnan.com','nsvrdwpuefhlqawu')
-        server.sendmail(email_from, email_to, email_string)
+        server.sendmail('datta@codegnan.com', to, email_string)
