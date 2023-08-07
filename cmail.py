@@ -1,4 +1,6 @@
 import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from email.message import EmailMessage
 def sendmail(to,subject,body):
     server=smtplib.SMTP_SSL('smtp.gmail.com',465)
