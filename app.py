@@ -792,33 +792,6 @@ def success():
         # 'Response_Code' key is missing in the response
         return "Invalid response received from payment gateway."
 
-
-
-
-
-'''@app.route('/dashboard')
-def dashboard():
-    if session.get('user'):
-        cursor = mydb.cursor(buffered=True)
-        cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member, status FROM register WHERE id=%s", [session.get('user')])
-        user_data = cursor.fetchone()
-        cursor.execute("SELECT game, amount FROM game where id=%s", [session.get('user')])
-        game,amount = cursor.fetchone()
-        cursor.close()
-        
-
-        if user_data[5] == 'success':
-            # User has completed the payment successfully
-            return render_template('dashboard.html', user_data=user_data,game=game,amount=amount)
-        else:
-            # User hasn't completed the payment, redirect to the payment page
-            flash('Complete your payment to access the dashboard.', 'info')
-            return redirect(url_for('payment'))
-    else:
-        flash('You must log in to access the dashboard.', 'error')
-        return redirect(url_for('login'))'''
-
-
 @app.route('/sport/<game>',methods=['GET','POST'])
 def sport(game):
     if session.get('user'):
@@ -1196,76 +1169,84 @@ def registeredgame(game):
     #             pass
 
     #     return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
-    # else:
-    #     return render_template(f'/games-individual-team/Team/{game}.html',gender=gender)
+    else:
+        cursor=mydb.cursor(buffered=True)
+        cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[session.get('user'),game])
+        count=cursor.fetchone()[0]
+        if count==0:
+            if request.method=='POST':
+                for i in request.form:
+                    if i.startswith('output'):
+                        if request.form[i] in ("Id not found","User Gender doesnot match","User Registered to other team" ,'User already Registered in other cricket team','You cannot add yourself.','User already Registered in two teams'):
+                            return jsonify({'message':request.form[i]})
+                else:
+                    names=[]
+                    for i in request.form:
+                        if i.startswith('input'):
+                            if request.form[i].isdigit():
+                                uid=request.form[i]
+                                if uid not in names:
+                                    names.append(uid)
+                                else:
+                                    return jsonify({'message':"You added a person twice"})
+                            else:
+                                cursor.execute("SELECT id from register where email=%s",[request.form[i]])
+                                uid=cursor.fetchone()[0]
+                                if uid not in names:
+                                    names.append(uid)
+                                else:
+                                    return jsonify({'message':"You added a person twice"})
+                    else:
+                        team_id=genteamid()
+                        cursor.execute('INSERT INTO sub_games (game,id,team_number) values(%s,%s,%s)',[game,session.get('user'),team_id])                  
+                        mydb.commit()
+                        for i in request.form:
+                            if i.startswith('input'):
+                                if request.form[i].isdigit(): 
+                                    uid=request.form[i]
+                                    requestid=adotp()
+                                    cursor.execute("insert into teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
+                                    mydb.commit()
+                                    cursor.execute("SELECT email from register where id=%s",[uid])
+                                    r_email=cursor.fetchone()[0]
+                                    one_time_token=token2(team_id,requestid,salt=salt2)
+                                    link=url_for('accept',token=one_time_token,_external=True)
+                                    subject=f'Team Request for {game}'
+                                    body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
+                                    sendmail(r_email,subject=subject,body=body)
+                                else:
+                                    cursor.execute("SELECT count(*) from register where email=%s",[request.form[i]])
+                                    count=cursor.fetchone()[0]
+                                    if count!=0:
+                                        cursor.execute("SELECT id from register where email=%s",[request.form[i]])
+                                        uid=cursor.fetchone()[0]
+                                        requestid=adotp()
+                                        cursor.execute("insert into teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
+                                        mydb.commit()
+                                        one_time_token=token2(team_id,requestid,salt=salt2)
+                                        link=url_for('accept',token=one_time_token,_external=True)
+                                        subject=f'Team Request for {game}'
+                                        body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
+                                        sendmail(request.form[i],subject=subject,body=body)
+                                    else:
+                                        requestid=adotp()
+                                        cursor.execute("insert into teams (reqid,teamid,game) values(%s,%s,%s)",[requestid,team_id,game])
+                                        mydb.commit()
+                                        one_time_token=token2(team_id,requestid,salt=salt2,email=request.form[i])
+                                        link=url_for('accept',token=one_time_token,_external=True)
+                                        subject=f'Team Request for {game}'
+                                        body=f"Hello,\n\n Register to doctors olympiad and join our team by using this using the below url.\nPlease click on this link to join -{link}"
+                                        sendmail(request.form[i],subject=subject,body=body)
+                        cursor.close()
+                        return jsonify({'message':'Success','url':url_for('dashboard',_external=True)})
+            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
+        else:
+            if request.method=='POST':
+                return "Updates are on the way"
+            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
+          
 
 
-# @app.route('/pays')
-# def pays():
-#     return render_template('eazy.html')
-
-# @app.route('/checkout/order-pay/<nam>/<int:numbr>')
-# def paymentsss(nam,numbr):
-#     return render_template('payment_form.html')
-
-# def validate_form(amount):
-#     if amount < 0:
-#         return False
-#     return True
-
-
-# @app.route('/checkout/order-pay/<nam>/<int:numbr>', methods=['POST'])
-# def process_payment(nam,numbr):
-#     session['payer_name'] = request.form['payername']
-#     session['payer_phone'] = request.form['payerphone']
-#     session['payer_email'] = request.form['payeremail']
-#     amount = int(request.form['payeramount'])
-#     name = session['payer_name']
-#     email = session['payer_email']
-#     phone = session['payer_phone']
-
-#     if not validate_form(amount):
-#         return "Amount should be greater than Rs.10"
-
-#     # Create an instance of Eazypay with the encryption key
-#     eazypay_integration = Eazypay()
-
-#     # reference_no = 8001  # You can use a random number generator if you prefer
-#     reference_no = str(random.randint(100000, 999999))
-
-#     # Store the necessary data in the session to verify the payment later
-#     session['reference_no'] = reference_no
-#     session['amount'] = amount
-#     session['name'] = name
-#     session['email'] = email
-#     session['phone'] = phone
-
-#     payment_url = eazypay_integration.get_payment_url(reference_no, amount, name, email, phone)
-#     print(payment_url)
-    
-#     return redirect(payment_url)
-
-
-
-# @app.route('/purchase-summary/order-received/', methods=['POST'])
-# def response_handler():
-#     response = request.form.to_dict()
-#     print(response)
-#     response_code_value = response.get('Response Code','na')
-#     print(response_code_value)
-#     if response_code_value != 'na':
-#         if payment_success_exec():
-#             print(response)
-#             # Payment is successful
-#             return render_template('thank-you.html')
-#         else:
-#             # Payment failed, show failure message
-#             response_msg = get_response_message(response['Response Code'])
-#             print(response_msg)
-#             return f"Transaction failed. Error: {response_msg}"
-#     else:
-#         # 'Response_Code' key is missing in the response
-#         return "Invalid response received from payment gateway."
 
 
 
