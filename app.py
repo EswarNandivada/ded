@@ -767,10 +767,6 @@ def success():
                         <th>Payment</th>
                         <td>{amount}</td>
                     </tr>
-                    <tr>
-                        <th>Payment ID</th>
-                        <td>{payment_id}</td>
-                    </tr>
                 </table>
             </body>
             </html>
