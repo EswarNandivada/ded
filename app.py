@@ -753,7 +753,7 @@ def success():
             # subject = 'Payment Successful! From Doctors Olympiad 2023'
             # mail_with_atc(email,subject,html)
             subject='Registration Successful for Doctors Olympiad 2023'
-            body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\nunique reference id:{uid}\nName: {name}\nRegistered game: {game}\nTransaction id: {transaction_id}\n\nThanks and Regards\nDoctors Olympiad 2023\nContact:+91 9759634567'
+            body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\nRegistered game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
             sendmail(to=email, subject=subject, body=body)
             
             flash('Payment Successful')
