@@ -740,7 +740,7 @@ def success():
                 </style>
             </head>
             <body>
-                <img src="{{ url_for('static', filename='images/asdf.jpeg') }}" width="40%"/>
+                <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
                 <h1>Thank you for Registering your details regarding Games</h1>
                 <table cellpadding="10">
                     <tr>
