@@ -744,8 +744,8 @@ def success():
                 <h1>Thank you for Registering your details regarding Games</h1>
                 <table cellpadding="10">
                     <tr>
-                        <th>ID</th>
-                        <td>{id}</td>
+                        <th>UNIQUE REFERENCE ID</th>
+                        <td>{uid}</td>
                     </tr>
                     <tr>
                         <th>Name</th>
