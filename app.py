@@ -93,14 +93,14 @@ class Eazypay:
         merchant_ids = self.decrypt(self.get_sub_merchant_id())
         pay_modes = self.decrypt(self.get_paymode())
         encrypted_url = (
-            f"https://eazypayuat.icicibank.com/EazyPG?merchantid={self.merchant_id}"
+            f"https://eazypay.icicibank.com/EazyPG?merchantid={self.merchant_id}"
             f"&mandatory fields={mandatory_field}&optional fields={optional_field}"
             f"&returnurl={self.get_return_url()}&Reference No={reference_no}"
             f"&submerchantid={self.get_sub_merchant_id()}&transaction amount={amount}"
             f"&paymode={self.get_paymode()}"
         )
         decrypted_url = (
-            f"https://eazypayuat.icicibank.com/EazyPG?merchantid={self.merchant_id}"
+            f"https://eazypay.icicibank.com/EazyPG?merchantid={self.merchant_id}"
             f"&mandatory fields={mandatory_fields}&optional fields={optional_field}"
             f"&returnurl={return_urls}&Reference No={reference_nos}"
             f"&submerchantid={merchant_ids}&transaction amount={amounts}"
