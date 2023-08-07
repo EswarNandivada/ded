@@ -69,7 +69,7 @@ class Eazypay:
         self.encryption_key = b'3777003168901000'
         self.sub_merchant_id = '20'
         self.paymode = '9'
-        self.return_url = f'https://doctorsolympiad.com/purchase-summary/order-received'
+        self.return_url = 'https://doctorsolympiad.com/purchase-summary/order-received/'
 
     def get_payment_url(self, reference_no, amount,name,email, phone,optional_field=None):
         mandatory_field = self.get_mandatory_field(reference_no, amount,name,email,phone)
