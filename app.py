@@ -1470,7 +1470,7 @@ def update_teams(input_value,game,add_gender):
             cond=True
             cursor.execute('SELECT id from register where Email=%s',[input_value])
             eid=cursor.fetchone()[0]
-            cursor.execute('SELECT gender from register where id=%s',[input_value])
+            cursor.execute('SELECT gender from register where id=%s',[eid])
             gend=cursor.fetchone()[0]
             cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
             count=cursor.fetchone()[0]
