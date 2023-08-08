@@ -1133,7 +1133,7 @@ def registeredgame(game):
     cursor.execute('select email from register where id=%s',[session.get('user')])
     email_id=cursor.fetchone()[0]
     cursor.close()
-    if game in ('ARCHERY','CHESS','CYCLOTHON','TENNKOIT','THROW','ROWING','ROLLER_SKATING','FENCING'):
+    if game in ('ARCHERY','CHESS','CYCLOTHON','ROWING','ROLLER_SKATING','FENCING'):
         cursor = mydb.cursor(buffered=True)
         cursor.execute('select count(*) from sub_games where game=%s and id=%s',[game,session.get('user')])
         count = cursor.fetchone()[0]
