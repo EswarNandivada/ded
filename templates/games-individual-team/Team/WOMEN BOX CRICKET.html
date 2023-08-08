@@ -52,6 +52,14 @@ background-color: #fff;
     width:50vw !important;
     margin-left: -110% !important;
 }
+        /* Center the buffering animation in the middle of the page */
+        #buffering {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
 </style>
 
 {% endblock %}
@@ -59,12 +67,14 @@ background-color: #fff;
 
 
 {% block content %}
-
+<div id="buffering">
+		<i class="fas fa-spinner fa-spin fa-3x"></i>
+	</div>
 <nav aria-label="breadcrumb" style="margin-left: 5%; margin-top: 3%">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
         <li class="breadcrumb-item"><a href="#">Library</a></li>
-        <li class="breadcrumb-item active" aria-current="page">WOMEN BOX CRICKET</li>
+        <li class="breadcrumb-item active" aria-current="page">BALL BADMINTON</li>
     </ol>
 </nav>
 <section class="gamesSection">
@@ -73,7 +83,7 @@ background-color: #fff;
             <div class="col-12 col-lg-9 col-xl-7">
                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px" id="good">
                    <div class="god">
-                    <h1 style="font-size:50px">WOMEN BOX CRICKET</h1>
+                    <h1 style="font-size:50px">BALL BADMINTON</h1>
                     <h2 style="text-align: center;">Enter Team Details</h2>
 
                    </div>
@@ -193,7 +203,7 @@ background-color: #fff;
                                 </div>
                             </div>
                             <div class="mt-4 pt-2">
-                                <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
+                                <button class="btn btn-primary btn-lg" id="formregister">submit</button>
                             </div>
                         </form>
                     </div>
@@ -211,5 +221,111 @@ background-color: #fff;
 
 {% block script %}
 
+
+    <!-- Add more corresponding input tags here -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function autoSubmit(inputNumber) {
+            const inputValue = document.getElementById(`input${inputNumber}`).value;
+            // Here, you can perform any necessary processing on the inputValue before setting it in the output field.
+            // For simplicity, we'll just set it directly.
+            document.getElementById(`output${inputNumber}`).value = inputValue;
+
+            // Send the data to the Flask route using AJAX
+            $.ajax({
+                url: "{{url_for('update',game=game)}}",
+                method: 'POST',
+                data: {inputValue: inputValue,
+                    gender:"{{gender}}",
+                    },
+                success: function(response) {
+                    // Update the corresponding output field with the response from the server
+                    document.getElementById(`output${inputNumber}`).value = response.outputValue;
+                   
+                    document.getElementById(`output${inputNumber}`).readOnly=true
+
+                },
+                error: function(error) {
+                    // Handle errors if any
+                    console.error(error);
+                }
+            });
+        }
+    </script>
+	<script>
+		$(document).ready(function() {
+			// Handle form submission using AJAX
+			$("#formregister").click(function(event) {
+				event.preventDefault(); // Prevent default form submission
+
+				var input1 = $("#input1").val();
+				var output1 = $('#output1').val();
+				var input2 = $('#input2').val();
+				var output2 = $('#output2').val();
+				var input3 = $('#input3').val();
+				var output3 = $('#output3').val();
+				var input4 = $('#input4').val();
+				var output4 = $('#output4').val();
+				var input5 = $('#input5').val(); 
+				var output5 = $('#output5').val(); 
+				var input6 = $('#input6').val(); 
+				var output6 = $('#output6').val(); 
+				var input7 = $('#input7').val(); 
+				var output7 = $('#output7').val(); 
+                if (input1=="" || output1=="" || input2=="" || output2=="" || output3=="" || input3=="" || output4==""|| input4=="" ||input5==""|| output5=="" || output6=="" || input6=="" || output7=="" || input7=="")
+                {
+                    alert("Please fill all fields")
+                    return false;
+                }
+				else{
+                    
+				$("#formregister").prop("disabled", true);
+				$("#buffering").show();
+				$.ajax({
+					type: "POST",
+					url: "{{url_for('registeredgame',game=game)}}",
+					data: {
+						input1 : input1,
+						output1 : output1,
+						input2:input2,
+						output2 : output2,
+						input3 : input3,
+						output3 : output3,
+						input4 : input4,
+						output4: output4,
+						input5 : input5,
+						output5 : output5,
+						input6 : input6,
+						output6 :output6,
+						input7:input7,
+						output7:output7,
+					},
+					success: function(response) {
+						
+						
+						alert(response.message);
+						$("#buffering").hide();
+						$("#formregister").prop("disabled", false);
+
+
+						
+					},
+					error: function(err) {
+						// Hide buffering animation
+						$("#buffering").hide();
+						console.log(err);
+						$("#formregister").prop("disabled", false);
+
+
+						// Enable the "Generate OTP" button
+						//$("#generateOTP").prop("disabled", false);
+					}
+				});
+                }
+
+			});
+		});
+	</script>
 
 {% endblock %}
