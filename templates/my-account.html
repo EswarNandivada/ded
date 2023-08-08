@@ -369,7 +369,12 @@ wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
 							  <div class="shadow explorecards p-3 mb-3">
 								<img  src="{{url_for('static',filename=i[0]+'.webp')}}" alt="{{i[0]}}" class="exploreimage w-100"/>
 								<b>{{i[0]}}</b><br>
+								  {% if i[1]>=5000 %}
 								<a href="{{url_for('registeredgame',game=i[0])}}"><button class="btn">Select options</button></a>
+								{% else %}
+								  <a href="{{url_for('registeronteam')}}"><button class="btn">Select options</button></a>
+								{% endif %}
+
 							  </div>
 							</div>
 							{% endfor %}
