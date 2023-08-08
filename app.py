@@ -65,12 +65,12 @@ app.config['UPLOAD_FOLDERSS'] = os.path.join(os.path.dirname(os.path.abspath(__f
 bcrypt = Bcrypt(app)
 
 class Eazypay:
-    def __init__(self):
+    def __init__(self,return_url):
         self.merchant_id = '376890'
         self.encryption_key = b'3777003168901000'
         self.sub_merchant_id = '20'
         self.paymode = '9'
-        self.return_url = 'https://doctorsolympiad.com/success'
+        self.return_url = return_url
 
     def get_payment_url(self, reference_no, amount,name,email, phone,optional_field=None):
         mandatory_field = self.get_mandatory_field(reference_no, amount,name,email,phone)
@@ -560,7 +560,7 @@ def generate_otp():
             session['email']=email
             session['otp']=otp
         subject = 'Email Confirmation'
-        body = f"Your One Time Password for Registring to IMA Doctors Olympiad-2023 is: {otp}\n\nThanks & Regards\nIMA Doctors Olympiad"
+        body = f"Your One Time Password for Registring for IMA Doctors Olympiad is: {otp}\n\nThanks & Regards\nIMA Doctors Olympiad"
         sendmail(to=email, subject=subject, body=body)
         return jsonify({'message': 'OTP has been sent to your email.OTP expires in 15 minutes.'})
     else:
@@ -639,7 +639,7 @@ def payment(eid,game,amount):
     # print(payment_url)
     if request.method=='POST':
         ref=random.randint(1000000,99999999)
-        eazypay_integration = Eazypay()
+        eazypay_integration = Eazypay(url_for('success',_external=True))
         payment_url=eazypay_integration.get_payment_url(ref,amount,name,email,data1[0][3])
         cursor  = mydb.cursor(buffered=True)
         cursor.execute('select count(*) from games where game_name=%s',[game])
@@ -750,7 +750,7 @@ def success():
             </head>
             <body>
                 <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
-                <h1>Hi {name},Thanks for registering to {game} in Doctors Olympiad 2023.Your Payment details</h1>
+                <h1>>Hi {name},Thanks for registering to {game} in Doctors Olympiad 2023.Your Payment details</h1>
                 <table cellpadding="10">
                     <tr>
                         <th>UNIQUE REFERENCE ID</th>
@@ -989,9 +989,140 @@ def buyaddon(game):
          cursor.execute("SELECT amount from games where game_name=%s",[sport])
          amount=cursor.fetchone()[0]
          cursor.close()
-         return redirect(url_for('payment',eid=session.get('user'),game=game,amount=amount))
+         return redirect(url_for('addonpayment',eid=session.get('user'),game=game,amount=amount))
     else:
         return redirect(url_for('login'))
+@app.route('/addonpayment/<eid>/<game>/<amount>')
+def addonpayment(eid,game,amount):
+    cursor = mydb.cursor(buffered=True)
+    cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member FROM register WHERE id=%s", [eid])
+    data1 = cursor.fetchall()
+    cursor.execute('SELECT email from register where id=%s',[eid])
+    email=cursor.fetchone()[0]
+    cursor.execute("select CONCAT(FirstName, ' ', LastName) AS FullName from register where id=%s",[eid])
+    name=cursor.fetchone()[0]
+    # print(payment_url)
+    if request.method=='POST':
+        ref=random.randint(1000000,99999999)
+        eazypay_integration = Eazypay(url_for('addonsuccess',eid=eid,game=game,_external=True))
+        payment_url=eazypay_integration.get_payment_url(ref,amount,name,email,data1[0][3])
+        cursor  = mydb.cursor(buffered=True)
+        cursor.execute('insert into payments (ordid,id,game,amount) values(%s,%s,%s,%s)',[ref,eid,game,amount])
+        mydb.commit()
+        cursor.close()
+        return jsonify({'status':'success','payment_url':payment_url})
+    return render_template('payment.html', data1=data1,game=game,amount=amount,eid=eid,name=name,email=email)
+@app.route('/addonsuccess/<eid>/<game>',methods=['POST'])
+def addonsuccess(eid,game):
+    uid=eid
+    response = request.form.to_dict()
+    print(response)
+    response_code_value = response.get('Response Code','na')
+    print(response_code_value)
+    if response_code_value != 'na':
+        if payment_success_exec():
+            ref = int(response['ReferenceNo'])
+            amount = float(response['Total Amount'])
+            transaction_id = int(response['Unique Ref Number'])
+            cursor = mydb.cursor(buffered=True)
+            cursor.execute('select gender,email from register where id=%s',[uid])
+            gender,email=cursor.fetchone()
+            cursor.execute('SELECT concat(FirstName," ",LastName) as name from register where id=%s',[uid])
+            name=cursor.fetchone()[0]
+            cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s,transactionid=%s WHERE ordid=%s',['Successfull',amount,uid,transaction_id,ref])
+            cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
+            mydb.commit()
+            if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
+                 category="Men's singles" if gender=='Male' else "Women's singles"
+                 cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,uid,category])
+                 mydb.commit()
+                 cursor.execute('select * from payments')
+                 details = cursor.fetchall()
+                 print(details)
+            cursor.close()
+            
+            html = f"""
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Registration Confirmation</title>
+                <style>
+                    table {{
+                        margin: auto;
+                    }}
+                    img {{
+                        margin-left: 30%;
+                    }}
+                    h1 {{
+                        text-align: center;
+                    }}
+                    table, tr, th, td {{
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                    }}
+                    th {{
+                        text-align: left;
+                    }}
+                    td {{
+                        width: 60%;
+                    }}
+                </style>
+            </head>
+            <body>
+                <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
+                <h1>>Hi {name},Thanks for registering to {game} in Doctors Olympiad 2023.Your Payment details</h1>
+                <table cellpadding="10">
+                    <tr>
+                        <th>UNIQUE REFERENCE ID</th>
+                        <td>{uid}</td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td>{name}</td>
+                    </tr>
+                    <tr>
+                        <th>email</th>
+                        <td>{email}</td>
+                    </tr>
+                    <tr>
+                        <th>Game</th>
+                        <td>{game}</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <td>{transaction_id}</td>
+                    </tr>
+                    <tr>
+                        <th>Payment</th>
+                        <td>{amount}</td>
+                    </tr>
+                </table>
+            </body>
+            </html>
+            """
+            session['user']=uid
+            # subject = 'Payment Successful! From Doctors Olympiad 2023'
+            # mail_with_atc(email,subject,html)
+            subject='Registration Successful for Doctors Olympiad 2023'
+            # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\nRegistered game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
+            mail_with_atc(to=email, subject=subject, html=html)
+            
+            flash('Payment Successful')
+            return redirect(url_for('dashboard'))
+            # print(response)
+            # Payment is successful
+            # return render_template('thank-you.html')
+        else:
+            # Payment failed, show failure message
+            response_msg = get_response_message(response['Response Code'])
+            print(response_msg)
+            return f"<h1>Transaction failed. Error: {response_msg}</h1>"
+    else:
+        # 'Response_Code' key is missing in the response
+        return "Invalid response received from payment gateway."
+     
 @app.route('/registeredgame/<game>',methods=['GET','POST'])
 def registeredgame(game):
     cursor = mydb.cursor(buffered=True)
