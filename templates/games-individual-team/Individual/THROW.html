@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block style %}
+<style>
+        section {
+            display: flex;
+            flex-direction: row;
+        }
+
+        body {
+            background-color: #ecf8ff;
+        }
+
+        #imp {
+            background-color: #ecf8ff !important;
+        }
+
+        #good {
+            border: none !important;
+            border-color: #ecf8ff !important;
+        }
+
+        h1 {
+            background-color: #ecf8ff;
+            font-size: 70px;
+
+            color: #1c244b;
+        }
+
+        h4 {
+            background-color: #ecf8ff;
+            font-size: 30px;
+
+            color: #1c244b;
+        }
+
+        h2 {
+            background-color: #ecf8ff;
+        }
+
+        .foot {
+            background-color: #fff;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+      {% endblock %}
+
+
+      {% block content %}
+
+    <section class="gamesSection">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-12 col-md-6 col-lg-6">
+                    <h1>Throw</h1>
+
+                    <h4>Select Category</h4>
+                    <form>
+
+
+                        <label for="checkbox2">Discus Throw</label>
+                        <input type="checkbox" id="checkbox1">
+
+
+                        <br>
+                        <label for="checkbox1">Javelin Throw</label>
+                        <input type="checkbox" id="checkbox2"><br />
+
+                        <br>
+                        <label for="checkbox1">Shot Put Throw</label>
+                        <input type="checkbox" id="checkbox3"><br />
+
+                        <button class="btn btn-primary" style="margin-top: 3%;">Submit</button>
+                        <br>
+                    </form>
+                    <!-- Divs to hold the input fields -->
+
+
+
+                    <script>
+                        // Get references to the checkboxes and input fields
+                        const checkbox1 = document.getElementById('checkbox1');
+                        const checkbox2 = document.getElementById('checkbox2');
+                        const checkbox3 = document.getElementById('checkbox3');
+                        const inputField1 = document.getElementById('inputField1');
+                        const inputField2 = document.getElementById('inputField2');
+                        const inputField3 = document.getElementById('inputField3');
+
+
+                        // Add event listeners to the checkboxes
+                        checkbox1.addEventListener('change', function () {
+                            // If checkbox1 is checked, show its corresponding input field
+                            if (checkbox1.checked) {
+                                inputField1.classList.remove('hidden');
+                            } else {
+                                inputField1.classList.add('hidden');
+                            }
+                        });
+
+                        checkbox2.addEventListener('change', function () {
+                            // If checkbox2 is checked, show its corresponding input field
+                            if (checkbox2.checked) {
+                                inputField2.classList.remove('hidden');
+                            } else {
+                                inputField2.classList.add('hidden');
+                            }
+                        });
+
+                        checkbox3.addEventListener('change', function () {
+                            // If checkbox3 is checked, show its corresponding input field
+                            if (checkbox3.checked) {
+                                inputField3.classList.remove('hidden');
+                            } else {
+                                inputField3.classList.add('hidden');
+                            }
+                        });
+
+
+                        // Function to append the input fields before the checkboxes
+                        function appendInputFields() {
+                            const container = document.body; // You can change this to any other container element if needed
+                            container.insertBefore(inputField1, checkbox1);
+                            container.insertBefore(inputField2, checkbox2);
+                            container.insertBefore(inputField3, checkbox3);
+
+                        }
+
+                        // Call the appendInputFields function initially to move the input fields before the checkboxes
+                        appendInputFields();
+
+                    </script>
+                </div>
+                <div class="col-12 col-md-6 col-lg-6">
+                    <img src="images/IMA  LOGO  Page Design (1).png" height="100%" width="100%" class="mt-1" />
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+    </section>
+    {% endblock %}
+      {% block script %}
+      {% endblock %}
