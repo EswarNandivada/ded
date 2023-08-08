@@ -1461,10 +1461,8 @@ def update_teams(input_value,game,add_gender):
             
         
     else:
-        cursor=mydb.cursor(buffered=True)
         cursor.execute('select count(*) from register where email=%s',[input_value])
         data=cursor.fetchone()[0]
-        cursor.close()
         message=''
         if data==0:
             message="User not found with this email id"
