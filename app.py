@@ -1004,6 +1004,7 @@ def addonpayment(eid,game,amount):
     # print(payment_url)
     if request.method=='POST':
         ref=random.randint(1000000,99999999)
+        print(url_for('addonsuccess',eid=eid,game=game,_external=True))
         eazypay_integration = Eazypay(url_for('addonsuccess',eid=eid,game=game,_external=True))
         payment_url=eazypay_integration.get_payment_url(ref,amount,name,email,data1[0][3])
         cursor  = mydb.cursor(buffered=True)
