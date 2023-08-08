@@ -560,7 +560,7 @@ def generate_otp():
             session['email']=email
             session['otp']=otp
         subject = 'Email Confirmation'
-        body = f"Your One Time Password for Registration is {otp}\n\nThanks & Regards\nIMA Doctors Olympiad"
+        body = f"Your One Time Password for Registring for IMA Doctors Olympiad is: {otp}\n\nThanks & Regards\nIMA Doctors Olympiad"
         sendmail(to=email, subject=subject, body=body)
         return jsonify({'message': 'OTP has been sent to your email.OTP expires in 15 minutes.'})
     else:
