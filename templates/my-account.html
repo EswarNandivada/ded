@@ -145,7 +145,7 @@ color: grey;
                 <img src="{{url_for('static',filename=i[0]+'.webp')}}" class="card-img-top p-2" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{i[0]}}</h5>
-                    <a href="{{url_for('buyaddon')}}" class="btn btn-primary">Select Options</a>
+                    <a href="{{url_for('buyaddon',game=i[0])}}" class="btn btn-primary">Select Options</a>
                 </div>
             </div>
             {% endfor %}
@@ -160,7 +160,7 @@ color: grey;
                     <img src="{{url_for('static',filename=i[0]+'.webp')}}" class="card-img-top p-2" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">{{i[0]}}</h5>
-                        <a href="{{url_for('buyaddon')}}" class="btn btn-primary">Select Options</a>
+                        <a href="{{url_for('buyaddon',game=i[0])}}" class="btn btn-primary">Select Options</a>
                         </div>
                     </div>
                 {% endfor %}
