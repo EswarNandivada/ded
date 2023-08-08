@@ -849,7 +849,7 @@ def dashboard():
         cursor = mydb.cursor(buffered=True)
         cursor.execute('SELECT game_name from games where game_name not in (select game from game where id=%s)',[session.get('user')])
         add_games=cursor.fetchall()
-        cursor.execute('SELECT game from game where id=%s',[session.get('user')])
+        cursor.execute('SELECT game,amount from game where id=%s',[session.get('user')])
         games=cursor.fetchall()
         cursor.close()
         '''cursor.execute('select count(*) from game where game=%s and id=%s',[game,session.get('user')])
