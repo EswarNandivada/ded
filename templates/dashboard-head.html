@@ -101,17 +101,17 @@ text-align: center!important;
         <div class="dashboard-games">
             <select onchange="location = this.value;">
                 <option selected>Games</option>
-                <option value="#">Payments</option>
+                <option value="{{ url_for('payment_orders') }}">Payments</option>
                 <option value="#">Your Requests</option>
                 <option value="#">Invitations</option>
-                <option value="#">Individuals</option>
+                <option value="{{ url_for('individual') }}">Individuals</option>
                 <option value="#">Teams Games</option>
             </select>
             <i class="fa-solid fa-caret-down"></i>
         </div>
     </div>
     <div class="col-12 col-lg-6 col-xl-2">
-        <a href="#">
+        <a href="{{ url_for('edit_profile') }}">
             <h1 class="p-2">Profile</h1>
         </a>
     </div>
