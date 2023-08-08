@@ -560,7 +560,7 @@ def generate_otp():
             session['email']=email
             session['otp']=otp
         subject = 'Email Confirmation'
-        body = f"Your One Time Password for Registring for IMA Doctors Olympiad is: {otp}\n\nThanks & Regards\nIMA Doctors Olympiad"
+        body = f"Your One Time Password for Registring to IMA Doctors Olympiad-2023 is: {otp}\n\nThanks & Regards\nIMA Doctors Olympiad"
         sendmail(to=email, subject=subject, body=body)
         return jsonify({'message': 'OTP has been sent to your email.OTP expires in 15 minutes.'})
     else:
@@ -750,7 +750,7 @@ def success():
             </head>
             <body>
                 <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
-                <h1>>Hi {name},Thanks for registering to {game} in Doctors Olympiad 2023.Your Payment details</h1>
+                <h1>Hi {name},Thanks for registering to {game} in Doctors Olympiad 2023.Your Payment details</h1>
                 <table cellpadding="10">
                     <tr>
                         <th>UNIQUE REFERENCE ID</th>
