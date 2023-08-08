@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, render_template, url_for, flash,session,abort,jsonify
 import flask_excel as excel
 from flask_session import Session
+from teamuniqueid import genteamid,adotp
 import mysql.connector
 import random
 from io import BytesIO
@@ -1352,12 +1353,15 @@ def registeredgame(game):
                                 else:
                                     return jsonify({'message':"You added a person twice"})
                             else:
-                                cursor.execute("SELECT id from register where email=%s",[request.form[i]])
-                                uid=cursor.fetchone()[0]
-                                if uid not in names:
-                                    names.append(uid)
-                                else:
-                                    return jsonify({'message':"You added a person twice"})
+                                cursor.execute("SELECT count(*) from register where email=%s",[request.form[i]])
+                                count=cursor.fetchone()[0]
+                                if count!=0:
+                                    cursor.execute("SELECT id from register where email=%s",[request.form[i]])
+                                    uid=cursor.fetchone()[0]
+                                    if uid not in names:
+                                        names.append(uid)
+                                    else:
+                                        return jsonify({'message':"You added a person twice"})
                     else:
                         team_id=genteamid()
                         cursor.execute('INSERT INTO sub_games (game,id,team_number) values(%s,%s,%s)',[game,session.get('user'),team_id])                  
