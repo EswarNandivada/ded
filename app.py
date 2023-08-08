@@ -1457,8 +1457,10 @@ def update_teams(input_value,game,add_gender):
                 message='User already Registered in two teams'
             if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
                 cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[input_value,game,'Accept'])
-                cond=False
-                message='User already Registered in other cricket team'
+                count2=cursor.fetchone()[0]
+                if count2!=0:
+                    cond=False
+                    message='User already Registered in other cricket team'
             if cond==True and  message!="You cannot add yourself.":
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[input_value])
                 message=cursor.fetchone()[0]
@@ -1493,8 +1495,10 @@ def update_teams(input_value,game,add_gender):
                 message='User already Registered in two teams'
             if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
                 cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
-                cond=False
-                message='User already Registered in other cricket team'
+                count2=cursor.fetchone()[0]
+                if count2!=0:
+                    cond=False
+                    message='User already Registered in other cricket team'
             if cond==True and message!='You cannot add yourself.':
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[eid])
                 message=cursor.fetchone()[0]
