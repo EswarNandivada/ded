@@ -855,10 +855,13 @@ def dashboard():
     print(session.get('user'))
     if session.get('user'):
         cursor = mydb.cursor(buffered=True)
-        cursor.execute('SELECT game_name from games where game_name not in (select game from game where id=%s)',[session.get('user')])
-        add_games=cursor.fetchall()
+        cursor.execute("SELECT game_name from games where game_name not in (select game from game where id=%s and game in ('ATHLETICS','ARCHERY','BADMINTON','CARROMS','CHESS','CYCLOTHON','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS'))",[session.get('user')])
+        add_individual_games=cursor.fetchall()
+        cursor.execute("SELECT game_name from games where game_name not in (select game from game where id=%s and game not in ('ATHLETICS','ARCHERY','BADMINTON','CARROMS','CHESS','CYCLOTHON','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS'))",[session.get('user')])
+        add_teams_games=cursor.fetchall()
         cursor.execute('SELECT game,amount from game where id=%s',[session.get('user')])
         games=cursor.fetchall()
+        
         cursor.close()
         '''cursor.execute('select count(*) from game where game=%s and id=%s',[game,session.get('user')])
         count = cursor.fetchone()[0]
@@ -867,7 +870,7 @@ def dashboard():
         cursor.execute('select email from register where id=%s',[session.get('user')])
         email_id=cursor.fetchone()[0]
         cursor.close()'''
-        return render_template('my-account.html',games=games,add_games=add_games)
+        return render_template('my-account.html',games=games,add_individual_games=add_individual_games,add_teams_games=add_teams_games)
     else:
         return redirect(url_for('login'))
 @app.route('/edit',methods=['GET','POST'])
