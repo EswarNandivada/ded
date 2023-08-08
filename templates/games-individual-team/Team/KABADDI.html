@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+
+{% block style %}
+<style>
+section {
+display: flex;
+flex-direction: row;
+}
+body {
+background-color: #ecf8ff;
+}
+
+.gamesSection{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+#imp {
+background-color: #ecf8ff !important;
+}
+#good {
+border: none !important;
+border-color: #ecf8ff !important ;
+}
+h1 {
+
+font-size: 60px !important;
+
+color: #1c244b;
+text-align: center;
+}
+h2 {
+
+}
+.foot {
+background-color: #fff;
+}
+@media screen and (max-width:768px){
+   .classs{
+     margin-left: 3% !important;
+   }
+   .imageries{
+    display: none !important;
+   }
+}
+.god{
+    background-color:#ecf8ff !important;
+}
+#badminton{
+    width:50vw !important;
+    margin-left: -110% !important;
+}
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<nav aria-label="breadcrumb" style="margin-left: 5%; margin-top: 3%">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Library</a></li>
+        <li class="breadcrumb-item active" aria-current="page">KABADDI</li>
+    </ol>
+</nav>
+<section class="gamesSection">
+    <div class="container py-5 h-100 col-12 col-lg-9 classs" style="margin-left: -15%;">
+        <div class="row justify-content-center align-items-center h-100 ">
+            <div class="col-12 col-lg-9 col-xl-7">
+                <div class="card shadow-2-strong card-registration" style="border-radius: 15px" id="good">
+                   <div class="god">
+                    <h1 style="font-size:50px">KABADDI</h1>
+                    <h2 style="text-align: center;">Enter Team Details</h2>
+
+                   </div>
+                    <div class="card-body p-2 p-md-5" id="imp">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="input1" name="input1" oninput="autoSubmit(1)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="output1" name="output1"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="lastName">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <input type="Details" id="input2" name="input2" oninput="autoSubmit(2)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="DetailsAddress">Enter Details or unique
+                                            Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <input type="tel" id="output2" name="n3" class="form-control form-control-lg" />
+                                        <label class="form-label" for="phoneNumber">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="input3" name="n4" oninput="autoSubmit(3)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="output3" name="n5"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="lastName">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <input type="Details" id="input4" name="n6" oninput="autoSubmit(4)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="DetailsAddress">Enter Details or unique
+                                            Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <input type="tel" id="output4" name="n7" class="form-control form-control-lg" />
+                                        <label class="form-label" for="phoneNumber">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="input5" name="n8" oninput="autoSubmit(5)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="output5" name="n9"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="lastName">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <input type="Details" id="input6" name="n10" oninput="autoSubmit(6)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="DetailsAddress">Enter Details or unique
+                                            Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <input type="tel" id="output6" name="n11"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="phoneNumber">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="input7" name="n12" oninput="autoSubmit(7)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="output7" name="n13"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="lastName">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="input8" name="n14" oninput="autoSubmit(8)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="output8" name="15"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="lastName">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="input9" name="n16" oninput="autoSubmit(9)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="output9" name="n17"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="lastName">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="input10" name="n16" oninput="autoSubmit(10)"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="output10" name="n17"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="lastName">Details</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-2">
+                                <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="imageries col-12 col-lg-3" style=" margin-top:10%">
+        <img src="{{url_for('static', filename='images/IMA  LOGO  Page Design.png')}}"  alt="imageries" id="badminton"/>
+    </div>
+</section>
+
+
+{% endblock %}
+
+{% block script %}
+
+
+{% endblock %}
