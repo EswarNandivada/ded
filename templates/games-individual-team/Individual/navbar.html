@@ -1,0 +1,389 @@
+<style>
+    /*headerrrrrrrrr*/
+    .new-navbar .nav-bar {
+        display: flex;
+        align-items: center;
+        /* Align items vertically centered */
+        justify-content: space-between;
+        /* Distribute items horizontally */
+        list-style: none;
+        color: black;
+        font-weight: 500;
+        padding: 12px 20px;
+        box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.4);
+    }
+
+    .logoimage {
+        flex: 0 0 30%;
+        /* Set the width of the logo container */
+    }
+
+    .new-navbar .logoimage img {
+        width: 100%;
+        display: block;
+        /* Remove any extra spacing around the image */
+    }
+
+
+    .menu .logo {
+        display: none;
+    }
+
+    .new-navbar .menu {
+        display: flex;
+    }
+
+    .new-navbar .menu li {
+        padding-left: 10px;
+    }
+
+    .new-navbar .menu li a {
+        display: inline-block;
+        text-decoration: none;
+        color: var(--color1);
+        text-align: center;
+        transition: 0.15s ease-in-out;
+        position: relative;
+        text-transform: uppercase;
+    }
+
+    .new-navbar .menu li a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background-color: var(--color1);
+        transition: 0.15s ease-in-out;
+    }
+
+    .new-navbar .menu li a:hover:after {
+        width: 100%;
+    }
+
+    .new-navbar .open-menu,
+    .close-menu {
+        position: absolute;
+        color: var(--color1);
+        cursor: pointer;
+        font-size: 1.5rem;
+        display: none;
+    }
+
+    .new-navbar a:hover {
+        text-decoration: underline !important;
+        padding: 2% !important;
+    }
+
+    .new-navbar .open-menu {
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+    }
+
+    .new-navbar select {
+        width: 20%;
+        margin: 0% 2%;
+        font-weight: 500;
+        border: none;
+        margin-top: -1%;
+    }
+
+    .new-navbar .close-menu {
+        top: 20px;
+        right: 20px;
+    }
+
+    .new-navbar #check {
+        display: none;
+    }
+
+    .new-navbar .registerBtn {
+        margin-top: -1%;
+        margin-left: 10%;
+        display: inline-block;
+        padding: 5px 20px;
+        justify-content: center;
+        text-align: center;
+        text-decoration: none;
+        color: #000;
+        background-color: #003B7D;
+        color: white !important;
+        border-radius: 2px;
+        animation: scaleAnimation 2s infinite;
+    }
+
+    @keyframes scaleAnimation {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+            /* You can adjust the scale factor as per your preference */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .new-navbar .logoimage img {
+            width: 210% !important;
+        }
+
+        .custom-dropdown {
+            display: block;
+            padding: 0px 10px 0px 10px;
+            background-color: transparent;
+            color: white;
+            /* border: 1px solid white; */
+            /* border-radius: 4px; */
+        }
+    }
+
+    @media (max-width: 992px) {
+        .new-navbar select {
+            width: 70%;
+            margin-left: 8%;
+        }
+
+        .new-navbar .menu li:not(:last-child)::after {
+            /* content: "|";
+    position: absolute;
+    top: 33%;
+    margin-left: 10px;
+    margin-right: 10px; */
+            /* right: -17px; Adjust the spacing as needed */
+            /* transform: translateY(-50%);
+    color: var(--color1);
+     Use the desired color */
+            display: none;
+        }
+
+        .custom-dropdown {
+            display: block;
+            padding: 0px 10px 0px 10px;
+            background-color: transparent;
+            color: white;
+            /* border: 1px solid white; */
+            /* border-radius: 4px; */
+        }
+
+        .new-navbar a {
+            color: white !important;
+        }
+
+        .new-navbar .registerBtn {
+            background-color: transparent;
+            border: 1px solid white
+        }
+
+        .new-navbar .nav-bar {
+
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            position: relative;
+            color: black;
+            font-weight: 700;
+            padding: 12px 20px;
+        }
+
+        .logoimage {
+            width: 30%
+        }
+
+        .new-navbar .logoimage img {
+            width: 150%;
+        }
+
+        .new-navbar .menu {
+            flex-direction: column;
+            align-items: flex-start;
+            width: 60%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            z-index: 100;
+            background-color: #003B7D;
+            transition: all 0.2s ease-in-out;
+        }
+
+
+        .new-navbar .menu li {
+            margin-top: 10px;
+
+        }
+
+        .new-navbar .menu li a {
+            padding: 10px;
+        }
+
+        .new-navbar .open-menu,
+        .close-menu {
+            display: block;
+        }
+
+        .new-navbar .close-menu {
+            color: white !important;
+        }
+
+        #check:checked~.menu {
+            right: 0;
+        }
+
+        .menu .logo {
+            display: none;
+        }
+
+        .new-navbar #home {
+            margin-top: 100%
+        }
+
+    }
+
+    .subFooter a {
+        text-decoration: none;
+        font-size: 1rem !important;
+        color: white
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .custom-dropdown {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+
+    }
+
+    .custom-dropdown {
+        display: block;
+        padding: 0px 10px 0px 10px;
+        background-color: transparent;
+        /* color: white; */
+        /* border: 1px solid white; */
+        /* border-radius: 4px; */
+    }
+
+    .custom-dropdown .dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        background-color: #003B7D;
+        display: none;
+        z-index: 100;
+        color: white;
+    }
+
+    .custom-dropdown.open .dropdown-list {
+        display: block;
+    }
+
+    .custom-dropdown .dropdown-list li {
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .custom-dropdown .dropdown-list li:hover {
+        background-color: #002356;
+        color: white;
+    }
+
+    .new-navbar .menu li {
+        padding-left: 10px;
+        position: relative;
+    }
+
+    /* .new-navbar .menu li:not(:last-child)::after {
+    content: "|";
+    position: absolute;
+    top: 33%;
+    margin-left: 10px;
+    margin-right: 10px;
+    right: -17px; /* Adjust the spacing as needed */
+    /* transform: translateY(-50%);
+    color: var(--color1); */
+    /* Use the desired color
+    } */
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Include Font Awesome icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!--navbar-->
+<header>
+    <nav class="new-navbar">
+        <div class='nav-bar'>
+            <li class="logoimage"><a href="{{url_for('home')}}"><img
+                        src="{{url_for('static', filename='images/logo.webp')}}" /></a></li>
+            <div>
+                <input type='checkbox' id='check' />
+                <span class="menu">
+                    <li class='logo'><a href="{{url_for('home')}}"><img
+                                src="{{url_for('static', filename='images/logo.webp')}}" /></a>
+                    </li>
+                    <li><a id="home" href="{{url_for('home')}}">Home</a></li>
+                    <li>
+                        <div class="custom-dropdown">
+                            <span>COMMITTEE</span>
+                            <ul class="dropdown-list">
+                                <a href="{{url_for('ima_ap_state_committee')}}">
+                                    <li data-value="National Committee">National Committee</li>
+                                </a>
+                                <a href="{{url_for('national_committee')}}">
+                                    <li data-value="IMA AP State Committee">IMA AP State Committee</li>
+                                </a>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><a href="{{url_for('rules_nav')}}">Rules</a></li>
+                    <li><a href="{{url_for('contact')}}">Contact</a></li>
+                    <li><a href="{{url_for('venue_sports_schedule')}}">Schedule</a></li>
+                    <li><a href="{{url_for('games_subgames')}}">Games</a></li>
+                    {% if 'user' in session%}
+                    <li><a href="{{url_for('dashboard')}}">Dashboard</a></li>
+                    <li><a href="{{url_for('logout')}}">Logout</a></li>
+                    {% else %}
+                    <li><a href="{{url_for('login')}}">Login</a></li>
+                    <li><a class="registerBtn" href="#">Register</a></li>
+                    {% endif %}
+                    <label for="check" class="close-menu"><i class="fas fa-times"></i></label>
+                </span>
+                <label for="check" class="open-menu"><i class="fas fa-bars"></i></label>
+            </div>
+        </div>
+    </nav>
+</header>
+<script>
+    $(document).ready(function () {
+        $('.custom-dropdown').click(function (event) {
+            event.stopPropagation(); // Prevent event from reaching the body
+            $(this).toggleClass('open');
+        });
+
+        // Close the dropdown when clicking outside of it
+        $(document.body).click(function (event) {
+            if (!$('.custom-dropdown').is(event.target) && $('.custom-dropdown').has(event.target).length === 0) {
+                $('.custom-dropdown').removeClass('open');
+            }
+        });
+
+        $('.dropdown-list li').click(function () {
+            var selectedValue = $(this).attr('data-value');
+            $('.selected-option').text(selectedValue);
+            $('.custom-dropdown').removeClass('open');
+        });
+    });
+</script>
