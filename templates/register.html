@@ -58,7 +58,7 @@
         </div>
         <div class="col-12 col-md-6">
             <h1 align="center" style="color:navy;margin-top: 2%;">REGISTER</h1>
-            <form method="POST" class="register-new" style="background-color: rgba(206,238,255,0.7)" enctype="multipart/form-data">
+            <form class="register-new" style="background-color: rgba(206,238,255,0.7)" enctype="multipart/form-data" method="POST">
                 <div class="container w-100 h-100">
                     <div class="row">
 
@@ -95,10 +95,10 @@
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" for="firstName">Password - must be 8 characters<span
+                                <label class="form-label" id="passcodetext" for="firstName">Password<span
                                         style="color: red;">*</span></label>
-                                <input type="password" name="password" minlength="8" id="password" class="form-control form-control-lg"
-                                    placeholder="Enter Password" required/>
+                                <input type="password" name="password" id="password" class="form-control form-control-lg"
+                                    placeholder="Enter Password" onkeyup="showPassword()" minlength="8"  required />
 
                             </div>
                         </div>
@@ -136,10 +136,10 @@
                                         style="color: red;">*</span></label>
                                 <select class="form-select" aria-label="Default select example" name="gender"
                                     id="gender" required>
-                                    <option disabled selected>Select Gender</option>
+                                    <option selected>Select Gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
-                                    <option value="other">Other</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
                         </div>
@@ -171,7 +171,7 @@
                                 <label class="form-label" for="firstName">Address<span
                                         style="color: red;">*</span></label>
                                 <input type="text" name="address" id="address" class="form-control form-control-lg"
-                                    placeholder="Enter Address"required />
+                                    placeholder="Enter Address" required/>
 
                             </div>
                         </div>
@@ -185,7 +185,6 @@
                                 <label class="form-label" for="firstName">State<span
                                         style="color: red;">*</span></label>
                                 <select class="form-select" aria-label="Default select example" name="state" id="state" required>
-                                    
                                     <option value="" disabled selected>Select Your state</option>
                                     <option value="Andhra Pradesh">Andhra Pradesh</option>
                                     <option value="Arunachal Pradesh">Arunachal Pradesh</option>
@@ -215,7 +214,7 @@
                                     <option value="Tripura">Tripura</option>
                                     <option value="Uttar Pradesh">Uttar Pradesh</option>
                                     <option value="Uttarakhand">Uttarakhand</option>
-                                    <option value="West Bengal">West Bengal</option>
+                                    <option value="West Bengal">West Bengal</option>
 
                                 </select>
                             </div>
@@ -289,7 +288,7 @@
                                     <option value="ARCHERY">ARCHERY</option>
                                     <option value="BADMINTON">BADMINTON</option>
                                     <option value="BALL BADMINTON">BALL BADMINTON</option>
-                                    <option value="BASKETBALL">BASKET BALL</option>
+                                    <option value="BASKETBALL">BASKETBALL</option>
                                     <option value="CARROMS">CARROMS</option>
                                     <option value="CHESS">CHESS</option>
                                     <option value="CRICKET WHITE BALL">CRICKET WHITE BALL</option>
@@ -297,8 +296,7 @@
                                     <option value="WOMEN BOX CRICKET">WOMEN BOX CRICKET</option>
                                     <option value="CYCLOTHON">CYCLOTHON</option>
                                     <option value="FENCING">FENCING</option>
-                                    <option value="FOOTBALL">FOOT BALL</option>
-                                    <option value="THROWBALL">THROW BALL</option>
+                                    <option value="FOOTBALL">FOOTBALL</option>
                                     <option value="KABADDI">KABADDI</option>
                                     <option value="KHO KHO">KHO KHO</option>
                                     <option value="LAWN TENNIS">LAWN TENNIS</option>
@@ -307,10 +305,12 @@
                                     <option value="SHOOTING">SHOOTING</option>
                                     <option value="SWIMMING">SWIMMING</option>
                                     <option value="TABLE TENNIS">TABLE TENNIS</option>
-                                    <option value="TENNIKOIT">TENNIKOIT</option>
+                                    <option value="BADMINTON">TENNIKOIT</option>
                                     <option value="THROW">THROW</option>
+                                    <option value="THROW BALL">THROW BALL</option>
                                     <option value="TUG OF WAR">TUG OF WAR</option>
-                                    <option value="VOLLEY BALL">VOLLY BALL</option>
+                                    <option value="VOLLEYBALL">VOLLEY BALL</option>
+                                    <option value="WALKETHON">WALKETHON</option>
 
                                 </select>
                             </div>
@@ -326,8 +326,8 @@
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">Select Shirt Size<span
                                         style="color: red;">*</span></label>
-                                <select class="form-select" onclick="showShirt()" id="shirt-dropdown-id" name="shirtsize"
-                                    aria-label="Default select example" required>
+                                <select class="form-select" onclick="showShirt()" id="shirt-dropdown-id"
+                                    aria-label="Default select example"  name="shirtsize" required>
                                     <option disabled selected>Select Shirt Size</option>
                                     <option value="S">S</option>
                                     <option value="M">M</option>
@@ -343,8 +343,10 @@
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label for="formFile" class="form-label" id="display-which-certificate" >Upload certificate (max 5mb)</label>
-                                <input class="form-control" type="file" name="certificate" id="certificate" required>
+                                <label for="formFile" class="form-label" id="display-which-certificate" >Upload
+                                    certificate (max 5MB)</label>
+                                <input class="form-control" type="file" name="certificate" id="certificate" accept=".jpg .jpeg .png .pdf " required>
+
                             </div>
                         </div>
                     </div>
@@ -353,16 +355,16 @@
 
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label for="formFile" class="form-label">Upload Photo (max 5mb)</label>
-                                <input class="form-control" type="file" name="photo" id="photo" required>
+                                <label for="formFile" class="form-label">Upload Photo (max 5MB)</label>
+                                <input class="form-control" type="file" name="photo" id="photo" accept=".jpg .jpeg .png .pdf" required>
 
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
 
-                                <label for="formFile" class="form-label">Upload DOB Certificate (max 5mb)</label>
-                                <input class="form-control" type="file" name="dobfile" id="dobfile" required>
+                                <label for="formFile" class="form-label">Upload DOB Certificate (max 5MB)</label>
+                                <input class="form-control" type="file" name="dobfile" id="dobfile" accept=".jpg .jpeg .png .pdf" required>
 
                             </div>
                         </div>
@@ -389,9 +391,9 @@
 
                     </div>
 
-                    <button id="formregister" class="btn btn-primary col-md-12 mb-4">
+                    <div id="formregister" class="btn btn-primary col-md-12 mb-4">
                         Register
-                    </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -581,13 +583,29 @@
     });
 </script>
 <script>
+    function showPassword() {
+        var passcodetext = document.getElementById("passcodetext");
+        var password = document.getElementById("password").value;
+        if (password.length < 8 || password == "") {
+            passcodetext.innerHTML = `Provide ${(password.length - 8) * -1} more for valid password`;
+            console.log("inside the passcode fields")
+            return false;
+        }
+        else {
+            passcodetext.innerHTML = "Password is valid"
+        }
+
+    }
+</script>
+
+<script>
     function imember() {
 
         var x = document.getElementById("selectmember").value;
         if (x == "Non IMA Member")
-            document.getElementById("display-which-certificate").innerHTML = "Upload MBBS Certificate(max 5mb)";
+            document.getElementById("display-which-certificate").innerHTML = "Upload MBBS Certificate (max 5MB)";
         else if (x == "IMA Member")
-            document.getElementById("display-which-certificate").innerHTML = "Upload IMA or MBBS Certificate(max 5mb)";
+            document.getElementById("display-which-certificate").innerHTML = "Upload IMA or MBBS Certificate (max 5MB)";
     }
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
