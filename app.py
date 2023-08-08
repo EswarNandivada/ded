@@ -873,7 +873,7 @@ def dashboard():
         WHERE game_name NOT IN (
             SELECT game FROM game WHERE id = %s) AND game_name not IN (
             'ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON',
-            'SWIMMING', 'TENNKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING',
+            'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING',
             'TABLE TENNIS', 'LAWN TENNIS')"""
         cursor.execute(query2,[session.get('user')])
         add_teams_games=cursor.fetchall()
