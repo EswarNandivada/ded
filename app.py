@@ -992,7 +992,7 @@ def buyaddon(game):
          return redirect(url_for('addonpayment',eid=session.get('user'),game=game,amount=amount))
     else:
         return redirect(url_for('login'))
-@app.route('/addonpayment/<eid>/<game>/<amount>')
+@app.route('/addonpayment/<eid>/<game>/<amount>',methods=['GET','POST'])
 def addonpayment(eid,game,amount):
     cursor = mydb.cursor(buffered=True)
     cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member FROM register WHERE id=%s", [eid])
@@ -1013,7 +1013,7 @@ def addonpayment(eid,game,amount):
         mydb.commit()
         cursor.close()
         return jsonify({'status':'success','payment_url':payment_url})
-    return render_template('payment.html', data1=data1,game=game,amount=amount,eid=eid,name=name,email=email)
+    return render_template('pays.html', data1=data1,game=game,amount=amount,eid=eid,name=name,email=email)
 @app.route('/addonsuccess/<eid>/<game>',methods=['POST'])
 def addonsuccess(eid,game):
     uid=eid
