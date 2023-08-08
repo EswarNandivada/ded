@@ -855,13 +855,30 @@ def dashboard():
     print(session.get('user'))
     if session.get('user'):
         cursor = mydb.cursor(buffered=True)
-        cursor.execute("SELECT game_name from games where game_name not in (select game from game where id=%s) and game_name in ('ATHLETICS','ARCHERY','BADMINTON','CARROMS','CHESS','CYCLOTHON','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS'))",[session.get('user')])
+        query1="""
+        SELECT game_name 
+        FROM games 
+        WHERE game_name NOT IN (
+            SELECT game FROM game WHERE id = %s
+        ) AND game_name IN (
+            'ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON',
+            'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING',
+            'TABLE TENNIS', 'LAWN TENNIS'
+        )"""
+        cursor.execute(query1,[session.get('user')])
         add_individual_games=cursor.fetchall()
-        cursor.execute("SELECT game_name from games where game_name not in (select game from game where id=%s) and game not in ('ATHLETICS','ARCHERY','BADMINTON','CARROMS','CHESS','CYCLOTHON','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS'))",[session.get('user')])
+        query2 = """
+        SELECT game_name 
+        FROM games 
+        WHERE game_name NOT IN (
+            SELECT game FROM game WHERE id = %s) AND game_name not IN (
+            'ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON',
+            'SWIMMING', 'TENNKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING',
+            'TABLE TENNIS', 'LAWN TENNIS')"""
+        cursor.execute(query2,[session.get('user')])
         add_teams_games=cursor.fetchall()
         cursor.execute('SELECT game,amount from game where id=%s',[session.get('user')])
         games=cursor.fetchall()
-        
         cursor.close()
         '''cursor.execute('select count(*) from game where game=%s and id=%s',[game,session.get('user')])
         count = cursor.fetchone()[0]
