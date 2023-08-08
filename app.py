@@ -492,6 +492,14 @@ def register(user_accept):
         return render_template('register.html',message='')
     else:
         abort(404,'Page not found')
+
+@app.route('/registeronteam')
+def registeronteam():
+     if session.get('user'):
+          flash("You Cannot Create a Team.Contact team lead to add you")
+          return redirect(url_for('dashboard'))
+     else:
+          return redirect(url_for('login'))
          
 @app.route('/login', methods=['GET', 'POST'])
 def login():
