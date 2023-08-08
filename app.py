@@ -1152,7 +1152,7 @@ def registeredgame(game):
             sendmail(email_id,subject,body)
             return redirect(url_for('individual'))
         return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
-    elif game =='JUMPS':
+    elif game in ['SHOOTING','THROW']:
         cursor = mydb.cursor(buffered=True)
         cursor.execute('select count(*) from sub_games where game=%s and id=%s',[game,session.get('user')])
         count = cursor.fetchone()[0]
