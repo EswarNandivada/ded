@@ -1420,7 +1420,7 @@ def accept(token):
      d=int((expiry_date-today_date).total_seconds())
      try:
         serializer = URLSafeTimedSerializer(secret_key)
-        data = serializer.loads(token, salt=salt2, max_age=-565)
+        data = serializer.loads(token, salt=salt2, max_age=d)
      except Exception as e:
         print(e)
         abort(404, "Gone,Link Expired")
