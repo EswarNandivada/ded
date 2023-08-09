@@ -1433,6 +1433,7 @@ def accept(token):
                if status=='Accept':
                     return "<h1>Request already Accepted<h1>"
                else:
+                    return 'Wait'
                     
           
                
