@@ -995,7 +995,9 @@ def dashboard():
         cursor.execute('select email from register where id=%s',[session.get('user')])
         email_id=cursor.fetchone()[0]
         cursor.close()'''
-        return render_template('my-account.html',games=games,add_individual_games=add_individual_games,add_teams_games=add_teams_games)
+        ivs=['ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON','SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING','TABLE TENNIS', 'LAWN TENNIS']
+        tms=['BALL BADMINTON','BASKET BALL','CRICKET WHITE BALL','FOOTBALL','HARD TENNIS CRICKET','KABADDI','KHO KHO','THROW BALL','TUG OF WAR','VOLLEY BALL','WOMEN BOX CRICKET']
+        return render_template('my-account.html',games=games,add_individual_games=add_individual_games,add_teams_games=add_teams_games,ivs=ivs,tms=tms)
     else:
         return redirect(url_for('login'))
 @app.route('/edit',methods=['GET','POST'])
