@@ -1415,6 +1415,7 @@ def registeredgame(game):
 def check_teams(eid,game):
     cond=True
     message=''
+    cursor=mydb.cursor()
     cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
     count=cursor.fetchone()[0]
     cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[eid,'Accept'])
@@ -1423,6 +1424,7 @@ def check_teams(eid,game):
     count3=cursor.fetchone()[0]
     cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
     count2=cursor.fetchone()[0]
+    cursor.close()
     if count>0:
         message='You are already in other team'
         cond=False
