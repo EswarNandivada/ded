@@ -1425,7 +1425,8 @@ def accept(token):
         print(e)
         abort(404, "Gone,Link Expired")
      else:
-          if data.get('email','NA')!='NA':
+          return jsonify(data)
+          '''if data.get('email','NA')!='NA':
                rid=data.get('rid')
                cursor=mydb.cursor(buffered=True)
                cursor.execute('SELECT status from teams where rid=%s',rid)
@@ -1433,7 +1434,7 @@ def accept(token):
                if status=='Accept':
                     return "<h1>Request already Accepted<h1>"
                else:
-                    return 'Wait'
+                    '''
                     
           
                
