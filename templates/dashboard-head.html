@@ -102,10 +102,10 @@ text-align: center!important;
             <select onchange="location = this.value;">
                 <option selected>Games</option>
                 <option value="{{ url_for('payment_orders') }}">Payments</option>
-                <option value="#">Your Requests</option>
-                <option value="#">Invitations</option>
+                <option value="{{url_for('request')">Your Requests</option>
+                <option value="{{ url_for('invitations') }}">Invitations</option>
                 <option value="{{ url_for('individual') }}">Individuals</option>
-                <option value="#">Teams Games</option>
+                <option value="{{url_for('team')">Teams Games</option>
             </select>
             <i class="fa-solid fa-caret-down"></i>
         </div>
@@ -116,7 +116,7 @@ text-align: center!important;
         </a>
     </div>
     <div class="col-12 col-lg-6 col-xl-2">
-        <a href="#">
+        <a href="{{url_for('logout')}}">
             <h1 class="p-2">Logout</h1>
         </a>
     </div>
