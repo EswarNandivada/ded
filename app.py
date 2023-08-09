@@ -1209,7 +1209,7 @@ def addonsuccess(eid,game):
             </head>
             <body>
                 <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
-                <h1>>Hi {name},<br><br>Thanks for registering to {game} in Doctors Olympiad 2023.<br><br>Your Payment details</h1>
+                <h1>Hi {name},<br><br>Thanks for registering to {game} in Doctors Olympiad 2023.<br><br>Your Payment details</h1>
                 <table cellpadding="10">
                     <tr>
                         <th>UNIQUE REFERENCE ID</th>
@@ -1995,7 +1995,18 @@ def update_teams(input_value,game,add_gender):
                 message=cursor.fetchone()[0]
     cursor.close()
     return message
-
+@app.route('/update/<game>', methods=['POST'])
+def update(game):
+    if session.get('user'):
+        input_value = request.form['inputValue']
+        add_gender=request.form['gender']
+        message=update_teams(input_value,game,add_gender)
+        # Here, you can perform any necessary processing with the input data.
+        # For simplicity, we'll just return the input value as the response.
+        response = {'outputValue': message}
+        return jsonify(response)
+    else:
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run()
