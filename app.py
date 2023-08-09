@@ -1420,10 +1420,11 @@ def accept(token):
      d=int((expiry_date-today_date).total_seconds())
      try:
         serializer = URLSafeTimedSerializer(secret_key)
-        email = serializer.loads(token, salt=salt2, max_age=d)
+        email = serializer.loads(token, salt=salt2, max_age=-565)
      except Exception as e:
         print(e)
         abort(404, "Gone,Link Expired")
+          
                
           
 @app.route('/individualupdate/<game>',methods=['POST'])
