@@ -1420,10 +1420,20 @@ def accept(token):
      d=int((expiry_date-today_date).total_seconds())
      try:
         serializer = URLSafeTimedSerializer(secret_key)
-        email = serializer.loads(token, salt=salt2, max_age=-565)
+        data = serializer.loads(token, salt=salt2, max_age=-565)
      except Exception as e:
         print(e)
         abort(404, "Gone,Link Expired")
+     else:
+          if data.get('email','NA')!='NA':
+               rid=data.get('rid')
+               cursor=mydb.cursor(buffered=True)
+               cursor.execute('SELECT status from teams where rid=%s',rid)
+               status=cursor.fetchone()[0]
+               if status=='Accept':
+                    return "<h1>Request already Accepted<h1>"
+               else:
+                    
           
                
           
@@ -1461,18 +1471,18 @@ def update_teams(input_value,game,add_gender):
                 message='You cannot add yourself.'
             if count>0:
                 cond=False
-                message='User accept to other team'
+                message='User registered to other team'
             cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[input_value,'Accept'])
             count1=cursor.fetchone()[0]
             if count1>1:
                 cond=False
-                message='User already accept in two teams'
+                message='User already in two teams'
             if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
                 cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[input_value,game,'Accept'])
                 count2=cursor.fetchone()[0]
                 if count2!=0:
                     cond=False
-                    message='User already accept in other cricket team'
+                    message='User registered to other team'
             if cond==True and  message!="You cannot add yourself.":
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[input_value])
                 message=cursor.fetchone()[0]
@@ -1499,18 +1509,18 @@ def update_teams(input_value,game,add_gender):
                 message='You cannot add yourself.'
             if count>0:
                 cond=False
-                message='User accept to other team'
+                message='User registered to other team'
             cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[eid,'Accept'])
             count1=cursor.fetchone()[0]
             if count1>1:
                 cond=False
-                message='User already /accept in two teams'
+                message='User already in two teams'
             if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
                 cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
                 count2=cursor.fetchone()[0]
                 if count2!=0:
                     cond=False
-                    message='User already /accept in other cricket team'
+                    message='User registered to other team'
             if cond==True and message!='You cannot add yourself.':
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[eid])
                 message=cursor.fetchone()[0]
