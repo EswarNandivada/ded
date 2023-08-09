@@ -318,7 +318,7 @@ def national_committee():
     return render_template('national-committe.html')
 
 @app.route('/request')
-def request():
+def requesteds():
     return render_template('requests.html')
 
 @app.route('/ir')
