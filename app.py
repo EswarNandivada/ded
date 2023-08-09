@@ -326,7 +326,7 @@ def ir():
     if session.get('user'):
         cursor = mydb.cursor(buffered=True)
         eid=session.get('user')
-        # cursor.execute("SELECT * FROM individual_teams WHERE id=%s",[eid])
+        cursor.execute("SELECT * FROM individual_teams WHERE id=%s",[eid])
         data = cursor.fetchall()
         print(data)
         return render_template('ir.html',data=data)
