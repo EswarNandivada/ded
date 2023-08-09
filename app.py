@@ -1424,18 +1424,71 @@ def registeredgame(game):
         #         sendmail(email_id,subject,body)
         #         return redirect(url_for('dashboard'))
         # return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
-     
-    
+        # 
+        # 
     elif game in ('BADMINTON','TABLETENNIS','LAWNTENNIS','CARROMS'):
         ds="Mens Doubles" if gender=="Male" else "Womens Doubles"
         singles=["Womens Single","Mens Single"]
         cursor = mydb.cursor(buffered=True)
         cursor.execute("SELECT count(*) from sub_games where game=%s",[game])
         count=cursor.fetchone()[0]
+        print(count)
+        '''cursor.execute('select category from sub_games where game=%s and id=%s',[game,session.get('user')])
+        singles_data=cursor.fetchall()
+        cursor = mydb.cursor(buffered=True)'''
+        #cursor.execute('''SELECT status from teams as t inner join sub_games as s on t.teamid=s.team_number where t.game=%s''',[game])
+        #cursor.close()
+        #data=[i[0] for i in cursor.                                () if i[0]=='Pending']
+        #cond=True
         if request.method=='POST':
-            print(request.form)
-            return jsonify(request.form)
+            dicts=request.form.to_dict()
+            for i in dicts:
+                print(dicts)
+                if i=='Mens Single' and dicts[i]!=False:
+                    cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
+                    mydb.commit()
+                if i.startswith('input') and dicts[i].startswith('input')!='' :
+                    team_id=genteamid()
+                    if request.form[i].isdigit():
+                        uid=request.form[i]
+                        requestid=adotp()
+                        cursor.execute("insert into individual_teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
+                        mydb.commit()
+                        cursor.execute("SELECT email from register where id=%s",[uid])
+                        r_email=cursor.fetchone()[0]
+                        one_time_token=token2(team_id,requestid,salt=salt2)
+                        link=url_for('accept',token=one_time_token,_external=True)
+                        subject=f'Team Request for {game}'
+                        body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
+                        sendmail(r_email,subject=subject,body=body)
+                    else:
+                        cursor.execute("SELECT count(*) from register where email=%s",[request.form[i]])
+                        count=cursor.fetchone()[0]
+                        if count!=0:
+                            cursor.execute("SELECT id from register where email=%s",[request.form[i]])
+                            uid=cursor.fetchone()[0]
+                            requestid=adotp()
+                            cursor.execute("insert into individual_teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
+                            mydb.commit()
+                            one_time_token=token2(team_id,requestid,salt=salt2)
+                            link=url_for('urlaccept',token=one_time_token,_external=True)
+                            subject=f'Team Request for {game}'
+                            body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
+                            sendmail(request.form[i],subject=subject,body=body)
+                        else:
+                            requestid=adotp()
+                            cursor.execute("insert into individual_teams (reqid,teamid,game) values(%s,%s,%s)",[requestid,team_id,game])
+                            mydb.commit()
+                            one_time_token=token2(team_id,requestid,salt=salt2,email=request.form[i])
+                            link=url_for('urlaccept',token=one_time_token,_external=True)
+                            subject=f'Team Request for {game}'
+                            body=f"Hello,\n\n Register to doctors olympiad and join our team by using this using the below url.\nPlease click on this link to join -{link}"
+                            sendmail(request.form[i],subject=subject,body=body)
+            else:
+                flash('Request sent')
+                return redirect(url_for('dashboard'))
         return render_template('Individual doubles.html',gender=gender,game=game,ds=ds)
+            
     else:
         cursor=mydb.cursor(buffered=True)
         cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[session.get('user'),game])
