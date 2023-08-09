@@ -1459,7 +1459,7 @@ def accept(token):
                cursor.execute('SELECT id from sub_games where team_number=%s',[tid])
                leadid=cursor.fetchone()[0]
                cursor.execute('SELECT email,concat(FirstName," ",LastName) from register where id=%s',[leadid])
-               email,name=cursor.fetchone()[0]
+               email,name=cursor.fetchone()
                cursor.execute('SELECT concat(FirstName," ",LastName) from register where id=%s',[eid])
                participant=cursor.fetchone()[0]
                if status=='Accept':
