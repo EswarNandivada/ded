@@ -321,6 +321,33 @@ def national_committee():
 def request():
     return render_template('requests.html')
 
+@app.route('/ir')
+def ir():
+    if session.get('user'):
+        cursor = mydb.cursor(buffered=True)
+        eid=session.get('user')
+        cursor.execute("SELECT * FROM individual_teams WHERE id=%s",[eid])
+        data = cursor.fetchall()
+        print(data)
+        return render_template('ir.html',data=data)
+@app.route('/tr')
+def tr():
+    if session.get('user'):
+        cursor = mydb.cursor(buffered=True)
+        eid=session.get('user')
+        cursor.execute("SELECT * FROM teams WHERE id=%s",[eid])
+        data = cursor.fetchall()
+        return render_template('tr.html',data=data)
+
+@app.route('/invitations')
+def invitations():
+    if session.get('user'):
+        cursor = mydb.cursor(buffered=True)
+        eid=session.get('user')
+        cursor.execute("SELECT * FROM teams WHERE id=%s",[eid])
+        data = cursor.fetchall()
+        return render_template('teaminvitations.html',data=data)
+
 @app.route('/ima_ap_state_committee')
 def ima_ap_state_committee():
     return render_template('ima-ap-state-committe.html')
