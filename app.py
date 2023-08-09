@@ -1068,6 +1068,8 @@ def individual_update(game):
         return jsonify(response)
     else:
         return redirect(url_for('login'))
+
+
 @app.route('/team')
 def team():
     if session.get('user'):
@@ -1566,22 +1568,7 @@ def accept(token):
                     else:
                         return f"<h1>{criteria['message']}</h1>"
                     
-                         
-                         
-                                
-          
-@app.route('/individualupdate/<game>',methods=['POST'])
-def individual_update(game): 
-    if session.get('user'):
-        input_value = request.form["inputValue"]
-        category=request.form['category']
-        print(category)
-        gender=request.form['gender']
-        message=check_individual(gender,input_value,game,category)
-        response = {'outputValue': message}
-        return jsonify(response)
-    else:
-        return redirect(url_for('login'))
+
 
 def update_teams(input_value,game,add_gender):
     cursor=mydb.cursor()
