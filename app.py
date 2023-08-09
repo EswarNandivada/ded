@@ -1412,7 +1412,32 @@ def registeredgame(game):
             if request.method=='POST':
                 return {'message':"Updates are on the way"}
             return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
-          
+def check_teams(eid,game):
+    cond=True
+    message=''
+    cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
+    count=cursor.fetchone()[0]
+    cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[eid,'Accept'])
+    count1=cursor.fetchone()[0]
+    cursor.execute("SELECT count(*) from sub_games where id=%s",[eid])
+    count3=cursor.fetchone()[0]
+    cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
+    count2=cursor.fetchone()[0]
+    if count>0:
+        message='You are already in other team'
+        cond=False
+    if count1>1:
+        cond=False
+        message='You are already in two teams'
+    if count3!=0:
+        message='You are already in other team'
+        cond=False
+    if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
+        if count2!=0:
+            message='You are already in other team
+            cond=False
+     return {'cond':cond,'message':message}
+  
 @app.route('/acceptrequest/<token>')
 def accept(token):
      today_date=datetime.now()
@@ -1428,11 +1453,16 @@ def accept(token):
           if data.get('email','NA')=='NA':
                rid=data.get('rid')
                cursor=mydb.cursor(buffered=True)
-               cursor.execute('SELECT status from teams where rid=%s',rid)
-               status=cursor.fetchone()[0]
+               cursor.execute('SELECT id,game,status from teams where rid=%s',[rid])
+               eid,game,status=cursor.fetchone()
                if status=='Accept':
+                    cursor.close()
                     return "<h1>Request already Accepted<h1>"
-               else:                    
+               else:
+                    if check_teams(eid,game):
+                         
+                         
+                    
           
                
           
