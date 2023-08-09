@@ -1635,7 +1635,7 @@ def accept(token):
             else:
                 criteria=check_teams(eid,game)
                 if criteria['cond']: 
-                    cursor.execute("SELECT count(*) from teams where rid=%s",[rid])
+                    cursor.execute("SELECT count(*) from teams where reqid=%s",[rid])
                     co=cursor.fetchone()[0]
                     if count!=0:
                         cursor.execute('update teams set status="Accept" where reqid=%s',[rid])
