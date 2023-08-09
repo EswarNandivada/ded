@@ -1437,7 +1437,7 @@ def check_teams(eid,game):
     if count>0:
         message='You are already in other team'
         cond=False
-    if count1>1 or count4>1:
+    if (count1+count4)==2:
         cond=False
         message='You are already in two teams'
     if count3!=0:
@@ -1538,10 +1538,12 @@ def update_teams(input_value,game,add_gender):
                 message='User registered to other team'
             cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[input_value,'Accept'])
             count1=cursor.fetchone()[0]
-            if count1>1:
+            cursor.execute("""SELECT COUNT(*) FROM sub_games WHERE id = %s AND game NOT IN ('ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON', 'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING', 'TABLE TENNIS', 'LAWN TENNIS')""", (input_value,game))
+            count4=cursor.fetchone()[0]
+            if (count1+count4)==2:
                 cond=False
                 message='User already in two teams'
-            cursor.execute("SELECT count(*) from sub_games where id=%s",[input_value])
+            cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[input_value,game])
             count3=cursor.fetchone()[0]
             if count3!=0:
                 cond=False
@@ -1581,10 +1583,12 @@ def update_teams(input_value,game,add_gender):
                 message='User registered to other team'
             cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[eid,'Accept'])
             count1=cursor.fetchone()[0]
-            if count1>1:
+            cursor.execute("""SELECT COUNT(*) FROM sub_games WHERE id = %s AND game NOT IN ('ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON', 'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING', 'TABLE TENNIS', 'LAWN TENNIS')""", (eid,game))
+            count4=cursor.fetchone()[0]
+            if (count1+count4)==2:
                 cond=False
                 message='User already in two teams'
-            cursor.execute("SELECT count(*) from sub_games where id=%s",[eid])
+            cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[eid,game])
             count3=cursor.fetchone()[0]
             if count3!=0:
                 cond=False
