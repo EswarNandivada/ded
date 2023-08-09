@@ -494,6 +494,112 @@ def register(user_accept):
         return render_template('register.html',message='')
     else:
         abort(404,'Page not found')
+@app.route('/individual')
+def individual():
+    if session.get('user'):
+        eid=session.get('user')
+        a=['ATHLETICS','ARCHERY','BADMINTON','CARROM','CHESS','CYCLOTHON','JUMPS','SWIMMING','THROW','ROWING','ROLLER_SKATING','FENCING','TENNIKOIT','TABELTENNIS','LAWNTENNIS','BALL_BADMINTON']
+        cursor = mydb.cursor(buffered=True)
+        cursor.execute("SELECT * FROM sub_games WHERE id=%s",[eid])
+        data1 = cursor.fetchall()
+        cursor.close()
+        data=[]
+        for i in data1:
+            if i[0] in a:
+                data.append(i)
+        return render_template('Individualgames.html',data=data)
+    else:
+        return redirect(url_for('login'))
+def check_individual(gender,input_value,game,category):
+    cursor=mydb.cursor()
+    if input_value.isdigit():
+        cursor.execute('select count(*) from register where id=%s',[input_value])
+        data=cursor.fetchone()[0]
+        message=''
+        if data==0:
+            message="Id not found"
+        else:
+            cond=True
+            cursor.execute("SELECT count(*) from individual_teams where id=%s and game=%s and sub_category =%s and status=%s",[input_value,game,category,'Accept'])
+            count=cursor.fetchone()[0]
+            if int(input_value)==session.get('user'):
+                message='You cannot add yourself.'
+            if count>0:
+                cond=False
+                message='User Registered to other team'
+            cursor.execute("select count(*) from sub_games where id=%s and category=%s",[input_value,category])
+            count2=cursor.fetchone()[0]
+            if count2>0:
+                cond=False
+                message='User Registered to other team'
+            if category!="Mixed Doubles":
+                cursor.execute("SELECT gender from register where id=%s",[input_value])
+                check_gender=cursor.fetchone()[0]
+                if check_gender!=gender:
+                    cond=False
+                    message='Cannot add other gender in team'
+            cursor.execute('SELECT age from register  where id=%s',[input_value])
+            age=cursor.fetchone()[0]
+            cursor.execute('SELECT age from register where id=%s',[session.get('user')])
+            lead_age=cursor.fetchone()[0]
+            if age>=50:
+                if lead_age<50:
+                    cond=False
+                    message='age greater than 50 cannot add'
+            if age<50:
+                if lead_age>50:
+                    cond=False
+                    message='age less than 50 cannot add'
+            if cond==True and  message!="You cannot add yourself.":
+                cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[input_value])
+                message=cursor.fetchone()[0]
+            
+    else:
+        cursor=mydb.cursor(buffered=True)
+        cursor.execute('select count(*) from register where email=%s',[input_value])
+        data=cursor.fetchone()[0]
+        message=''
+        if data==0:
+            message="Invite on submit User not found"
+        else:
+            cond=True
+            cursor.execute('SELECT id from register where Email=%s',[input_value])
+            eid=cursor.fetchone()[0]
+            cursor.execute("SELECT count(*) from individual_teams where id=%s and game=%s and sub_category =%s and status=%s",[eid,game,category,'Accept'])
+            count=cursor.fetchone()[0]
+            if eid ==session.get('user'):
+                message='You cannot add yourself.'
+            if count>0:
+                cond=False
+                message='User Registered to other team'
+            cursor.execute("select count(*) from sub_games where id=%s and category=%s",[eid,category])
+            count2=cursor.fetchone()[0]
+            if count2>0:
+                cond=False
+                message='User Registered to other team'
+            if category!="Mixed Doubles":
+                cursor.execute("SELECT gender from register where id=%s",[eid])
+                check_gender=cursor.fetchone()[0]
+                if check_gender!=gender:
+                    cond=False
+                    message='Cannot add other gender in team'
+            cursor.execute('SELECT age from register  where id=%s',[eid])
+            age=cursor.fetchone()[0]
+            cursor.execute('SELECT age from register  where id=%s',[session.get('user')])
+            lead_age=cursor.fetchone()[0]
+            if age>=50:
+                if lead_age<50:
+                    cond=False
+                    message='Cannot add the people less than 50'
+            if age<50:
+                if lead_age>50:
+                    cond=False
+                    message='Cannot add the people greater than 50'
+            if cond==True and  message!="You cannot add yourself.":
+                cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[eid])
+                message=cursor.fetchone()[0]
+    cursor.close()
+    return message
 
 @app.route('/registeronteam')
 def registeronteam():
@@ -950,20 +1056,16 @@ def payment_orders():
         return render_template('Payments.html',payment = payment)
     else:
         return redirect(url_for('login'))
-@app.route('/individual')
-def individual():
+@app.route('/individualupdate/<game>',methods=['POST'])
+def individual_update(game): 
     if session.get('user'):
-        eid=session.get('user')
-        a=['ATHLETICS','ARCHERY','BADMINTON','CARROM','CHESS','CYCLOTHON','JUMPS','SWIMMING','THROW','ROWING','ROLLER_SKATING','FENCING','TENNIKOIT','TABELTENNIS','LAWNTENNIS','BALL_BADMINTON']
-        cursor = mydb.cursor(buffered=True)
-        cursor.execute("SELECT * FROM sub_games WHERE id=%s",[eid])
-        data1 = cursor.fetchall()
-        cursor.close()
-        data=[]
-        for i in data1:
-            if i[0] in a:
-                data.append(i)
-        return render_template('Individualgames.html',data=data)
+        input_value = request.form["inputValue"]
+        category=request.form['category']
+        print(category)
+        gender=request.form['gender']
+        message=check_individual(gender,input_value,game,category)
+        response = {'outputValue': message}
+        return jsonify(response)
     else:
         return redirect(url_for('login'))
 @app.route('/team')
@@ -1294,45 +1396,15 @@ def registeredgame(game):
      
     
     elif game in ('BADMINTON','TABLETENNIS','LAWNTENNIS','CARROMS'):
-        return "<center><h1> Updates are on the way </h1></center>"
-        # singles=["Women's Single","Men's Single"]
-    #     cursor = mydb.cursor(buffered=True)
-    #     cursor.execute('select category from sub_games where game=%s and id=%s',[game,session.get('user')])
-    #     singles_data=cursor.fetchall()
-    #     cursor = mydb.cursor(buffered=True)
-    #     cursor.execute('''SELECT status from teams as t inner join sub_games as s on t.teamid=s.team_number where game=%s''',[game])
-    #     cursor.close()
-    #     data=[i[0] for i in cursor.fetchall() if i[0]=='Pending']
-    #     cond=True
-        
-    #     if len(singles_data)==1:
-    #         if singles_data[0] in singles:
-    #             cond=False
-    #     else:
-    #         cond=False
-    #     if len(data)==0 and cond:
-    #         flash('Already def accept refer to games section')
-    #         return redirect(url_for('dashboard'))
-    #     if len(data)!=0:
-    #         pass
-
-    #     if request.method=='POST':
-    #         if len(request.form.keys())==1:
-    #             if list(request.form.keys())[0] in singles:
-    #                 cursor = mydb.cursor(buffered=True)
-    #                 for i in request.form.values():
-    #                     cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
-    #                     mydb.commit()
-    #                 cursor.close()
-    #                 flash('Details def accept Successfully ')
-    #                 subject='Doctors Olympiad Games registration'
-    #                 body=f'You are successfully def accept to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
-    #                 sendmail(email_id,subject,body)
-    #                 return redirect(url_for('dashboard'))
-    #         else:
-    #             pass
-
-    #     return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
+        ds="Mens Doubles" if gender=="Male" else "Womens Doubles"
+        singles=["Womens Single","Mens Single"]
+        cursor = mydb.cursor(buffered=True)
+        cursor.execute("SELECT count(*) from sub_games where game=%s",[game])
+        count=cursor.fetchone()[0]
+        if request.method=='POST':
+            print(request.form)
+            return jsonify(request.form)
+        return render_template('Individual doubles.html',gender=gender,game=game,ds=ds)
     else:
         cursor=mydb.cursor(buffered=True)
         cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[session.get('user'),game])
@@ -1451,17 +1523,17 @@ def check_teams(eid,game):
   
 @app.route('/acceptrequest/<token>')
 def accept(token):
-     today_date=datetime.now()
-     expiry_date = datetime.strptime('21/11/23 23:59:59', "%d/%m/%y %H:%M:%S")
-     d=int((expiry_date-today_date).total_seconds())
-     try:
+    today_date=datetime.now()
+    expiry_date = datetime.strptime('21/11/23 23:59:59', "%d/%m/%y %H:%M:%S")
+    d=int((expiry_date-today_date).total_seconds())
+    try:
         serializer = URLSafeTimedSerializer(secret_key)
         data = serializer.loads(token, salt=salt2, max_age=d)
-     except Exception as e:
+    except Exception as e:
         print(e)
         abort(404, "Gone,Link Expired")
-     else:
-          if data.get('email','NA')=='NA':
+    else:
+        if data.get('email','NA')=='NA':
                rid=data.get('rid')
                tid=data.get('teamid')
                cursor=mydb.cursor(buffered=True)
@@ -1496,10 +1568,7 @@ def accept(token):
                     
                          
                          
-                         
-                    
-          
-               
+                                
           
 @app.route('/individualupdate/<game>',methods=['POST'])
 def individual_update(game): 
