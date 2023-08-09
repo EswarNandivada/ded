@@ -326,7 +326,7 @@ def ir():
     if session.get('user'):
         cursor = mydb.cursor(buffered=True)
         eid=session.get('user')
-        cursor.execute("SELECT * FROM individual_teams WHERE id=%s",[eid])
+        # cursor.execute("SELECT * FROM individual_teams WHERE id=%s",[eid])
         data = cursor.fetchall()
         print(data)
         return render_template('ir.html',data=data)
@@ -1457,7 +1457,7 @@ def registeredgame(game):
                         cursor.execute("SELECT email from register where id=%s",[uid])
                         r_email=cursor.fetchone()[0]
                         one_time_token=token2(team_id,requestid,salt=salt2)
-                        link=url_for('accept',token=one_time_token,_external=True)
+                        link=url_for('acceptrequest',token=one_time_token,_external=True)
                         subject=f'Team Request for {game}'
                         body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
                         sendmail(r_email,subject=subject,body=body)
@@ -1471,7 +1471,7 @@ def registeredgame(game):
                             cursor.execute("insert into individual_teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
                             mydb.commit()
                             one_time_token=token2(team_id,requestid,salt=salt2)
-                            link=url_for('urlaccept',token=one_time_token,_external=True)
+                            link=url_for('acceptrequest',token=one_time_token,_external=True)
                             subject=f'Team Request for {game}'
                             body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
                             sendmail(request.form[i],subject=subject,body=body)
@@ -1480,7 +1480,7 @@ def registeredgame(game):
                             cursor.execute("insert into individual_teams (reqid,teamid,game) values(%s,%s,%s)",[requestid,team_id,game])
                             mydb.commit()
                             one_time_token=token2(team_id,requestid,salt=salt2,email=request.form[i])
-                            link=url_for('accept',token=one_time_token,_external=True)
+                            link=url_for('acceptrequest',token=one_time_token,_external=True)
                             subject=f'Team Request for {game}'
                             body=f"Hello,\n\n Register to doctors olympiad and join our team by using this using the below url.\nPlease click on this link to join -{link}"
                             sendmail(request.form[i],subject=subject,body=body)
@@ -1618,39 +1618,292 @@ def accept(token):
         abort(404, "Gone,Link Expired")
     else:
         if data.get('email','NA')=='NA':
-               rid=data.get('rid')
-               tid=data.get('teamid')
-               cursor=mydb.cursor(buffered=True)
-               cursor.execute('SELECT id,game,status from teams where reqid=%s',[rid])
-               eid,game,status=cursor.fetchone()
-               cursor.execute('SELECT id from sub_games where team_number=%s',[tid])
-               leadid=cursor.fetchone()[0]
-               cursor.execute('SELECT email,concat(FirstName," ",LastName) from register where id=%s',[leadid])
-               email,name=cursor.fetchone()
-               cursor.execute('SELECT concat(FirstName," ",LastName) from register where id=%s',[eid])
-               participant=cursor.fetchone()[0]
-               if status=='Accept':
-                    cursor.close()
-                    return "<h1>Request already Accepted<h1>"
-               else:
-                    criteria=check_teams(eid,game)
-                    if criteria['cond']: 
+            rid=data.get('rid')
+            tid=data.get('teamid')
+            cursor=mydb.cursor(buffered=True)
+            cursor.execute('SELECT id,game,status from teams where reqid=%s',[rid])
+            eid,game,status=cursor.fetchone()
+            cursor.execute('SELECT id from sub_games where team_number=%s',[tid])
+            leadid=cursor.fetchone()[0]
+            cursor.execute('SELECT email,concat(FirstName," ",LastName) from register where id=%s',[leadid])
+            email,name=cursor.fetchone()
+            cursor.execute('SELECT concat(FirstName," ",LastName) from register where id=%s',[eid])
+            participant=cursor.fetchone()[0]
+            if status=='Accept':
+                cursor.close()
+                return "<h1>Request already Accepted<h1>"
+            else:
+                criteria=check_teams(eid,game)
+                if criteria['cond']: 
+                    cursor.execute("SELECT count(*) from teams where rid=%s",[rid])
+                    co=cursor.fetchone()[0]
+                    if count!=0:
                         cursor.execute('update teams set status="Accept" where reqid=%s',[rid])
                         mydb.commit()
-                        cursor.execute('select count(*) from game where id=%s and game=%s',[eid,game])
-                        count=cursor.fetchone()[0]
-                        if count==0:
-                             cursor.execute('insert into game values(%s,%s,%s)',[eid,game,0])
-                             mydb.commit()
-                        subject=f"{participant} Accepted your {game} team request"
-                        body=f"Hi,\n\n{name}\n\n\n {participant} just accepted your team request for {game}.See others status in your dashboard\n\n{url_for('dashboard',_external=True)}"
-                        sendmail(to=email,subject=subject,body=body)
-                        flash('Request Accepted')
-                        return redirect(url_for('dashboard'))
                     else:
-                        return f"<h1>{criteria['message']}</h1>"
-                    
+                        cursor.execute('update individual_teams set status="Accept" where reqid=%s',[rid])
+                        mydb.commit()
+                    cursor.execute('select count(*) from game where id=%s and game=%s',[eid,game])
+                    count=cursor.fetchone()[0]
+                    if count==0:
+                            cursor.execute('insert into game values(%s,%s,%s)',[eid,game,0])
+                            mydb.commit()
+                    subject=f"{participant} Accepted your {game} team request"
+                    body=f"Hi,\n\n{name}\n\n\n {participant} just accepted your team request for {game}.See others status in your dashboard\n\n{url_for('dashboard',_external=True)}"
+                    sendmail(to=email,subject=subject,body=body)
+                    flash('Request Accepted')
+                    return redirect(url_for('dashboard'))
+                else:
+                    return f"<h1>{criteria['message']}</h1>"
+        else:
+            game=data.get('game')
+            email=data.get('email')
+            rid=data.get('rid')
+            tid=data.get('teamid')
+            return redirect(url_for('registeron',game=game,email=email,rid=rid))
+@app.route('/registeron/<game>/<email>/<rid>')
+def register(game,email,rid):
+    if request.method == 'POST':
+        print(request.form)
+        acception = 'Yes'
+        fname = request.form['fname']
+        lname = request.form['lname']
+        email = request.form['email']
+        password = request.form['password']
+        mobile = request.form['mobile']
+        age = request.form['age']
+        gender = request.form['gender']
+        dob = request.form['dob']
+        city = request.form['city']
+        address = request.form['address']
+        state = request.form['state']
+        country = request.form['country']
+        degree = request.form['degree']
+        mci = request.form['mci']
+        game = request.form['game']
+        selectmember = request.form['selectmember']
+        shirtsize = request.form['shirtsize']
+        otp=request.form['otp']
+        dobfile=request.files['dobfile']
+        cursor = mydb.cursor(buffered=True)
+        # cursor.execute('SELECT COUNT(*) FROM register WHERE CONCAT(FirstName, " ", LastName) = %s', [full_name])
+        # count = cursor.fetchone()[0]
+        cursor.execute('SELECT COUNT(*) FROM register WHERE Email = %s', [email])
+        count1 = cursor.fetchone()[0]
+        cursor.execute('SELECT COUNT(*) FROM register WHERE mobileno = %s', [mobile])
+        count2 = cursor.fetchone()[0]
+        cursor.close()
+        if count2 == 1:
+            message='Mobile number already exists.'
+            return render_template('register.html',message=message)
+        if count1 == 1:
+            message='Email already in use'
+            return render_template('register.html',message=message)
+        cond=True if session.get('email') else False
+        if cond!=True:
+            message='Please verify your email'
+            return render_template('register.html',message=message)
+        if session['otp']!=otp:
+            message='Invalid OTP'
+            return render_template('register.html',message=message)
+        if session.get('email')!=request.form['email']:
+            message='Email address changed verify otp again'
+            return render_template('register.html',message=message)
+        # Get the uploaded certificate and photo files
+        certificate_file = request.files['certificate']
+        photo_file = request.files['photo']
 
+        # Generate unique filenames for certificate and photo using UUID
+        certificate_filename = f'{mobile}.{certificate_file.filename.split(".")[-1]}'
+        photo_filename = f'{mobile}.{photo_file.filename.split(".")[-1]}'
+        dob_filename = f'{mobile}.{dobfile.filename.split(".")[-1]}'
+
+
+        # Save the certificate and photo files to the upload folder
+        certificate_file.save(os.path.join(app.config['UPLOAD_FOLDER'], certificate_filename))
+        photo_file.save(os.path.join(app.config['UPLOAD_FOLDERS'], photo_filename))
+        dobfile.save(os.path.join(app.config['UPLOAD_FOLDERSS'], dob_filename))
+
+        
+        if selectmember == 'IMA Member':
+            amount = 30
+        else:
+            amount = 35
+        
+        full_name = fname + ' ' + lname  # Combine first name and last name
+
+        
+        # Hash the password using bcrypt
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        
+
+        data = {
+            'fname': fname, 'lname': lname, 'email': email, 'password': hashed_password, 'mobile': mobile,
+            'age': age, 'gender': gender, 'dob': dob, 'city': city, 'address': address, 'state': state,
+            'country': country, 'degree': degree, 'mci': mci, 'game': game, 'selectmember': selectmember,
+            'acception': acception, 'amount': amount,'shirtsize': shirtsize,
+        }
+        cursor=mydb.cursor(buffered=True)
+        cursor.execute('INSERT INTO temporary(FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', [data['fname'], data['lname'], data['email'], data['password'], data['mobile'], data['age'], data['gender'], data['dob'], data['city'], data['address'], data['state'], data['country'], data['degree'], data['mci'], data['selectmember'],data['shirtsize'], data['acception']])
+        mydb.commit()
+        cursor.execute('select id from temporary where Email=%s and mobileno=%s', [data['email'], data['mobile']])
+        eid=cursor.fetchone()[0]
+
+        #updated code------------------------- --------------------------------
+        #cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,data['game'],data['amount']])
+        #print(game)
+        
+        cursor.close()
+        session.pop('otp')
+        session.pop('email')
+        #flash ('Registration successful! Complete the payment process.')
+        #subject='IMA Doctors Olympiad Registration'
+        #body=f'Thanks for the registration your unique for future reference is {eid}'
+        #sendmail(to=email, subject=subject, body=body)
+        #---------------------------------------------------------------
+        link=url_for('payment_add_on_c',eid=eid,game=data['game'],amount=amount,_external=True)
+        return redirect(link)
+    return render_template('register.html',message='')
+                    
+@app.route('/checkout-addon-payc/<eid>/<game>/<amount>/<rid>', methods=['GET', 'POST'])
+def payment_add_on_c(eid,game,amount,rid):
+    cursor = mydb.cursor(buffered=True)
+    cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member FROM temporary WHERE id=%s", [eid])
+    data1 = cursor.fetchall()
+    cursor.execute('SELECT email from temporary where id=%s',[eid])
+    email=cursor.fetchone()[0]
+    cursor.execute("select CONCAT(FirstName, ' ', LastName) AS FullName from temporary where id=%s",[eid])
+    name=cursor.fetchone()[0]
+    # print(payment_url)
+    if request.method=='POST':
+        ref=random.randint(1000000,99999999)
+        eazypay_integration = Eazypay(url_for('c_success',rid=rid,_external=True))
+        payment_url=eazypay_integration.get_payment_url(ref,amount,name,email,data1[0][3])
+        cursor  = mydb.cursor(buffered=True)
+        cursor.execute('select count(*) from games where game_name=%s',[game])
+        cursor.execute('insert into payments (ordid,id,game,amount) values(%s,%s,%s,%s)',[ref,eid,game,amount])
+        mydb.commit()
+        cursor.close()
+        return jsonify({'status':'success','payment_url':payment_url})
+    return render_template('pt.html', data1=data1,game=game,amount=amount,eid=eid,name=name,email=email)
+@app.route('/success_c/<rid>',methods=['POST'])
+def success(rid):
+    response = request.form.to_dict()
+    print(response)
+    response_code_value = response.get('Response Code','na')
+    print(response_code_value)
+    if response_code_value != 'na':
+        if payment_success_exec():
+            ref = int(response['ReferenceNo'])
+            amount = float(response['Total Amount'])
+            transaction_id = int(response['Unique Ref Number'])
+            cursor = mydb.cursor(buffered=True)
+            cursor.execute('SELECT id,game from payments where ordid=%s',[ref])
+            eid,game=cursor.fetchone()
+            #cursor.execute('SELECT status from register WHERE id=%s', [eid])
+            #status=cursor.fetchone()[0]
+            cursor.execute('select gender,email from temporary where id=%s',[eid])
+            gender,email=cursor.fetchone()
+            cursor.execute('insert into register (FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) select FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception from temporary where id=%s',[eid])
+            mydb.commit()
+            cursor.execute('SELECT id from register where email=%s',[email])
+            uid=cursor.fetchone()[0]
+            cursor.execute('SELECT concat(FirstName," ",LastName) as name from register where email=%s',[email])
+            name=cursor.fetchone()[0]
+            cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s,transactionid=%s WHERE ordid=%s',['Successfull',amount,uid,transaction_id,ref])
+            cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
+            cursor.execute('DELETE FROM temporary where id=%s',[eid])
+            mydb.commit()
+            if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
+                 category="Men's singles" if gender=='Male' else "Women's singles"
+                 cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,uid,category])
+                 mydb.commit()
+                 cursor.execute('select * from payments')
+                 details = cursor.fetchall()
+                 print(details)
+            cursor.close()
+            
+            html = f"""
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Registration Confirmation</title>
+                <style>
+                    table {{
+                        margin: auto;
+                    }}
+                    img {{
+                        margin-left: 30%;
+                    }}
+                    h1 {{
+                        text-align: center;
+                    }}
+                    table, tr, th, td {{
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                    }}
+                    th {{
+                        text-align: left;
+                    }}
+                    td {{
+                        width: 60%;
+                    }}
+                </style>
+            </head>
+            <body>
+                <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
+                <h1>Hi {name},<br><br>Thanks for registering to {game} in Doctors Olympiad 2023.<br><br>Your Payment details</h1>
+                <table cellpadding="10">
+                    <tr>
+                        <th>UNIQUE REFERENCE ID</th>
+                        <td>{uid}</td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td>{name}</td>
+                    </tr>
+                    <tr>
+                        <th>email</th>
+                        <td>{email}</td>
+                    </tr>
+                    <tr>
+                        <th>Game</th>
+                        <td>{game}</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <td>{transaction_id}</td>
+                    </tr>
+                    <tr>
+                        <th>Payment</th>
+                        <td>{amount}</td>
+                    </tr>
+                </table>
+            </body>
+            </html>
+            """
+            session['user']=uid
+            # subject = 'Payment Successful! From Doctors Olympiad 2023'
+            # mail_with_atc(email,subject,html)
+            subject='Registration Successful for Doctors Olympiad 2023'
+            # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\ndef accept game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
+            mail_with_atc(to=email, subject=subject, html=html)
+            
+            flash('Payment Successful')
+            return redirect(url_for('dashboard'))
+            # print(response)
+            # Payment is successful
+            # return render_template('thank-you.html')
+        else:
+            # Payment failed, show failure message
+            response_msg = get_response_message(response['Response Code'])
+            print(response_msg)
+            return f"<h1>Transaction failed. Error: {response_msg}</h1>"
+    else:
+        # 'Response_Code' key is missing in the response
+        return "Invalid response received from payment gateway."
 
 def update_teams(input_value,game,add_gender):
     cursor=mydb.cursor()
@@ -1743,18 +1996,6 @@ def update_teams(input_value,game,add_gender):
     cursor.close()
     return message
 
-@app.route('/update/<game>', methods=['POST'])
-def update(game):
-    if session.get('user'):
-        input_value = request.form['inputValue']
-        add_gender=request.form['gender']
-        message=update_teams(input_value,game,add_gender)
-        # Here, you can perform any necessary processing with the input data.
-        # For simplicity, we'll just return the input value as the response.
-        response = {'outputValue': message}
-        return jsonify(response)
-    else:
-        return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run()
