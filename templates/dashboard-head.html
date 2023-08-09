@@ -1,94 +1,105 @@
 <style>
     /*dashboard start css*/
-  h1{
-   background-color:#323596;
-    color: white;
-    text-align: center;
-    font-size: 16px;
-    padding:3%;
-   justify-content: space-between;
-    margin-top: 0%;
-    margin-right: 0% !important;
-  }
+    h1 {
+        background-color: #323596;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        padding: 3%;
+        justify-content: space-between;
+        margin-top: 0%;
+        margin-right: 0% !important;
+    }
 
-  h1:hover{
-    background-color:white;
-    color:#323596;
-    border: 1px solid #323596;
-  }
+    h1:hover {
+        background-color: white;
+        color: #323596;
+        border: 1px solid #323596;
+    }
 
-  h1:visited {
-    color: #ccc;
-  }
+    h1:visited {
+        color: #ccc;
+    }
 
-h1:visited:hover {
-    background-color: #888;
-    color:black
-}
-.card-img-top{
-    height: 90%;
-    width:90%;
-    padding:2%;
-   margin-left: 5%;
-}
-.dashboard-games{
-    padding:3%;
-    background-color:#323596;
-    color: white;
-}
-.dashboard-games select{
-    outline:none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    text-indent: 1px;
-    text-overflow: '';
-    background-color:#323596;
-    color: white;
-    width:90%;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 400;
-    border: none;
-}
-.dashboard-games select option{
-    background-color: #323596;
+    h1:visited:hover {
+        background-color: #888;
+        color: black
+    }
 
-}
+    .card-img-top {
+        height: 90%;
+        width: 90%;
+        padding: 2%;
+        margin-left: 5%;
+    }
 
-.container.new {
-    display: flex;
-    gap: 20px;
-    padding: 2%;
-    justify-content: center;
-    align-items: flex-start; /* Keep items aligned at the top of the container */
-    margin-top: 2%;
-}
+    .dashboard-games {
+        padding: 3%;
+        background-color: #323596;
+        color: white;
+    }
 
-@media screen and (max-width: 768px) {
+    .dashboard-games select {
+        outline: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        text-indent: 1px;
+        text-overflow: '';
+        background-color: #323596;
+        color: white;
+        width: 90%;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 400;
+        border: none;
+    }
+
+    .dashboard-games select option {
+        background-color: #323596;
+
+    }
+
     .container.new {
-        flex-wrap: wrap; /* Allow items to wrap to a new row on smaller screens */
-        padding: 2%; /* Adjust padding for smaller screens */
+        display: flex;
+        gap: 20px;
+        padding: 2%;
+        justify-content: center;
+        align-items: flex-start;
+        /* Keep items aligned at the top of the container */
+        margin-top: 2%;
     }
-    .col-12 {
-        text-align: center; /* Center align columns on smaller screens */
-    }
-}
 
-@media screen and (max-width:992px){
-    .dashboard-games{
-        padding:1%;
-}
-.new{
-text-align: center!important;
-}
-}
-@media screen and (min-width:992px){
-    .new{
-        margin-left: 6% !important;
-    }
-}
+    @media screen and (max-width: 768px) {
+        .container.new {
+            flex-wrap: wrap;
+            /* Allow items to wrap to a new row on smaller screens */
+            padding: 2%;
+            /* Adjust padding for smaller screens */
+        }
 
-/*dashboard css end*/
+        .col-12 {
+            text-align: center;
+            /* Center align columns on smaller screens */
+        }
+    }
+
+    @media screen and (max-width:992px) {
+        .dashboard-games {
+            padding: 1%;
+        }
+
+        .new {
+            text-align: center !important;
+        }
+    }
+
+    @media screen and (min-width:992px) {
+        .new {
+            margin-left: 6% !important;
+        }
+    }
+
+    /*dashboard css end*/
 </style>
 
 <!--dashboard start-->
@@ -102,7 +113,7 @@ text-align: center!important;
             <select onchange="location = this.value;">
                 <option value="{{ url_for('dashboard') }}" selected>Games</option>
                 <option value="{{ url_for('payment_orders') }}">Payments</option>
-                <option value="#">Your Requests</option>
+                <option value="{{ url_for('send_request') }}">Your Requests</option>
                 <option value="{{ url_for('invitations') }}">Invitations</option>
                 <option value="{{ url_for('individual') }}">Individuals</option>
                 <option value="{{ url_for('team') }}">Teams Games</option>
@@ -122,5 +133,3 @@ text-align: center!important;
     </div>
 </div>
 <!--Dashboard end-->
-
-
