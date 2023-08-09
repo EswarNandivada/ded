@@ -18,6 +18,7 @@ import base64
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad,unpad
 import hashlib
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = secret_key
@@ -579,7 +580,7 @@ def forgot_password():
         cursor.close()
 
         if count == 0:
-            flash('Email not found. Please enter a registered email.')
+            flash('Email not found. Please enter a def accep email.')
             return render_template('forgot_password.html')
 
         # Generate a one-time token for password reset
@@ -785,7 +786,7 @@ def success():
             # subject = 'Payment Successful! From Doctors Olympiad 2023'
             # mail_with_atc(email,subject,html)
             subject='Registration Successful for Doctors Olympiad 2023'
-            # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\nRegistered game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
+            # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\ndef accept game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
             mail_with_atc(to=email, subject=subject, html=html)
             
             flash('Payment Successful')
@@ -829,7 +830,7 @@ def sport(game):
                         mydb.commit()
                         cursor.close()
                         subject='Doctors Olympiad Games registration'
-                        body=f'You are successfully registered to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
+                        body=f'You are successfully def accept to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
                         sendmail(email_id,subject,body)
                         return redirect(url_for('dashboard'))
                     return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
@@ -845,7 +846,7 @@ def sport(game):
 
             elif count>=1:
                 if game in ('ATHLETICS','ARCHERY','CHESS','CYCLOTHON','JUMPS','WALKATHON','SWIMMING','TENNKOIT','THROW','ROWING','ROLLER_SKATING','FENCING','SHOOTING'):
-                    flash('You already registered for this game')
+                    flash('You already def accept for this game')
                     return redirect(url_for('individual'))
                 else:
                     return game
@@ -1109,7 +1110,7 @@ def addonsuccess(eid,game):
             # subject = 'Payment Successful! From Doctors Olympiad 2023'
             # mail_with_atc(email,subject,html)
             subject='Registration Successful for Doctors Olympiad 2023'
-            # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\nRegistered game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
+            # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\ndef accept game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
             mail_with_atc(to=email, subject=subject, html=html)
             
             flash('Payment Successful')
@@ -1140,7 +1141,7 @@ def registeredgame(game):
         count = cursor.fetchone()[0]
         cursor.close()
         if count>=1:
-            flash('Already registered!refer your games profile')
+            flash('Already def accept!refer your games profile')
             return redirect(url_for('individual'))
         if request.method=='POST':
             cursor = mydb.cursor(buffered=True)
@@ -1149,7 +1150,7 @@ def registeredgame(game):
                 mydb.commit()
             cursor.close()
             subject='Doctors Olympiad Games registration'
-            body=f'You are successfully registered to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
+            body=f'You are successfully def accept to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
             sendmail(email_id,subject,body)
             return redirect(url_for('individual'))
         return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
@@ -1159,7 +1160,7 @@ def registeredgame(game):
         count = cursor.fetchone()[0]
         cursor.close()
         if count>=1:
-            flash('Already registered!refer your games profile')
+            flash('Already def accept!refer your games profile')
             return redirect(url_for('dashboard'))
         if request.method=='POST':
             if len(request.form)==0:
@@ -1171,7 +1172,7 @@ def registeredgame(game):
                     mydb.commit()
                 cursor.close()
                 subject='Doctors Olympiad Games registration'
-                body=f'You are successfully registered to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
+                body=f'You are successfully def accept to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
                 sendmail(email_id,subject,body)
                 return redirect(url_for('dashboard'))
         return render_template(f'/games-individual-team/Individual/{game}.html')
@@ -1181,7 +1182,7 @@ def registeredgame(game):
         count = cursor.fetchone()[0]
         cursor.close()
         if count>=1:
-            flash('Already registered!refer your games profile')
+            flash('Already def accept!refer your games profile')
             return redirect(url_for('dashboard'))
         if request.method=='POST':
             s_styles={'Butterfly Stroke','Breaststroke','Backstroke','Freestyle'}
@@ -1223,9 +1224,9 @@ def registeredgame(game):
                     cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
                     mydb.commit()
                 cursor.close()
-                flash('Details Registered Successfully ')
+                flash('Details def accept Successfully ')
                 subject='Doctors Olympiad Games registration'
-                body=f'You are successfully registered to {"/n".join(values)}\n\nThanks and regards\nDoctors Olympiad 2023'
+                body=f'You are successfully def accept to {"/n".join(values)}\n\nThanks and regards\nDoctors Olympiad 2023'
                 sendmail(email_id,subject,body)
                 return redirect(url_for('dashboard'))
         return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
@@ -1239,7 +1240,7 @@ def registeredgame(game):
         # gender=cursor.fetchone()[0]
         # cursor.close()
         # if count>=1:
-        #     flash('Already registered!refer your games profile')
+        #     flash('Already def accept!refer your games profile')
         #     return redirect(url_for('dashboard'))
         # if request.method=='POST':
         #     print(request.form)
@@ -1284,9 +1285,9 @@ def registeredgame(game):
         #             cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
         #             mydb.commit()
         #         cursor.close()
-        #         flash('Details Registered Successfully ')
+        #         flash('Details def accept Successfully ')
         #         subject='Doctors Olympiad Games registration'
-        #         body=f'You are successfully registered to {" ".join(values)}\n\nThanks and regards\nDoctors Olympiad 2023'
+        #         body=f'You are successfully def accept to {" ".join(values)}\n\nThanks and regards\nDoctors Olympiad 2023'
         #         sendmail(email_id,subject,body)
         #         return redirect(url_for('dashboard'))
         # return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
@@ -1310,7 +1311,7 @@ def registeredgame(game):
     #     else:
     #         cond=False
     #     if len(data)==0 and cond:
-    #         flash('Already registered refer to games section')
+    #         flash('Already def accept refer to games section')
     #         return redirect(url_for('dashboard'))
     #     if len(data)!=0:
     #         pass
@@ -1323,9 +1324,9 @@ def registeredgame(game):
     #                     cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
     #                     mydb.commit()
     #                 cursor.close()
-    #                 flash('Details Registered Successfully ')
+    #                 flash('Details def accept Successfully ')
     #                 subject='Doctors Olympiad Games registration'
-    #                 body=f'You are successfully registered to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
+    #                 body=f'You are successfully def accept to {" ".join(request.form.values())}\n\nThanks and regards\nDoctors Olympiad 2023'
     #                 sendmail(email_id,subject,body)
     #                 return redirect(url_for('dashboard'))
     #         else:
@@ -1340,7 +1341,7 @@ def registeredgame(game):
             if request.method=='POST':
                 for i in request.form:
                     if i.startswith('output'):
-                        if request.form[i] in ("Id not found","User Gender doesnot match","User Registered to other team" ,'User already Registered in other cricket team','You cannot add yourself.','User already Registered in two teams'):
+                        if request.form[i] in ("Id not found","User Gender doesnot match","User def accept to other team" ,'User already def accept in other cricket team','You cannot add yourself.','User already def accept in two teams'):
                             return jsonify({'message':request.form[i]})
                 else:
                     names=[]
@@ -1414,7 +1415,11 @@ def registeredgame(game):
           
 @app.route('/acceptrequest/<token>')
 def accept(token):
-    return "Updates are on the way"
+     today_date=datetime.now()
+     expiry_date = datetime.strptime('21/11/23 23:59:59', "%d/%m/%y %H:%M:%S")
+     d=int((expiry_date-today_date).total_seconds())
+     try:
+          
 @app.route('/individualupdate/<game>',methods=['POST'])
 def individual_update(game): 
     if session.get('user'):
@@ -1449,18 +1454,18 @@ def update_teams(input_value,game,add_gender):
                 message='You cannot add yourself.'
             if count>0:
                 cond=False
-                message='User Registered to other team'
+                message='User accept to other team'
             cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[input_value,'Accept'])
             count1=cursor.fetchone()[0]
             if count1>1:
                 cond=False
-                message='User already Registered in two teams'
+                message='User already accept in two teams'
             if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
                 cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[input_value,game,'Accept'])
                 count2=cursor.fetchone()[0]
                 if count2!=0:
                     cond=False
-                    message='User already Registered in other cricket team'
+                    message='User already accept in other cricket team'
             if cond==True and  message!="You cannot add yourself.":
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[input_value])
                 message=cursor.fetchone()[0]
@@ -1487,18 +1492,18 @@ def update_teams(input_value,game,add_gender):
                 message='You cannot add yourself.'
             if count>0:
                 cond=False
-                message='User Registered to other team'
+                message='User accept to other team'
             cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[eid,'Accept'])
             count1=cursor.fetchone()[0]
             if count1>1:
                 cond=False
-                message='User already Registered in two teams'
+                message='User already /accept in two teams'
             if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
                 cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
                 count2=cursor.fetchone()[0]
                 if count2!=0:
                     cond=False
-                    message='User already Registered in other cricket team'
+                    message='User already /accept in other cricket team'
             if cond==True and message!='You cannot add yourself.':
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[eid])
                 message=cursor.fetchone()[0]
