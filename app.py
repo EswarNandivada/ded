@@ -1420,7 +1420,16 @@ def check_teams(eid,game):
     count=cursor.fetchone()[0]
     cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[eid,'Accept'])
     count1=cursor.fetchone()[0]
-    cursor.execute("SELECT count(*) from sub_games where id=%s",[eid])
+    cursor.execute("""
+    SELECT COUNT(*)
+    FROM sub_games
+    WHERE id = %s
+    AND game NOT IN (
+        'ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 
+        'WALKATHON', 'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 
+        'FENCING', 'SHOOTING', 'TABLE TENNIS', 'LAWN TENNIS')""", (eid,game))
+    count4=cursor.fetchone()[0]
+    cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[eid,game])
     count3=cursor.fetchone()[0]
     cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
     count2=cursor.fetchone()[0]
@@ -1428,7 +1437,7 @@ def check_teams(eid,game):
     if count>0:
         message='You are already in other team'
         cond=False
-    if count1>1:
+    if count1>1 or count4>1:
         cond=False
         message='You are already in two teams'
     if count3!=0:
