@@ -1467,7 +1467,7 @@ def accept(token):
                     return "<h1>Request already Accepted<h1>"
                else:
                     criteria=check_teams(eid,game)
-                    if criteria['cond']:
+                    if criteria['cond']: 
                          cursor.execute('update teams set status="Accept" where reqid=%s',[rid])
                          mydb.commit()
                          subject=f"{participant} Accepted your {game} team request"
