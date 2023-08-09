@@ -1348,7 +1348,7 @@ def registeredgame(game):
                     for i in request.form:
                         if i.startswith('input'):
                             if request.form[i].isdigit():
-                                uid=request.form[i]
+                                uid=int(request.form[i])
                                 if uid not in names:
                                     names.append(uid)
                                 else:
