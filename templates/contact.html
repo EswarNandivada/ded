@@ -38,6 +38,38 @@
         font-weight: bold;
         margin-left: 10px;
     }
+
+    /* Image Head */
+    .image-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+    .image-container img {
+        width: 75%;
+        height: auto;
+        max-height: 400px;
+        object-fit: cover;
+    }
+
+    @media (max-width: 768px) {
+        .image-container {
+            max-width: 100%;
+        }
+    }
+
+
+    /* Media query for responsiveness */
+    @media (max-width: 768px) {
+        .image-container {
+            max-width: 100%;
+        }
+    }
 </style>
 
 {% endblock %}
@@ -48,6 +80,9 @@
 
 <section class="gamesSection">
     <section class="National-committee">
+        <div class="image-container">
+            <img src="{{url_for('static',filename='images/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.webp')}}" alt="">
+        </div>
         <div class="container">
             <div class="row">
                 <div class="col-12 col-lg-4 col-md-12">
