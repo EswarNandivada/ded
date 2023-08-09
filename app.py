@@ -1341,7 +1341,7 @@ def registeredgame(game):
             if request.method=='POST':
                 for i in request.form:
                     if i.startswith('output'):
-                        if request.form[i] in ("Id not found","User Gender doesnot match","User def accept to other team" ,'User already def accept in other cricket team','You cannot add yourself.','User already def accept in two teams'):
+                        if request.form[i] in ("Id not found","User Gender doesnot match","User registered to other team" ,'User already in two teams','You cannot add yourself.','User registered to other cricket team'):
                             return jsonify({'message':request.form[i]})
                 else:
                     names=[]
