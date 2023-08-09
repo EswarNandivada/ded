@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Doctors Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: linear-gradient(to right, rgb(58, 58, 236), rgb(17, 149, 202), rgb(97, 158, 211), rgb(144, 232, 241));
+        }
+
+        .container {
+            border-radius: 6%;
+            margin-top: 1% !important;
+            margin-bottom: 2% !important;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1);
+            padding-bottom: 1% !important;
+            cursor: pointer;
+
+        }
+
+        .empCode {
+            color: rgb(50, 81, 204);
+        }
+
+        form {
+
+            margin-bottom: 20px;
+
+
+        }
+
+        label {
+            color: rgb(50, 81, 204);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+
+        @media (max-width: 600px) {
+            form {
+                width: 100%;
+
+            }
+
+            input {
+                width: 50%;
+            }
+        }
+    </style>
+    <style>
+        /* Center the buffering animation in the middle of the page */
+        #buffering {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script src="https://kit.fontawesome.com/942547a0cd.js" crossorigin="anonymous"></script>
+</head>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<center>
+    <li>{{ message }}</li>
+</center>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<body>
+    <center>
+        <h1 style="color:aliceblue;">*Once payment is done,no refund can be issued</h1>
+    </center>
+    <div id="buffering">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+    </div>
+
+    <div class="container">
+        {% for i in data1 %}
+        <form autocomplete="off" method="POST">
+            <div>
+                <label for="fullName"><i class="fa-regular fa-address-card"></i> ID</label>
+                <input type="text" name="id" id="id" value="{{i[0]}}" readonly>
+            </div>
+            <div>
+                <label for="fullName"><i class="fa-solid fa-user"></i> Name</label>
+                <input type="text" name="name" value="{{i[1]}}" readonly>
+            </div>
+            <div>
+                <label for="salary"><i class="fa-regular fa-envelope"></i> Email ID</label>
+                <input type="text" name="emailid" id="emailid" value="{{i[2]}}" readonly>
+            </div>
+            <div>
+                <label for="salary"><i class="fa-solid fa-phone"></i> Phone Number</label>
+                <input type="text" name="mobileno" id="mobileno" value="{{i[3]}}" readonly>
+            </div>
+            <div>
+                <label for="salary"><i class="fa-brands fa-creative-commons-remix"></i> IMA or NON IMA MEMBER</label>
+                <input type="text" name="member" id="member" value="{{i[4]}}" readonly>
+            </div>
+            <div>
+                <label for="salary"><i class="fa-solid fa-gamepad"></i> SELECTED GAME NAME</label>
+                <input type="text" name="game" id="game" value="{{game}}" readonly>
+            </div>
+            <div>
+                <label for="salary"><i class="fa-solid fa-sack-dollar"></i> Amount</label>
+                <input type="text" name="amount" id="amount" value="{{amount}}" readonly><br />
+                <button id="generateOTP">Pay Now</button>
+            </div>
+            {% endfor %}
+        </form>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Handle form submission using AJAX
+            $("#generateOTP").click(function (e) {
+                e.preventDefault()
+                //var name = $("#name").val();
+                //var address = $("#address").val();
+
+                // Disable the "Generate OTP" button
+                $("#generateOTP").prop("disabled", true);
+                // Disable the email field
+                //$("#email").prop("disabled", true);
+
+                // Show buffering animation
+                $("#buffering").show();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{url_for('payment_add_on_c',eid=eid,game=game,amount=amount,rid=rid)}}",
+                    success: function (response) {
+                        // Hide buffering animation
+                        $("#buffering").hide();
+                        if (response.status == 'success') {
+                            window.location.href = response.payment_url;
+
+                        }
+
+
+                        // Enable the "Generate OTP" button
+                    },
+                    error: function (err) {
+                        // Hide buffering animation
+                        $("#buffering").hide();
+                        alert('Error in generating payment link,try again');
+                        $("#generateOTP").prop("disabled", false);
+
+                        // Enable the "Generate OTP" button
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
