@@ -100,7 +100,7 @@ text-align: center!important;
     <div class="col-12 col-lg-6 col-xl-2 mb-1">
         <div class="dashboard-games">
             <select onchange="location = this.value;">
-                <option selected>Games</option>
+                <option value="{{ url_for('dashboard') }}" selected>Games</option>
                 <option value="{{ url_for('payment_orders') }}">Payments</option>
                 <option value="#">Your Requests</option>
                 <option value="{{ url_for('invitations') }}">Invitations</option>
@@ -111,7 +111,7 @@ text-align: center!important;
         </div>
     </div>
     <div class="col-12 col-lg-6 col-xl-2">
-        <a href="{{ url_for('edit_profile') }}">
+        <a href="{{ url_for('edit_profile') }}" style="text-decoration: none">
             <h1 class="p-2">Profile</h1>
         </a>
     </div>
