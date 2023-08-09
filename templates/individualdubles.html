@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous" />
+  <link rel="stylesheet" href="Nav bar and footer before login/style.css" />
+  <style>
+    .hidden {
+      display: none;
+  }
+#border{
+  border: 2px solid black;
+  margin-top:2% ;
+  border-radius: 15px;
+}
+input{
+  border-color: black !important;
+}
+.check-fields{
+  display: flex; 
+  justify-content: space-around; 
+  margin-bottom: 5%;
+}
+@media(max-width:768px){
+  .check-fields{
+    flex-direction: column;
+  }
+}
+.name{
+  font-size: 3rem;
+}
+    section {
+      display: flex;
+      flex-direction: row;
+    }
+
+    body {
+      background-color: #ecf8ff;
+    }
+
+    #imp {
+      background-color: #ecf8ff !important;
+    }
+
+    #good {
+      border: none !important;
+      border-color: #ecf8ff !important;
+    }
+
+    h1 {
+      background-color: #ecf8ff;
+      font-size: 70px;
+
+      color: #1c244b;
+    }
+
+    h2 {
+      background-color: #ecf8ff;
+    }
+
+    .foot {
+      background-color: #fff;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+  <style>
+    /* Center the buffering animation in the middle of the page */
+    #buffering {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+    }
+</style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm py-3">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="#"><img src="./Nav bar and footer before login/Logo.png" width="250px" alt="" /></a>
+      <button class="navToggleBtn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+      </button>
+      <div class="collapse navbar-collapse navbar_menus" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex flex-wrap">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+
+          <li class="bar"></li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <b>Managment Committee</b>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="m-0">
+                <a class="dropdown-item" href="#"><b>NATIONAL COMMITTEE</b></a>
+              </li>
+              <li class="m-0">
+                <a class="dropdown-item" href="#">IMA AP STATE COMMITTEE</a>
+              </li>
+            </ul>
+          </li>
+          <li class="bar"></li>
+
+          <li class="nav-item">
+            <a class="nav-link"> <b>Rules</b></a>
+          </li>
+          <li class="bar"></li>
+
+          <li class="nav-item">
+            <a class="nav-link"><b>Contact</b> </a>
+          </li>
+
+          <li class="bar"></li>
+
+          <li class="nav-item">
+            <a class="nav-link"><b>Venue/Sports Schedule</b></a>
+          </li>
+
+          <li class="bar"></li>
+
+          <li class="nav-item">
+            <a class="nav-link"><b>Games & Subgames</b> </a>
+          </li>
+
+          <li class="bar"></li>
+
+          <li class="nav-item mt-1">
+            <a class="nav-link"><b>Login</b></a>
+          </li>
+
+          <li class="bar"></li>
+
+          <li class="mt-2">
+            <a class="registerBtn" href="/register"><b>Register</b></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <nav aria-label="breadcrumb" style="margin-left: 5%; margin-top: 3%">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#">Home</a></li>
+      <li class="breadcrumb-item"><a href="#">Games</a></li>
+      <li class="breadcrumb-item"><a href="#">Individual</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Badminton</li>
+    </ol>
+  </nav>
+  <section class="gamesSection">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-12 col-md-6 col-lg-6">
+          <h1>{{game}}</h1>
+          <form>
+      
+            <label for="checkbox0">  {{ "Men's" if gender=='Male' else "Women's" }} single</label>
+            <input type="checkbox" id="checkbox0" name="ch1" value="on d">
+            <br>
+
+            <label for="checkbox2"> {{ "Men's" if gender=='Male' else "Women's" }} Doubles</label>
+            <input type="checkbox" id="checkbox2" name="ch2" value="off d">
+            <div id="inputField2" class="hidden">
+              <label>Enter email or unique id of 2nd Player</label>
+              <input type="text" id="input1" placeholder="Enter email or unique id" oninput="autoSubmit(1)">
+              <label>Details</label>
+              <input type="text" id="output1">
+            </div>
+
+            <br>
+            <label for="checkbox1">Mixed Doubles</label>
+            <input type="checkbox" id="checkbox1">
+            <div id="inputField1" class="hidden">
+              <label>Enter email or unique id of 2nd Player</label>
+              <input type="text" id="input2" placeholder="Enter email or unique id" oninput="autoSubmitcat(2)">
+              <label>Details</label>
+              <input type="text" id="output2" placeholder=" email 1">
+
+            </div><br />
+            <button class="btn btn-primary" style="margin-top: 3%;" id="formregister">Submit</button>
+            <br>
+          </form>
+          <!-- Divs to hold the input fields -->
+
+          <div id="buffering">
+            <i class="fas fa-spinner fa-spin fa-3x"></i>
+          </div>
+
+          <script>
+            // Get references to the checkboxes and input fields
+            const checkbox1 = document.getElementById('checkbox1');
+            const checkbox2 = document.getElementById('checkbox2');
+            const inputField1 = document.getElementById('inputField1');
+            const inputField2 = document.getElementById('inputField2');
+
+            // Add event listeners to the checkboxes
+            checkbox1.addEventListener('change', function () {
+              // If checkbox1 is checked, show its corresponding input field
+              if (checkbox1.checked) {
+                inputField1.classList.remove('hidden');
+              } else {
+                inputField1.classList.add('hidden');
+              }
+            });
+
+            checkbox2.addEventListener('change', function () {
+              // If checkbox2 is checked, show its corresponding input field
+              if (checkbox2.checked) {
+                inputField2.classList.remove('hidden');
+              } else {
+                inputField2.classList.add('hidden');
+              }
+            });
+
+          </script>
+
+
+
+
+
+
+
+
+        </div>
+        <div class="col-12 col-md-6 col-lg-6">
+          <img src="images/IMA  LOGO  Page Design (1).png" height="100%" width="100%" class="mt-1" />
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+  </section>
+  <footer class="foot py-4">
+    <div class="container">
+      <div class="row footer_row justify-content-between">
+        <div class="col-12 col-md-4 mb-4">
+          <img src="./Nav bar and footer before login/Logo.png" alt="Logo" class="img-fluid mb-3" />
+          <p>
+            <b>Unite, Compete, Excel - Our Nation's Passion for Sports</b>
+          </p>
+          <div class="socialLinks d-flex flex-column">
+            <span><i class="fa fa-envelope"> </i> Email:
+              doctorsolympaid2023@gmail.com</span><br />
+            <span><i class="bi bi-telephone"></i> Phone: 9759434567</span><br />
+            <span><i class="bi bi-telephone"></i> Mobile: 9759634567</span><br />
+          </div>
+          <div class="message d-flex gap-1">
+            <a href="https://api.whatsapp.com/send?phone=YOUR_WHATSAPP_NUMBER" target="_blank"
+              rel="noopener noreferrer">
+              <i class="bi bi-whatsapp text-success"></i>
+            </a>
+            <a href="https://www.instagram.com/YOUR_INSTAGRAM_ACCOUNT" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-instagram text-danger"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-12 col-md-3 mb-4">
+          <h2 style="background-color: #fff">Get In Touch</h2>
+          <p>Indian Medical Association VIJAYAWADA Branch</p>
+          <span>DOCTORS SPORTS ACADEMY D.No.14: Beside GEMS Public School</span>
+          <span>Kaza Village, Mangalagiri Mandal, Guntur District, Andhra
+            Pradesh</span>
+        </div>
+        <div class="col-12 col-md-3 mb-4">
+          <h2 style="background-color: #fff">Quick Links</h2>
+          <ul class="list-unstyled quickLinks">
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Return & Refund Policy</a></li>
+            <li><a href="#">Cancellation Policy</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="subFooter text-center bg-primary text-white py-1">
+    <h4>
+      <a href="https://www.codegnan.com" class="codegnan">Designed By Codegnan</a>
+      &#169; All Right Reserved
+    </h4>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+</body>
+<script>
+  function autoSubmit(inputNumber) {
+   
+      const inputValue = document.getElementById(`input${inputNumber}`).value;
+      // Here, you can perform any necessary processing on the inputValue before setting it in the output field.
+      // For simplicity, we'll just set it directly.
+      document.getElementById(`output${inputNumber}`).value = inputValue;
+
+      // Send the data to the Flask route using AJAX
+      $.ajax({
+          url: "{{url_for('individual_update',game=game)}}",
+          method: 'POST',
+          data: {inputValue: inputValue,
+            gender:"{{gender}}",
+            category:"{{ds}}"
+
+              },
+          success: function(response) {
+              // Update the corresponding output field with the response from the server
+              document.getElementById(`output${inputNumber}`).value = response.outputValue;
+              if(response.outputValue== "Id not found"|| response.outputValue=="User Registered to other team" || response.outputValue=='You cannot add yourself.' || response.outputValue=='Cannot add other gender in team' || response.outputValue=='age greater than 50 cannot add' ||response.outputValue=='age less than 50 cannot add' )
+                  document.getElementById(`output${inputNumber}`).readOnly=false
+              else   
+                  document.getElementById(`output${inputNumber}`).readOnly=true
+
+          },
+          error: function(error) {
+              // Handle errors if any
+              console.error(error);
+          }
+      });
+  }
+</script>
+<script>
+  function autoSubmitcat(inputNumber) {
+      const inputValue = document.getElementById(`input${inputNumber}`).value;
+      // Here, you can perform any necessary processing on the inputValue before setting it in the output field.
+      // For simplicity, we'll just set it directly.
+      document.getElementById(`output${inputNumber}`).value = inputValue;
+
+      // Send the data to the Flask route using AJAX
+      $.ajax({
+          url: "{{url_for('individual_update',game=game)}}",
+          method: 'POST',
+          data: {inputValue: inputValue,
+            gender:"{{gender}}",
+            category:"Mixed Doubles"
+
+              },
+          success: function(response) {
+
+              // Update the corresponding output field with the response from the server
+              document.getElementById(`output${inputNumber}`).value = response.outputValue;
+              if(response.outputValue== "Id not found"|| response.outputValue=="User Registered to other team" || response.outputValue=='You cannot add yourself.' || response.outputValue=='Cannot add other gender in team' || response.outputValue=='age greater than 50 cannot add' ||response.outputValue=='age less than 50 cannot add' )
+                  document.getElementById(`output${inputNumber}`).readOnly=false
+              else   
+                  document.getElementById(`output${inputNumber}`).readOnly=true
+
+          },
+          error: function(error) {
+              // Handle errors if any
+              console.error(error);
+          }
+      });
+  }
+</script>
+<script>
+  function isCheckboxChecked(ele) {
+    var isTicked = document.getElementById(ele).checked;
+    return isTicked;
+  }
+  $(document).ready(function() {
+    // Handle form submission using AJAX
+    $("#formregister").click(function(event) {
+      event.preventDefault(); // Prevent default form submission
+      var input1 = $("#input1").val();
+      var output1 = $('#output1').val();
+      var input2 = $('#input2').val();
+      var output2 = $('#output2').val();
+      var c1=isCheckboxChecked('checkbox0');
+      var c2=isCheckboxChecked('checkbox1');
+      var c3=isCheckboxChecked('checkbox2');
+
+
+      if(output1== "Id not found"|| output1=="User Registered to other team" || output1=='You cannot add yourself.' || output1=='Cannot add other gender in team' || output1=='age greater than 50 cannot add' || output1=='age less than 50 cannot add' || output2== "Id not found"|| output2=="User Registered to other team" || output2=='You cannot add yourself.' || output2=='Cannot add other gender in team' || output2=='age greater than 50 cannot add' || output2=='age less than 50 cannot add'){
+        alert(output1)
+      
+      }
+      else{
+
+     
+
+             
+      $("#formregister").prop("disabled", true);
+      $("#buffering").show();
+      $.ajax({
+        type: "POST",
+        url: "{{url_for('registeredgame',game=game)}}",
+        data: {
+          singles:c1,
+          doubles:c2,
+          mixed:c3,
+          input1 : input1,
+          output1 : output1,
+          input2:input2,
+          output2 : output2,
+        },
+        success: function(response) {
+          
+          
+          $("#buffering").hide();
+          $("#formregister").prop("disabled", false);
+
+
+          
+        },
+        error: function(err) {
+          // Hide buffering animation
+          $("#buffering").hide();
+          console.log(err);
+          $("#formregister").prop("disabled", false);
+
+
+          // Enable the "Generate OTP" button
+          //$("#generateOTP").prop("disabled", false);
+        }
+      });
+              
+    }
+    });
+    
+  });
+</script>
+
+</html>
