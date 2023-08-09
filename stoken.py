@@ -8,4 +8,4 @@ def token2(teamid,rid,salt,email=None):
     if email==None:
         return serializer.dumps({'rid':rid,'teamid':teamid},salt=salt)
     else:
-        return serializer.dumps({'rid':rid,'teamid':teamid,'email':email]},salt=salt)
+        return serializer.dumps({'rid':rid,'teamid':teamid,'email':email},salt=salt)
