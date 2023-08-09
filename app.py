@@ -1483,7 +1483,7 @@ def update_teams(input_value,game,add_gender):
                 count2=cursor.fetchone()[0]
                 if count2!=0:
                     cond=False
-                    message='User registered to other team'
+                    message='User registered to other cricket team'
             if cond==True and  message!="You cannot add yourself.":
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[input_value])
                 message=cursor.fetchone()[0]
@@ -1521,7 +1521,7 @@ def update_teams(input_value,game,add_gender):
                 count2=cursor.fetchone()[0]
                 if count2!=0:
                     cond=False
-                    message='User registered to other team'
+                    message='User registered to other cricket team'
             if cond==True and message!='You cannot add yourself.':
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[eid])
                 message=cursor.fetchone()[0]
