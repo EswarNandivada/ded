@@ -121,7 +121,7 @@ color: grey;
                 <img src="{{url_for('static',filename=i[0]+'.webp')}}" class="card-img-top p-2" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{i[0]}}</h5>
-                    {% if i[1]>=30 %}
+                    {% if i[1]>=40 %}
                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Select Options</a>
                     {% else %}
                     <a href="{{url_for('registeronteam')}}" class="btn btn-primary">Select Options</a>
