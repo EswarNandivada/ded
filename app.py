@@ -858,7 +858,7 @@ def success():
             </head>
             <body>
                 <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
-                <h1>Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023.\n\n\nYour Payment details</h1>
+                <h1>Hi {name},<br><br>Thanks for registering to {game} in Doctors Olympiad 2023.<br><br>Your Payment details</h1>
                 <table cellpadding="10">
                     <tr>
                         <th>UNIQUE REFERENCE ID</th>
@@ -1178,7 +1178,7 @@ def addonsuccess(eid,game):
             </head>
             <body>
                 <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
-                <h1>>Hi {name},Thanks for registering to {game} in Doctors Olympiad 2023.Your Payment details</h1>
+                <h1>>Hi {name},<br><br>Thanks for registering to {game} in Doctors Olympiad 2023.<br><br>Your Payment details</h1>
                 <table cellpadding="10">
                     <tr>
                         <th>UNIQUE REFERENCE ID</th>
