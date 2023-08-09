@@ -319,7 +319,9 @@ def home():
 def national_committee():
     return render_template('national-committe.html')
 
-
+@app.route('/request')
+def request():
+    return render_template('requests.html')
 
 @app.route('/ima_ap_state_committee')
 def ima_ap_state_committee():
