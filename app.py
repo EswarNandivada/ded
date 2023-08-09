@@ -1456,7 +1456,7 @@ def accept(token):
                cursor=mydb.cursor(buffered=True)
                cursor.execute('SELECT id,game,status from teams where reqid=%s',[rid])
                eid,game,status=cursor.fetchone()
-               cursor.execute('SELECT id from sub_games where teamid=%s',[tid])
+               cursor.execute('SELECT id from sub_games where team_number=%s',[tid])
                leadid=cursor.fetchone()[0]
                cursor.execute('SELECT email,concat(FirstName," ",LastName) from register where id=%s',[leadid])
                email,name=cursor.fetchone()[0]
