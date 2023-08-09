@@ -1,30 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-    <table border="1">
-        <tr>
-            <th>game</th>
-            <th>id</th>
-            <th>category</th>
-            <th> team_number</th>
-            <th>date</th>
-        </tr>
-        {% for i in data %}
-        <tr>
-            <td>{{i[0]}}</td>
-            <td>{{i[1]}}</td>
-            <td>{{i[2]}}</td>
-            <td>{{i[3]}}</td>
-            <td>{{i[4]}}</td>
+{% extends "base.html" %}
 
-        </tr>
-    </table>
-    {% endfor %}
-</body>
-</html>
+
+{% block style %}
+
+<style>
+    section {
+        display: flex;
+        flex-direction: row;
+    }
+
+    body {
+        background-color: #ecf8ff;
+        
+    }
+
+    #imp {
+        background-color: #ecf8ff !important;
+    }
+
+    #good {
+        border: none !important;
+        border-color: #ecf8ff !important;
+    }
+
+    h1 {
+        background-color: #ecf8ff;
+        font-size: 70px;
+
+        color: #1c244b;
+    }
+
+    h2 {
+        background-color: #ecf8ff;
+    }
+
+    .foot {
+        background-color: #fff;
+    }
+
+    .hidden {
+        display: none;
+
+    }
+
+    .row {
+        margin-top: 3%;
+        
+
+    }
+    @media(max-width: 480px) {
+
+        h1 {
+            font-size: 40px;
+        }
+        
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+{% include "dashboard-head.html" %}
+
+<nav aria-label="breadcrumb" style="margin-left: 1.5%; margin-top: 3%">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{url_for('home')}}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{url_for('dashboard')}}">Games</a></li>
+        <!-- <li class="breadcrumb-item"><a href="#">Individual</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Badminton</li> -->
+    </ol>
+</nav>
+
+<section class="gamesSection">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-6">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Team Id</th>
+                            <th scope="col">Game</th>
+                            <th scope="col">Members</th>
+                            <th scope="col">Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in data %}
+                        <tr>
+                            <td scope="row">{{i[1]}}</td>
+                            <td scope="row">{{i[0]}}</td>
+                            <td scope="row">{{i[2]}}</td>
+                            <td scope="row">{{i[3]}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="col-12 col-md-6 col-lg-6">
+                <img src="{{url_for('static',filename='images/imagame.webp')}}" height="100%" width="100%"
+                    class="mt-1" />
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+</section>
+
+
+{% endblock %}
+
+{% block sc %}
+
+{% endblock %}
