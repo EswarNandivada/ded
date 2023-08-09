@@ -186,22 +186,6 @@ background-color: #fff;
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="input7" name="n12" oninput="autoSubmit(7)"
-                                            class="form-control form-control-lg" />
-                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="output7" name="n13"
-                                            class="form-control form-control-lg" />
-                                        <label class="form-label" for="lastName">Details</label>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="mt-4 pt-2">
                                 <button class="btn btn-primary btn-lg" id="formregister">submit</button>
                             </div>
@@ -271,9 +255,7 @@ background-color: #fff;
 				var output5 = $('#output5').val(); 
 				var input6 = $('#input6').val(); 
 				var output6 = $('#output6').val(); 
-				var input7 = $('#input7').val(); 
-				var output7 = $('#output7').val(); 
-                if (input1=="" || output1=="" || input2=="" || output2=="" || output3=="" || input3=="" || output4==""|| input4=="" ||input5==""|| output5=="" || output6=="" || input6=="" || output7=="" || input7=="")
+                if (input1=="" || output1=="" || input2=="" || output2=="" || output3=="" || input3=="" || output4==""|| input4=="" ||input5==""|| output5=="" || output6=="" || input6=="" )
                 {
                     alert("Please fill all fields")
                     return false;
@@ -298,8 +280,7 @@ background-color: #fff;
 						output5 : output5,
 						input6 : input6,
 						output6 :output6,
-						input7:input7,
-						output7:output7,
+	
 					},
 					success: function(response) {
 						

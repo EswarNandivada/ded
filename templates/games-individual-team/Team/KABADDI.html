@@ -232,22 +232,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="input9" name="n16" oninput="autoSubmit(10)"
-                                            class="form-control form-control-lg" />
-                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="output9" name="n17"
-                                            class="form-control form-control-lg" />
-                                        <label class="form-label" for="lastName">Details</label>
-                                    </div>
-                                </div>
-                            </div>
+                        
                             <div class="mt-4 pt-2">
                                 <button class="btn btn-primary btn-lg" id="formregister">submit</button>
                             </div>
@@ -319,9 +304,8 @@ background-color: #fff;
 				var output8 = $('#output8').val();
                 var input9 = $('#input9').val(); 
 				var output9 = $('#output9').val();
-                var input10 = $('#input10').val(); 
-				var output10 = $('#output10').val();
-                if (input1=="" || output1=="" || input2=="" || output2=="" || output3=="" || input3=="" || output4==""|| input4=="" ||input5==""|| output5=="" || output6=="" || input6=="" || output7=="" || input7==""|| output8=="" || input8==""|| output9=="" || input9==""|| output10=="" || input10=="")
+                
+                if (input1=="" || output1=="" || input2=="" || output2=="" || output3=="" || input3=="" || output4==""|| input4=="" ||input5==""|| output5=="" || output6=="" || input6=="" || output7=="" || input7==""|| output8=="" || input8==""|| output9=="" || input9=="")
                 {
                     alert("Please fill all fields")
                     return false;
@@ -352,8 +336,7 @@ background-color: #fff;
 						output8:output8,
                         input9:input9,
 						output9:output9,
-                        input10:input10,
-						output10:output10,
+                       
 					},
 					success: function(response) {
 						

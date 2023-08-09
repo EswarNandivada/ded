@@ -279,7 +279,8 @@ background-color: #fff;
                                         <label class="form-label" for="lastName">Details</label>
                                     </div>
                                 </div>
-                            </div><div class="row">
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
                                         <input type="text" id="input10" name="n16" oninput="autoSubmit(13)"
@@ -294,22 +295,8 @@ background-color: #fff;
                                         <label class="form-label" for="lastName">Details</label>
                                     </div>
                                 </div>
-                            </div><div class="row">
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="input10" name="n16" oninput="autoSubmit(14)"
-                                            class="form-control form-control-lg" />
-                                        <label class="form-label" for="firstName">Enter Details or unique Id</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <input type="text" id="output10" name="n17"
-                                            class="form-control form-control-lg" />
-                                        <label class="form-label" for="lastName">Details</label>
-                                    </div>
-                                </div>
                             </div>
+                            
                             <div class="mt-4 pt-2">
                                 <button class="btn btn-primary btn-lg" id="formregister">submit</button>
                             </div>
@@ -389,9 +376,8 @@ background-color: #fff;
 				var output12 = $('#output12').val();
                 var input13 = $('#input13').val(); 
 				var output13 = $('#output13').val();
-                var input14 = $('#input14').val(); 
-				var output14 = $('#output14').val();
-                if (input1=="" || output1=="" || input2=="" || output2=="" || output3=="" || input3=="" || output4==""|| input4=="" ||input5==""|| output5=="" || output6=="" || input6=="" || output7=="" || input7==""|| output8=="" || input8==""|| output9=="" || input9==""|| output10=="" || input10==""|| output11=="" || input11==""|| output12=="" || input12=="" || output13=="" || input13==""|| output14=="" || input14=="")
+                
+                if (input1=="" || output1=="" || input2=="" || output2=="" || output3=="" || input3=="" || output4==""|| input4=="" ||input5==""|| output5=="" || output6=="" || input6=="" || output7=="" || input7==""|| output8=="" || input8==""|| output9=="" || input9==""|| output10=="" || input10==""|| output11=="" || input11==""|| output12=="" || input12=="" || output13=="" || input13=="")
                 {
                     alert("Please fill all fields")
                     return false;
@@ -430,8 +416,7 @@ background-color: #fff;
 						output12:output12,
                         input13:input13,
 						output13:output13,
-                        input14:input14,
-						output14:output14,
+                    
 					},
 					success: function(response) {
 						
