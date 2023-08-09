@@ -1427,7 +1427,7 @@ def check_teams(eid,game):
     AND game NOT IN (
         'ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 
         'WALKATHON', 'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 
-        'FENCING', 'SHOOTING', 'TABLE TENNIS', 'LAWN TENNIS')""", (eid,game))
+        'FENCING', 'SHOOTING', 'TABLE TENNIS', 'LAWN TENNIS')""", (eid,))
     count4=cursor.fetchone()[0]
     cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[eid,game])
     count3=cursor.fetchone()[0]
@@ -1538,7 +1538,7 @@ def update_teams(input_value,game,add_gender):
                 message='User registered to other team'
             cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[input_value,'Accept'])
             count1=cursor.fetchone()[0]
-            cursor.execute("""SELECT COUNT(*) FROM sub_games WHERE id = %s AND game NOT IN ('ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON', 'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING', 'TABLE TENNIS', 'LAWN TENNIS')""", (input_value,game))
+            cursor.execute("""SELECT COUNT(*) FROM sub_games WHERE id = %s AND game NOT IN ('ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON', 'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING', 'TABLE TENNIS', 'LAWN TENNIS')""", (input_value,))
             count4=cursor.fetchone()[0]
             if (count1+count4)==2:
                 cond=False
@@ -1583,7 +1583,7 @@ def update_teams(input_value,game,add_gender):
                 message='User registered to other team'
             cursor.execute("SELECT count(*) from teams where id=%s and status=%s",[eid,'Accept'])
             count1=cursor.fetchone()[0]
-            cursor.execute("""SELECT COUNT(*) FROM sub_games WHERE id = %s AND game NOT IN ('ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON', 'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING', 'TABLE TENNIS', 'LAWN TENNIS')""", (eid,game))
+            cursor.execute("""SELECT COUNT(*) FROM sub_games WHERE id = %s AND game NOT IN ('ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON', 'SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING', 'TABLE TENNIS', 'LAWN TENNIS')""", (eid,))
             count4=cursor.fetchone()[0]
             if (count1+count4)==2:
                 cond=False
