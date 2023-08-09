@@ -1434,9 +1434,9 @@ def check_teams(eid,game):
         cond=False
     if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
         if count2!=0:
-            message='You are already in other team
+            message='You are already in other team'
             cond=False
-     return {'cond':cond,'message':message}
+    return {'cond':cond,'message':message}
   
 @app.route('/acceptrequest/<token>')
 def accept(token):
@@ -1468,15 +1468,15 @@ def accept(token):
                else:
                     criteria=check_teams(eid,game)
                     if criteria['cond']: 
-                         cursor.execute('update teams set status="Accept" where reqid=%s',[rid])
-                         mydb.commit()
-                         subject=f"{participant} Accepted your {game} team request"
-                         body=f"Hi,\n\n{name}\n\n\n {participant} just accepted your team request for {game}.See others status in your dashboard\n\n{url_for('dashboard',_external=True)}"
-                         sendmail(to=email,subject=subject,body=body)
-                         flash('Request Accepted')
-                         return redirect(url_for('dashboard'))
+                        cursor.execute('update teams set status="Accept" where reqid=%s',[rid])
+                        mydb.commit()
+                        subject=f"{participant} Accepted your {game} team request"
+                        body=f"Hi,\n\n{name}\n\n\n {participant} just accepted your team request for {game}.See others status in your dashboard\n\n{url_for('dashboard',_external=True)}"
+                        sendmail(to=email,subject=subject,body=body)
+                        flash('Request Accepted')
+                        return redirect(url_for('dashboard'))
                     else:
-                         retrurn f"<h1>{criteria['message']}</h1>"
+                        return f"<h1>{criteria['message']}</h1>"
                     
                          
                          
