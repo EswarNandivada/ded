@@ -1487,7 +1487,7 @@ def registeredgame(game):
             else:
                 flash('Request sent')
                 return redirect(url_for('dashboard'))
-        return render_template('individualdoubles.html',gender=gender,game=game,ds=ds)
+        return render_template('individualdubles.html',gender=gender,game=game,ds=ds)
             
     else:
         cursor=mydb.cursor(buffered=True)
