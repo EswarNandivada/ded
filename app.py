@@ -1457,7 +1457,7 @@ def registeredgame(game):
                         cursor.execute("SELECT email from register where id=%s",[uid])
                         r_email=cursor.fetchone()[0]
                         one_time_token=token2(team_id,requestid,salt=salt2)
-                        link=url_for('acceptrequest',token=one_time_token,_external=True)
+                        link=url_for('accept',token=one_time_token,_external=True)
                         subject=f'Team Request for {game}'
                         body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
                         sendmail(r_email,subject=subject,body=body)
@@ -1471,7 +1471,7 @@ def registeredgame(game):
                             cursor.execute("insert into individual_teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
                             mydb.commit()
                             one_time_token=token2(team_id,requestid,salt=salt2)
-                            link=url_for('acceptrequest',token=one_time_token,_external=True)
+                            link=url_for('accept',token=one_time_token,_external=True)
                             subject=f'Team Request for {game}'
                             body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
                             sendmail(request.form[i],subject=subject,body=body)
@@ -1480,7 +1480,7 @@ def registeredgame(game):
                             cursor.execute("insert into individual_teams (reqid,teamid,game) values(%s,%s,%s)",[requestid,team_id,game])
                             mydb.commit()
                             one_time_token=token2(team_id,requestid,salt=salt2,email=request.form[i])
-                            link=url_for('acceptrequest',token=one_time_token,_external=True)
+                            link=url_for('accept',token=one_time_token,_external=True)
                             subject=f'Team Request for {game}'
                             body=f"Hello,\n\n Register to doctors olympiad and join our team by using this using the below url.\nPlease click on this link to join -{link}"
                             sendmail(request.form[i],subject=subject,body=body)
