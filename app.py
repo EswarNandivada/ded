@@ -195,8 +195,6 @@ def payment_success_exec():
         return False
 
 
-
-
 def get_response_message(code):
     rc = {
         'E000': 'Payment Successful.',
