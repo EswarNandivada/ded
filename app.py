@@ -1787,7 +1787,7 @@ def payment_add_on_c(eid,game,amount,rid):
         return jsonify({'status':'success','payment_url':payment_url})
     return render_template('pt.html', data1=data1,game=game,amount=amount,eid=eid,name=name,email=email,rid=rid)
 @app.route('/success_c/<rid>',methods=['POST'])
-def success(rid):
+def success_c(rid):
     response = request.form.to_dict()
     print(response)
     response_code_value = response.get('Response Code','na')
