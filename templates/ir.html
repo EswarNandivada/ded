@@ -1,0 +1,537 @@
+{% extends "base.html" %}
+
+
+{% block style %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='ATHLETICS' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='SWIMMING' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='ARCHERY' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='BADMINTON' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='ROWING' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='CARROMS' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='CHESS' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='CYCLOTHON' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='JUMPS' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='THROW' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='ROLLER SKATING' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='FENCING' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='SHOOTING' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='TENNIKOIT' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='TABLE TENNIS' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table>
+        <thead>
+            {% for i in data%}
+            {% if i[3]=='LAWN TENNIS' %}
+            {{i[3]}}
+            <tr>
+                <th>reqid</th>
+                <th>teamid</th>
+                <th>id</th>
+                <th>game</th>
+                <th>sub_category</th>
+                <th>status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>{{i[0]}}</td>
+                <td>{{i[1]}}</td>
+                <td>{{i[2]}}</td>
+                <td>{{i[3]}}</td>
+                <td>{{i[4]}}</td>
+                <td>{{i[5]}}</td>
+            </tr>
+            {% endif%}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+
+
+{% endblock %}
