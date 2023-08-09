@@ -1425,17 +1425,14 @@ def accept(token):
         print(e)
         abort(404, "Gone,Link Expired")
      else:
-          return jsonify(data)
-          '''if data.get('email','NA')!='NA':
+          if data.get('email','NA')=='NA':
                rid=data.get('rid')
                cursor=mydb.cursor(buffered=True)
                cursor.execute('SELECT status from teams where rid=%s',rid)
                status=cursor.fetchone()[0]
                if status=='Accept':
                     return "<h1>Request already Accepted<h1>"
-               else:
-                    '''
-                    
+               else:                    
           
                
           
@@ -1479,6 +1476,11 @@ def update_teams(input_value,game,add_gender):
             if count1>1:
                 cond=False
                 message='User already in two teams'
+            cursor.execute("SELECT count(*) from sub_games where id=%s",[input_value])
+            count3=cursor.fetchone()[0]
+            if count3!=0:
+                cond=False
+                message='User registered to other team'
             if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
                 cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[input_value,game,'Accept'])
                 count2=cursor.fetchone()[0]
@@ -1517,6 +1519,11 @@ def update_teams(input_value,game,add_gender):
             if count1>1:
                 cond=False
                 message='User already in two teams'
+            cursor.execute("SELECT count(*) from sub_games where id=%s",[eid])
+            count3=cursor.fetchone()[0]
+            if count3!=0:
+                cond=False
+                message='User registered to other team'
             if game in ['CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET']:
                 cursor.execute("SELECT count(*) from teams where id=%s and game=%s and status=%s",[eid,game,'Accept'])
                 count2=cursor.fetchone()[0]
