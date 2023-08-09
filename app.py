@@ -326,7 +326,7 @@ def ir():
     if session.get('user'):
         cursor = mydb.cursor(buffered=True)
         eid=session.get('user')
-        cursor.execute("SELECT * FROM individual_teams WHERE id=%s",[eid])
+        # cursor.execute("SELECT * FROM individual_teams WHERE id=%s",[eid])
         data = cursor.fetchall()
         print(data)
         return render_template('ir.html',data=data)
@@ -1785,7 +1785,7 @@ def payment_add_on_c(eid,game,amount,rid):
         mydb.commit()
         cursor.close()
         return jsonify({'status':'success','payment_url':payment_url})
-    return render_template('pt.html', data1=data1,game=game,amount=amount,eid=eid,name=name,email=email)
+    return render_template('pt.html', data1=data1,game=game,amount=amount,eid=eid,name=name,email=email,rid=rid)
 @app.route('/success_c/<rid>',methods=['POST'])
 def success(rid):
     response = request.form.to_dict()
