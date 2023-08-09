@@ -1662,7 +1662,7 @@ def accept(token):
             tid=data.get('teamid')
             return redirect(url_for('registeron',game=game,email=email,rid=rid))
 @app.route('/registeron/<game>/<email>/<rid>')
-def register(game,email,rid):
+def registeron(game,email,rid):
     if request.method == 'POST':
         print(request.form)
         acception = 'Yes'
