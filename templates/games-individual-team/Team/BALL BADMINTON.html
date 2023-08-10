@@ -320,6 +320,7 @@ background-color: #fff;
                     },
                 success: function(response) {
                     // Update the corresponding output field with the response from the server
+		    alert(response.outputValue)
                     document.getElementById(`output${inputNumber}`).value = response.outputValue;
                    
                     document.getElementById(`output${inputNumber}`).readOnly=true
