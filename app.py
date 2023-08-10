@@ -1116,8 +1116,25 @@ def team():
     else:
         return redirect(url_for('login'))
 
-@app.route('/buyaddon/<game>')
-def buyaddon(game):
+@app.route('/buyaddon/', methods=['GET','POST'])
+def buyaddon():
+    if session.get('user'):
+        selected_games = request.get_json()  # Get the selected games from the request JSON
+        total_amount = 0
+        cursor = mydb.cursor(buffered=True)
+
+        for game in selected_games:
+            cursor.execute("SELECT amount from games where game_name=%s", [game])
+            amount = cursor.fetchone()[0]
+            total_amount += amount
+
+        cursor.close()
+        return jsonify({"payment_url": url_for('addonpayment', eid=session.get('user'), game=','.join(selected_games), amount=total_amount)})
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/buyaddons/<game>')
+def buyaddons(game):
     if session.get('user'):
          sport =game
          cursor=mydb.cursor(buffered=True)
@@ -1139,12 +1156,20 @@ def addonpayment(eid,game,amount):
     # print(payment_url)
     if request.method=='POST':
         ref=random.randint(1000000,99999999)
+        game_list = game.split(',')
+        amount_per_game = int(amount) / len(game_list)
         #print(url_for('addonsuccess',eid=eid,game=game,_external=True))
         return_url=url_for('addonsuccess',eid=eid,game=game,_external=True)
         eazypay_integration = Eazypay(return_url)
         payment_url=eazypay_integration.get_payment_url(ref,amount,name,email,data1[0][3])
         cursor  = mydb.cursor(buffered=True)
-        cursor.execute('insert into payments (ordid,id,game,amount) values(%s,%s,%s,%s)',[ref,eid,game,amount])
+        
+        print("Game Length:", len(game))
+        for game in game_list:
+            if game in ('ATHLETICS','ARCHERY','BADMINTON','BASKETBALL','BALL BADMINTON','CARROMS','CHESS','CYCLOTHON','JUMPS','WALKATHON','SWIMMING','TENNIKOIT','THROW','ROWING','ROLLER SKATING','FENCING','SHOOTING','TABLE TENNIS','LAWN TENNIS','CRICKET WHITE BALL','HARD TENNIS CRICKET','WOMEN BOX CRICKET','VOLLEY BALL','FOOTBALL','KHO KHO','KABADDI','THROW BALL','TUG OF WAR'):
+                print("Game:", game)
+                cursor.execute('insert into payments (ordid, id, game, amount) values (%s, %s, %s, %s)', [ref, eid, game, amount_per_game])
+
         mydb.commit()
         cursor.close()
         return jsonify({'status':'success','payment_url':payment_url})
@@ -1166,16 +1191,22 @@ def addonsuccess(eid,game):
             gender,email=cursor.fetchone()
             cursor.execute('SELECT concat(FirstName," ",LastName) as name from register where id=%s',[uid])
             name=cursor.fetchone()[0]
-            cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s,transactionid=%s WHERE ordid=%s',['Successfull',amount,uid,transaction_id,ref])
-            cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
+            cursor.execute('SELECT game FROM payments WHERE ordid = %s', [ref])
+            games_list = cursor.fetchall()
+            amount_per_game = int(amount) / len(games_list)
+            for game_record in games_list:
+                game = game_record[0]
+                cursor.execute('UPDATE payments SET status = %s, amount = %s, id = %s, transactionid = %s WHERE ordid = %s AND game = %s', ['Successfull', amount_per_game, uid, transaction_id, ref, game])
+                cursor.execute('INSERT INTO game (id, game, amount) VALUES (%s, %s, %s)', [uid, game, amount_per_game])
+                
+                if game in ('CHESS', 'ROWING', 'FENCING', 'CYCLOTHON', 'ARCHERY', 'ROLLER SKATING'):
+                    category = "Men's singles" if gender == 'Male' else "Women's singles"
+                    cursor.execute('INSERT INTO sub_games (game, id, category) VALUES (%s, %s, %s)', [game, uid, category])
+
             mydb.commit()
-            if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
-                 category="Men's singles" if gender=='Male' else "Women's singles"
-                 cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,uid,category])
-                 mydb.commit()
-                 cursor.execute('select * from payments')
-                 details = cursor.fetchall()
-                 print(details)
+            cursor.execute('select * from payments')
+            details = cursor.fetchall()
+            print(details)
             cursor.close()
             
             html = f"""
@@ -1209,7 +1240,7 @@ def addonsuccess(eid,game):
             </head>
             <body>
                 <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
-                <h1>Hi {name},<br><br>Thanks for registering to {game} in Doctors Olympiad 2023.<br><br>Your Payment details</h1>
+                <h1>>Hi {name},<br><br>Thanks for registering to {game} in Doctors Olympiad 2023.<br><br>Your Payment details</h1>
                 <table cellpadding="10">
                     <tr>
                         <th>UNIQUE REFERENCE ID</th>
@@ -1259,6 +1290,7 @@ def addonsuccess(eid,game):
     else:
         # 'Response_Code' key is missing in the response
         return "Invalid response received from payment gateway."
+
      
 @app.route('/registeredgame/<game>',methods=['GET','POST'])
 def registeredgame(game):
