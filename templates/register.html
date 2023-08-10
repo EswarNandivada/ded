@@ -75,7 +75,7 @@
 /* Media query for mobile view */
 @media (max-width: 768px) {
     .popup-content {
-        max-width: 90%; /* Adjust this value to your preference */
+        max-width: 100%; /* Adjust this value to your preference */
     }
 
     .popup-image {
@@ -87,7 +87,7 @@
 /* Adjust the image size for larger screens */
 @media (min-width: 769px) {
     .popup-image {
-        max-width: 80%; /* Adjust this value to control image size on larger screens */
+        max-width: 100%; /* Adjust this value to control image size on larger screens */
         height: auto;
     }
 }
@@ -322,7 +322,7 @@
                                     <option value="Non IMA Member">Non IMA Member-4000/</option>
                                 </select>
                             </div>
-                            <div class="form-outline" id="extraInput" style="display: none;">
+                            <div class="form-outline" id="extraInput" style="display: none; margin-top: 7% !important;">
                                 <label class="form-label" for="extraField">IMA Membership Number<span style="color: red;">*</span></label>
                             
                                 <input type="text" name="imamembershipnumber" id="extraField" class="form-control form-control-lg" placeholder="Enter IMA Membership Number"
@@ -365,7 +365,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <div class="btn btn-primary col-md-12 mt-4" onclick="showShirtPopup()">
-                                    View Shirt Sizes
+                                    Size Chart
                                 </div>
                             </div>
                         </div>
