@@ -1752,6 +1752,18 @@ def registeron(game,email,rid):
         link=url_for('payment_add_on_c',eid=eid,game=data['game'],amount=amount,_external=True)
         return redirect(link)
     return render_template('register.html',message='')
+     
+def link_validator(token):
+    today_date=datetime.now()
+    expiry_date = datetime.strptime('21/11/23 23:59:59', "%d/%m/%y %H:%M:%S")
+    d=int((expiry_date-today_date).total_seconds())
+    try:
+        serializer = URLSafeTimedSerializer(secret_key)
+        data = serializer.loads(token, salt=salt2, max_age=d)
+    except Exception as e:
+        return 'link Expired'
+    else:
+        return data
                     
 @app.route('/checkout-addon-payc/<eid>/<game>/<amount>/<rid>', methods=['GET', 'POST'])
 def payment_add_on_c(eid,game,amount,rid):
