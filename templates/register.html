@@ -57,7 +57,7 @@
 
         </div>
         <div class="col-12 col-md-6">
-            <h1 align="center" style="color:navy;margin-top: 2%;">REGISTER</h1>
+            <h1 align="center" style="color:navy;margin-top: 2%;">PERSONAL DETAILS</h1>
             <form class="register-new" style="background-color: rgba(206,238,255,0.7)" enctype="multipart/form-data" method="POST">
                 <div class="container w-100 h-100">
                     <div class="row">
@@ -95,13 +95,16 @@
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" id="passcodetext" for="firstName">Password<span
-                                        style="color: red;">*</span></label>
+                                <label class="form-label" id="passcodetext" for="firstName">Password<span style="color: red;">*</span></label>
                                 <input type="password" name="password" id="password" class="form-control form-control-lg"
-                                    placeholder="Enter Password" onkeyup="showPassword()" minlength="8"  required />
-
+                                    placeholder="Enter Password" onkeyup="validatePassword()"
+                                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z]).{8,}$"
+                                    title="Password must contain at least one lowercase letter, one uppercase letter, one special character, and be at least 8 characters long."
+                                    required />
+                                <div id="passwordMessage" style="color: red;"></div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="row">
@@ -109,33 +112,51 @@
 
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" for="firstName">Mobile Number<span
-                                        style="color: red;">*</span></label>
-                                <input type="text" name="mobile" id="mobile" class="form-control form-control-lg"
-                                    placeholder="Enter Mobile Number" required/>
-
+                                <label class="form-label" for="firstName">Confirm Password<span style="color: red;">*</span></label>
+                                <input type="password" name="cpassword" id="cpassword" class="form-control form-control-lg"
+                                    placeholder="Enter Confirm Password" required />
+                                <div id="passwordMatchMessage" style="color: red;"></div>
                             </div>
                         </div>
 
+
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label" for="firstName">Mobile Number<span style="color: red;">*</span></label>
+                                <input type="text" name="mobile" id="mobile" class="form-control form-control-lg"
+                                    placeholder="Enter Mobile Number" maxlength="10"
+                                    title="Mobile number must be exactly 10 digits and consist of numbers only." required />
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label" for="firstName">Date Of Birth<span style="color: red;">*</span></label>
+                                <input type="date" name="dob" id="dob" class="form-control form-control-lg"
+                                    placeholder="Enter Date of Birth" required />
+                            </div>
+                        </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">Age<span style="color: red;">*</span></label>
-                                <input type="text" name="age" id="age" class="form-control form-control-lg"
-                                    placeholder="Enter Age" required/>
-
+                                <input type="text" name="age" id="age" class="form-control form-control-lg" placeholder="Enter Age"
+                                    required readonly/>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="row">
 
 
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" for="firstName">Gender<span
-                                        style="color: red;">*</span></label>
-                                <select class="form-select" aria-label="Default select example" name="gender"
-                                    id="gender" required>
+                                <label class="form-label" for="firstName">Gender<span style="color: red;">*</span></label>
+                                <select class="form-select" aria-label="Default select example" name="gender" id="gender" required>
                                     <option selected>Select Gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -145,34 +166,10 @@
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" for="firstName">Date Of Birth<span
-                                        style="color: red;">*</span></label>
-                                <input type="date" name="dob" id="dob" class="form-control form-control-lg"
-                                    placeholder="Enter Date of Birth" required/>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-
-
-                        <div class="col-md-6 mb-4">
-                            <div class="form-outline">
                                 <label class="form-label" for="firstName">City<span style="color: red;">*</span></label>
-                                <input type="text" name="city" id="city" class="form-control form-control-lg"
-                                    placeholder="Enter City" required/>
-
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <div class="form-outline">
-                                <label class="form-label" for="firstName">Address<span
-                                        style="color: red;">*</span></label>
-                                <input type="text" name="address" id="address" class="form-control form-control-lg"
-                                    placeholder="Enter Address" required/>
-
+                                <input type="text" name="city" id="city" class="form-control form-control-lg" placeholder="Enter City"
+                                    required />
+                        
                             </div>
                         </div>
                     </div>
@@ -182,8 +179,16 @@
 
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" for="firstName">State<span
-                                        style="color: red;">*</span></label>
+                                <label class="form-label" for="firstName">Address<span style="color: red;">*</span></label>
+                                <input type="text" name="address" id="address" class="form-control form-control-lg" placeholder="Enter Address"
+                                    required />
+                        
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label" for="firstName">State<span style="color: red;">*</span></label>
                                 <select class="form-select" aria-label="Default select example" name="state" id="state" required>
                                     <option value="" disabled selected>Select Your state</option>
                                     <option value="Andhra Pradesh">Andhra Pradesh</option>
@@ -215,18 +220,7 @@
                                     <option value="Uttar Pradesh">Uttar Pradesh</option>
                                     <option value="Uttarakhand">Uttarakhand</option>
                                     <option value="West Bengal">West Bengal</option>
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <div class="form-outline">
-                                <label class="form-label" for="firstName">Country<span
-                                        style="color: red;">*</span></label>
-                                <select class="form-select" aria-label="Default select example" name="country"
-                                    id="country" required>
-                                    <option value="India">India</option>
-
+                        
                                 </select>
                             </div>
                         </div>
@@ -235,6 +229,15 @@
                     <div class="row">
 
 
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label" for="firstName">Country<span style="color: red;">*</span></label>
+                                <select class="form-select" aria-label="Default select example" name="country" id="country" required>
+                                    <option value="India">India</option>
+                        
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">Degree-MBBS(Compulsory)<span
@@ -252,6 +255,25 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row">
+
+
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label" for="firstName">Select Member<span style="color: red;">*</span></label>
+                        
+                        
+                                <select class="form-select" aria-label="Default select example" name="selectmember" onchange="imember()"
+                                    id="selectmember" required>
+                                    <option disabled selected>Select Member</option>
+                        
+                                    <option value="IMA Member">IMA Member-3500/</option>
+                                    <option value="Non IMA Member">Non IMA Member-4000/</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">State or MCI Registration No<span
@@ -264,18 +286,21 @@
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" for="firstName">Select Member<span
-                                        style="color: red;">*</span></label>
-
-
-                                <select class="form-select" aria-label="Default select example" name="selectmember"
-                                    onchange="imember()" id="selectmember" required>
-                                    <option disabled selected>Select Member</option>
-
-                                    <option value="IMA Member">IMA Member-3500/</option>
-                                    <option value="Non IMA Member">Non IMA Member-4000/</option>
+                                <label class="form-label" for="firstName">Select Shirt Size<span style="color: red;">*</span></label>
+                                <select class="form-select" onclick="showShirt()" id="shirt-dropdown-id" aria-label="Default select example"
+                                    name="shirtsize" required>
+                                    <option disabled selected>Select Shirt Size</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                    <option value="XXXL">XXXL</option>
+                                    <option value="XXXXL">XXXXL</option>
                                 </select>
+                        
                             </div>
+                            <img src="{{url_for('static', filename='images/T-Shirts.jpg')}}" width id="shirt" class="shirt-image" />
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
@@ -324,50 +349,26 @@
 
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" for="firstName">Select Shirt Size<span
-                                        style="color: red;">*</span></label>
-                                <select class="form-select" onclick="showShirt()" id="shirt-dropdown-id"
-                                    aria-label="Default select example"  name="shirtsize" required>
-                                    <option disabled selected>Select Shirt Size</option>
-                                    <option value="S">S</option>
-                                    <option value="M">M</option>
-                                    <option value="L">L</option>
-                                    <option value="XL">XL</option>
-                                    <option value="XXL">XXL</option>
-                                    <option value="XXXL">XXXL</option>
-                                    <option value="XXXXL">XXXXL</option>
-                                </select>
-
+                                <label for="formFile" class="form-label" id="display-which-certificate">Upload
+                                    MCI certificate (max 5MB)<span style="color: red;">*</span></label>
+                                <input class="form-control" type="file" name="certificate" id="certificate" accept=".jpg .jpeg .png .pdf "
+                                    required>
+                        
                             </div>
-                            <img src="{{url_for('static', filename='images/T-Shirts.jpg')}}" width id="shirt" class="shirt-image" />
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label for="formFile" class="form-label" id="display-which-certificate" >Upload
-                                    certificate (max 5MB)</label>
-                                <input class="form-control" type="file" name="certificate" id="certificate" accept=".jpg, .jpeg, .png, .pdf " required>
-
+                                <label for="formFile" class="form-label">Upload Photo (max 5MB)<span style="color: red;">*</span></label>
+                                <input class="form-control" type="file" name="photo" id="photo" accept=".jpg .jpeg .png .pdf" required>
+                        
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
 
-                        <div class="col-md-6 mb-4">
-                            <div class="form-outline">
-                                <label for="formFile" class="form-label">Upload Photo (max 5MB)</label>
-                                <input class="form-control" type="file" name="photo" id="photo" accept=".jpg, .jpeg, .png, .pdf" required>
-
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <div class="form-outline">
-
-                                <label for="formFile" class="form-label">Upload DOB Certificate (max 5MB)</label>
-                                <input class="form-control" type="file" name="dobfile" id="dobfile" accept=".jpg, .jpeg, .png, .pdf" required>
-
-                            </div>
-                        </div>
+                        
+                        
                     </div>
                     <div class="row">
 
@@ -583,22 +584,95 @@
     });
 </script>
 <script>
-    function showPassword() {
-        var passcodetext = document.getElementById("passcodetext");
-        var password = document.getElementById("password").value;
-        if (password.length < 8 || password == "") {
-            passcodetext.innerHTML = `Provide ${(password.length - 8) * -1} more for valid password`;
-            console.log("inside the passcode fields")
-            return false;
-        }
-        else {
-            passcodetext.innerHTML = "Password is valid"
-        }
+   function validatePassword() {
+        const passwordInput = document.getElementById('password');
+        const passwordMessage = document.getElementById('passwordMessage');
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z]).{8,}$/;
 
+        if (regex.test(passwordInput.value)) {
+            passwordMessage.textContent = ''; // Clear the message
+            passwordInput.setCustomValidity(''); // Clear any custom validity
+        } else {
+            if (passwordInput.value.length < 8) {
+                passwordMessage.textContent = 'Password must contain at least one lowercase letter, one uppercase letter, one special character.';
+            } else {
+                passwordMessage.textContent = 'Password is Valid';
+            }
+            passwordInput.setCustomValidity('Password requirements not met.');
+        }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordInput = document.getElementById('password');
+        passwordInput.addEventListener('input', validatePassword);
+
+        // Reset error message when the input field loses focus
+        passwordInput.addEventListener('blur', function () {
+            const passwordMessage = document.getElementById('passwordMessage');
+            passwordMessage.textContent = '';
+        });
+    });
+
+
 </script>
 
 <script>
+    function validatePasswords() {
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('cpassword');
+            const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+
+            if (passwordInput.value === confirmPasswordInput.value) {
+                passwordMatchMessage.textContent = ''; // Clear the message
+                confirmPasswordInput.setCustomValidity(''); // Clear any custom validity
+            } else {
+                passwordMatchMessage.textContent = 'Passwords do not match.';
+                confirmPasswordInput.setCustomValidity('Passwords do not match.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const confirmPasswordInput = document.getElementById('cpassword');
+
+            confirmPasswordInput.addEventListener('input', validatePasswords);
+
+            // Reset error message when the confirm password input field loses focus
+            confirmPasswordInput.addEventListener('blur', function () {
+                const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+                passwordMatchMessage.textContent = '';
+            });
+        });
+
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            const mobileInput = document.getElementById('mobile');
+
+            mobileInput.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, ''); // Remove non-numeric characters
+            });
+        });
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            const dobInput = document.getElementById('dob');
+            const ageInput = document.getElementById('age');
+
+            dobInput.addEventListener('input', function () {
+                const dobValue = new Date(this.value);
+                const today = new Date();
+                const age = Math.floor((today - dobValue) / (365.25 * 24 * 60 * 60 * 1000));
+                ageInput.value = age;
+            });
+        });
+
+</script>
+
+<!-- <script>
     function imember() {
 
         var x = document.getElementById("selectmember").value;
@@ -607,7 +681,7 @@
         else if (x == "IMA Member")
             document.getElementById("display-which-certificate").innerHTML = "Upload IMA or MBBS Certificate (max 5MB)";
     }
-</script>
+</script> -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 {% endblock %}
