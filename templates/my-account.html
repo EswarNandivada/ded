@@ -103,6 +103,9 @@ color: grey;
     color: white;
     text-decoration: none;
   }
+  .select-box-container {
+        display: none;
+    }
 
 </style>
 
@@ -118,17 +121,14 @@ color: grey;
         <div class="row">
             {% for i in games %}
             <div class="card col-12 col-md-3 m-3" style="width: 15rem;">
-                <img src="{{url_for('static',filename=i[0]+'.webp')}}" class="card-img-top p-2" alt="...">
+                <img src="{{ url_for('static', filename='games/' + i[0] + '.webp') }}" class="card-img-top p-2" alt="...">
+    
                 <div class="card-body">
                     <h5 class="card-title">{{i[0]}}</h5>
-                    {% if i[0] in ivs %}
-                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Get your registered deatils</a>
-                    {% else %}
-                    {% if i[1]>=40 %}
+                    {% if i[1]>=30 %}
                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Select Options</a>
                     {% else %}
                     <a href="{{url_for('registeronteam')}}" class="btn btn-primary">Select Options</a>
-                    {% endif %}
                     {% endif %}
 
                 </div>
@@ -143,28 +143,50 @@ color: grey;
     <h2>Individual Games</h2>
     <div class="container">
         <!-- 1 -->
+    <div class="container">
+        <!-- First Row -->
         <div class="row">
             {% for i in add_individual_games %}
             <div class="card col-12 col-md-3 m-3" style="width: 15rem;">
-                <img src="{{url_for('static',filename=i[0]+'.webp')}}" class="card-img-top p-2" alt="...">
+                <img src="{{ url_for('static', filename='games/' + i[0] + '.webp') }}" class="card-img-top p-2" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">{{i[0]}}</h5>
-                    <a href="{{url_for('buyaddon',game=i[0])}}" class="btn btn-primary">pay now</a>
+                    <h5 class="card-title">{{ i[0] }}</h5>
+                    <label>
+                        <input type="checkbox" name="selected_games" value="{{ i[0] }}" class="game-checkbox">
+                        Select
+                    </label>
+                </div>
+                <div class="select-box-container">
+                    <select class="custom-select select-game">
+                        <option value="" selected disabled>Select Option</option>
+                        <option value="{{ i[0] }}">Select {{ i[0] }}</option>
+                    </select>
                 </div>
             </div>
             {% endfor %}
-            
-            <div>
+        </div>
+    </div>
+    <!-- Add more rows here if needed -->
+
+</div>
+
+
+        
+        <div>
+            <p>Total Price: $<span id="totalPrice">0</span></p>
+            <a href="#" id="payNowButton" class="btn btn-primary">Pay Now</a>
+        </div>
                 <h2>Team Games</h2><br />
                 <div class="container">
                     <!-- 1 -->
                     <div class="row">
                         {% for i in add_teams_games %}
                         <div class="card col-12 col-md-3 m-3" style="width: 15rem;">
-                    <img src="{{url_for('static',filename=i[0]+'.webp')}}" class="card-img-top p-2" alt="...">
+                    <img src="{{ url_for('static', filename='games/' + i[0] + '.webp') }}" class="card-img-top p-2" alt="...">
+
                     <div class="card-body">
                         <h5 class="card-title">{{i[0]}}</h5>
-                        <a href="{{url_for('buyaddon',game=i[0])}}" class="btn btn-primary">pay now</a>
+                        <a href="{{url_for('buyaddons',game=i[0])}}" class="btn btn-primary">Select Options</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -181,5 +203,132 @@ color: grey;
 {% endblock %}
 
 {% block script %}
+
+<!-- Include your previous HTML code here -->
+<script>
+    // JavaScript to toggle between card and select box
+    document.querySelectorAll('.card').forEach(card => {
+        const selectBoxContainer = card.querySelector('.select-box-container');
+        const selectBox = card.querySelector('.select-game');
+
+        // Add click event listener to each card
+        card.addEventListener('click', () => {
+            // Toggle visibility of card and select box
+            card.style.display = 'none';
+            selectBoxContainer.style.display = 'block';
+        });
+
+        // Add change event listener to select box
+        selectBox.addEventListener('change', () => {
+            if (selectBox.value === '') {
+                card.style.display = 'block';
+                selectBoxContainer.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+<script>
+    const checkboxes = document.querySelectorAll('.game-checkbox');
+    const totalPriceElement = document.getElementById('totalPrice');
+    const payNowButton = document.getElementById('payNowButton');
+    let totalPrice = 0;
+
+    checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const gameName = checkbox.value;
+                const gamePrice = 1500; // Fixed price for each game (you can change this as needed)
+
+                if (checkbox.checked) {
+                    totalPrice += gamePrice;
+                } else {
+                    totalPrice -= gamePrice;
+                }
+                totalPriceElement.textContent = totalPrice.toFixed(2);
+            });
+        });
+
+    // payNowButton.addEventListener('click', () => {
+    //         // Disable the button to prevent multiple clicks
+    //         payNowButton.disabled = true;
+
+    //         // Make an AJAX call to initiate the payment process
+    //         $.ajax({
+    //             url: "{{url_for('buyaddons',game=game)}}",
+    //             method: 'POST',
+    //             dataType: 'json',
+    //             success: function (data) {
+    //                 // Redirect the user to the payment gateway page
+    //                 window.location.href = data.payment_url;
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 console.error('Error initiating payment:', error);
+    //                 // Re-enable the button so the user can try again
+    //                 payNowButton.disabled = false;
+    //             }
+    //         });
+    //     });
+</script>
+
+<script>
+    // Create an array to store selected game names
+        const selectedGames = [];
+
+        // Add event listeners to checkboxes
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                const gameName = checkbox.value;
+
+                if (checkbox.checked) {
+                    selectedGames.push(gameName);
+                    totalPrice += gamePrice;
+                } else {
+                    const index = selectedGames.indexOf(gameName);
+                    if (index > -1) {
+                        selectedGames.splice(index, 1);
+                    }
+                    totalPrice -= gamePrice;
+                }
+                totalPriceElement.textContent = totalPrice.toFixed(2);
+            });
+        });
+
+        payNowButton.addEventListener('click', () => {
+                // Disable the button to prevent multiple clicks
+                payNowButton.disabled = true;
+
+                // Create an array to store selected game names
+                const selectedGames = [];
+
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedGames.push(checkbox.value);
+                    }
+                });
+
+                // Make an AJAX POST request to initiate the payment process
+                $.ajax({
+                    url: "{{ url_for('buyaddon') }}",  // Correct URL construction
+                    method: 'POST',
+                    data: JSON.stringify(selectedGames),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        // Redirect the user to the payment gateway page
+                        window.location.href = data.payment_url;
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error initiating payment:', error);
+                        // Re-enable the button so the user can try again
+                        payNowButton.disabled = false;
+                    }
+                });
+            });
+
+
+
+</script>
+
+<!-- Rest of your HTML code -->
+
 <script src="https://kit.fontawesome.com/ea6d4fec5e.js" crossorigin="anonymous"></script>
 {% endblock %}
