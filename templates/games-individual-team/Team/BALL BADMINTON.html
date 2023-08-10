@@ -208,11 +208,13 @@ background-color: #fff;
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-	     function autoSubmitDelayed(inputNumber) {
-        setTimeout(function() {
-            autoSubmit(inputNumber);
-        }, 30000); // 10000 milliseconds = 10 seconds
-    }
+	    $(document).ready(function () {
+            // Attach blur event listener to each input field
+            $('[id^="input"]').blur(function () {
+                const inputNumber = this.id.replace('input', '');
+                autoSubmit(inputNumber);
+            });
+        });
         function autoSubmit(inputNumber) {
             const inputValue = document.getElementById(`input${inputNumber}`).value;
             // Here, you can perform any necessary processing on the inputValue before setting it in the output field.
