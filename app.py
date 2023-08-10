@@ -1618,77 +1618,37 @@ def accept(token):
         abort(404, "Gone,Link Expired")
     else:
         if data.get('email','NA')=='NA':
-            cursor=mydb.cursor(buffered=True)
             rid=data.get('rid')
             tid=data.get('teamid')
-            cursor.execute("SELECT count(*) from teams where reqid=%s",[rid])
-            co=cursor.fetchone()[0]
-            if co!=0:
-                cursor.execute('SELECT id,game,status from teams where reqid=%s',[rid])
-                eid,game,status=cursor.fetchone()
-                cursor.execute('SELECT id from sub_games where team_number=%s',[tid])
-                leadid=cursor.fetchone()[0]
-                cursor.execute('SELECT email,concat(FirstName," ",LastName) from register where id=%s',[leadid])
-                email,name=cursor.fetchone()
-                cursor.execute('SELECT concat(FirstName," ",LastName) from register where id=%s',[eid])
-                participant=cursor.fetchone()[0]
-                if status=='Accept':
-                    cursor.close()
-                    return "<h1>Request already Accepted<h1>"
-                else:
-                    criteria=check_teams(eid,game)
-                    if criteria['cond']: 
-                        cursor.execute("SELECT count(*) from teams where reqid=%s",[rid])
-                        co=cursor.fetchone()[0]
-                        if count!=0:
-                            cursor.execute('update teams set status="Accept" where reqid=%s',[rid])
-                            mydb.commit()
-                        else:
-                            cursor.execute('update individual_teams set status="Accept" where reqid=%s',[rid])
-                            mydb.commit()
-                        cursor.execute('select count(*) from game where id=%s and game=%s',[eid,game])
-                        count=cursor.fetchone()[0]
-                        if count==0:
-                                cursor.execute('insert into game values(%s,%s,%s)',[eid,game,0])
-                                mydb.commit()
-                        subject=f"{participant} Accepted your {game} team request"
-                        body=f"Hi,\n\n{name}\n\n\n {participant} just accepted your team request for {game}.See others status in your dashboard\n\n{url_for('dashboard',_external=True)}"
-                        sendmail(to=email,subject=subject,body=body)
-                        flash('Request Accepted')
-                        return redirect(url_for('dashboard'))
-                    else:
-                        return f"<h1>{criteria['message']}</h1>"
+            cursor=mydb.cursor(buffered=True)
+            cursor.execute('SELECT id,game,status from teams where reqid=%s',[rid])
+            eid,game,status=cursor.fetchone()
+            cursor.execute('SELECT id from sub_games where team_number=%s',[tid])
+            leadid=cursor.fetchone()[0]
+            cursor.execute('SELECT email,concat(FirstName," ",LastName) from register where id=%s',[leadid])
+            email,name=cursor.fetchone()
+            cursor.execute('SELECT concat(FirstName," ",LastName) from register where id=%s',[eid])
+            participant=cursor.fetchone()[0]
+            if status=='Accept':
+                cursor.close()
+                return "<h1>Request already Accepted<h1>"
             else:
-                cursor.execute('SELECT id,game,status from individual_teams where reqid=%s',[rid])
-                eid,game,status=cursor.fetchone()
-                cursor.execute('SELECT id from sub_games where team_number=%s',[tid])
-                leadid=cursor.fetchone()[0]
-                cursor.execute('SELECT email,concat(FirstName," ",LastName) from register where id=%s',[leadid])
-                email,name=cursor.fetchone()
-                cursor.execute('SELECT concat(FirstName," ",LastName) from register where id=%s',[eid])
-                participant=cursor.fetchone()[0]
-                if status=='Accept':
-                    cursor.close()
-                    return "<h1>Request already Accepted<h1>"
-                else:
-                    cursor.execute('update individual_teams set status="Accept" where reqid=%s',[rid])
+                criteria=check_teams(eid,game)
+                if criteria['cond']: 
+                    cursor.execute('update teams set status="Accept" where reqid=%s',[rid])
                     mydb.commit()
                     cursor.execute('select count(*) from game where id=%s and game=%s',[eid,game])
                     count=cursor.fetchone()[0]
                     if count==0:
-                        cursor.execute('insert into game values(%s,%s,%s)',[eid,game,0])
-                        mydb.commit()
+                            cursor.execute('insert into game values(%s,%s,%s)',[eid,game,0])
+                            mydb.commit()
                     subject=f"{participant} Accepted your {game} team request"
                     body=f"Hi,\n\n{name}\n\n\n {participant} just accepted your team request for {game}.See others status in your dashboard\n\n{url_for('dashboard',_external=True)}"
                     sendmail(to=email,subject=subject,body=body)
                     flash('Request Accepted')
                     return redirect(url_for('dashboard'))
-        else:
-            game=data.get('game')
-            email=data.get('email')
-            rid=data.get('rid')
-            tid=data.get('teamid')
-            return redirect(url_for('registeron',game=game,email=email,rid=rid))
+                else:
+                    return f"<h1>{criteria['message']}</h1>"
 @app.route('/registeron/<game>/<email>/<rid>')
 def registeron(game,email,rid):
     if request.method == 'POST':
