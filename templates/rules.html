@@ -1,95 +1,146 @@
 {% extends "base.html" %}
 {% block style %}
-    
-    <style>/* ===== Google Font Import - Poppins ===== */
-      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
-    
-      .image-container {
-        width: 100%;
-        max-width: 600px; 
-        margin: 20px auto; 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+
+<style>
+	/* ===== Google Font Import - Poppins ===== */
+	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+
+	.image-container {
+		width: 100%;
+		max-width: 600px;
+		margin: 20px auto;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
 
-      .image-container img {
-        width: 75%;
-        height: auto;
-        max-height: 400px;
-        object-fit: cover; 
-      }
+	.image-container img {
+		width: 75%;
+		height: auto;
+		max-height: 400px;
+		object-fit: cover;
+	}
 
- @media (max-width: 768px) {
-        .image-container {
-          max-width: 100%; 
-        }
-      }
-
-
-      /* Media query for responsiveness */
-      @media (max-width: 768px) {
-        .image-container {
-          max-width: 100%;
-        }
-      }
-dt>input{
- transform:scale(1.5) ;
-}
-      
-      </style>
-      {% endblock %}
+	@media (max-width: 768px) {
+		.image-container {
+			max-width: 100%;
+		}
+	}
 
 
-    {% block content %}
-      <section class="gamesSection">
-        <div class="image-container">
-        <img src="{{url_for('static',filename='images/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.webp')}}" alt="">
-        </div>
+	/* Media query for responsiveness */
+	@media (max-width: 768px) {
+		.image-container {
+			max-width: 100%;
+		}
+	}
 
-        <div class="Rules1>">
-          <h2 style="color: red;">  RULES & REGULATIONS FOR IMA NATIONAL GAMES 2023</h2>
-			<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>The Mission is to Aid in Academic, Emotional, Physical Cooperation and Coordination of Doctors through Promotion of Team Work & sportsmanship.</p>
-          
-          
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Participants should be Doctors - MBBS & Above only.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Indian medical association members will register as members with their IMA membership number.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Non IMA members can also participate, but should be registered doctors with Medical council of India having Registration Number.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Prior Registration is compulsory for participation.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Age group will done as below 50 and above or equal to 50 years. Based on the Medical council registration certificate. The age categories will be done, only if there are registered minimum entries.
-      </p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Last date to register – 31 st October 2023.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>On spot registration will not be available.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Registration Fees: – IMA Members 3500/- Per Person for one sport with two discipline options in the same sport. Any Additional discipline 500/-.Additional sport is 1500/- where he/she can choose two disciplines. He can also participate in any of two team games provided, his name is taken by a team captain during the team submission.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Non IMA members 4000/- per person Person per sport with choice of two disciplines in the same sport. For Participation in Additional sport 1500/- per sport, can choose two disciplines. He can also participate in any of two team games provided, his name is taken by a team captain during the team submission.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Registration fees Includes – Participation in one sport, can be a part of the team event ( maximum two team events) , Kit bag, one T shirt, Transport within the vijayawada city from the accommodation booked through the website/ app to the sporting arenas on scheduled timings, Breakfast, Lunch, High Tea & Banquet Night Dinner, E - certificate for participation with credit hours for sports medicine CME.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Dinner except the Banquet & Accommodation will not be Included.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Accommodation will be organised by organisers on payment basis in the accommodation clusters for better connectivity to the venues.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Sports Medicine CME Certificate (4 Credit Points Applied).</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Additional Sport will be Subjected to availability of according the schedule posted. The risk of the participation in the more games is upto the participant only. The organisers will make efforts in accommodating what is possible.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>For Season white Ball cricket ball T- 20 Tournament franchise Fee will be Rs 30000 Per Team of 14 Players Each. Additional t shirt is provided.Additional Player Will be charged Rs.2500/- Per player. The player has to be registered and the player can be chosen by the franchise into the team by the captain.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>For Hard tennis cricket ball T- 20 Tournament franchise Fee will be Rs 20000 Per Team of 14 Players Each. Additional t shirt is provided.Additional Player Will be charged Rs.2500/- Per player.The player has to be registered and the player can be chosen by thy franchise into the team by the captain.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>For team games- all players have to be registered individually, then the captain can select them into the franchise team by paying the franchise fee for the team event. Additional T shirt will be provided for the team event.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Franchise fee for team games Women box cricket (7 players) 10000, Basket ball (9 players) 10000, Volley ball ( 9 players) 10000, Tug of war- (team of 10) 5000, Football- (11 players) 10000, Kho Kho -(12 players) 10000, Kabaddi- (10 players) 10000, throw ball- (10 players ) 10000,Ball badminton ( 7 players) 10000.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Registration fees Includes – Participation in one sport, Kit bag, one T shirt, Transport within the vijayawada city from the accommodation booked through the website/ app to the sporting arenas on scheduled timings, Breakfast, Lunch, High Tea & Banquet Night Dinner, E - certificate for participation with credit hours for sports medicine CME.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>All Dinner except the Banquet & Accommodation will not be Included.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Accommodation will be organised by organisers on payment basis in the accommodation clusters for better connectivity to the venues.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Sports Medicine CME Certificate (4 Credit Points Applied).</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Additional Sport will be Subjected to availability of according the schedule posted. The risk of the participation in the secondary game is upto the participant only.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Season Ball & Hard tennis ball cricket players can participate in other games also but subject to availability of the slots at the players risk. No reschedule of the matches will be changed once done. The player has to choose and if not present on time, walk over to the opponent is given.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Attractive Prizes for each Sport will be given.</p>
-		  <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>State winning maximum prizes will be given Rotating State championship.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Prior dates will be informed to Participants by November 10th 2023.</p>
-      <p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>For all sports Professional Umpires will be available & their decisions will be considered final. Any Team or Participant arguing will be disqualified.</p>
-      
-         </div>
+	dt>input {
+		transform: scale(1.5);
+	}
+</style>
+{% endblock %}
 
-       
-        
-      </section>
-      {% endblock %}
 
-      {% block script %}
-      
-      {% endblock %}
+{% block content %}
+<section class="gamesSection">
+	<div class="image-container">
+		<img src="{{url_for('static',filename='images/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.webp')}}" alt="">
+	</div>
+
+	<div class="Rules1>">
+		<h2 style="color: red;"> RULES & REGULATIONS FOR IMA NATIONAL GAMES 2023</h2>
+		<h6>IMA National Games 2023 will be held from 22-26 th November in Vijayawada, Andhra Pradesh.</h6>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>The Mission is to Aid in
+			Academic, Emotional, Physical Cooperation and Coordination of Doctors through Promotion of Team Work &
+			sportsmanship.</p>
+
+
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Participants should be Doctors -
+			MBBS & Above only.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Indian medical association
+			members will register as members with their IMA membership number.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Non IMA members can also
+			participate, but should be registered doctors with Medical council of India having Registration Number.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Prior Registration is compulsory
+			for participation.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Age group will done as below 50 and above or equal to 50 years. Based on the Medical council registration certificate.
+		The age categories will be done, only if there are registered minimum entries. For badminton, Tennis, swimming,
+		Athletics age categories are going to be Below40 years, 40-55 yrs, above 55 yrs.
+		</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Last date to register – 31 st
+			October 2023.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>On spot registration will not be
+			available.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Registration Fees: – IMA Members
+			3500/- Per Person for one sport with two discipline options in the same sport. Any Additional discipline
+			500/-.Additional sport is 1500/- where he/she can choose two disciplines. He can also participate in any of
+			two team games provided, his name is taken by a team captain during the team submission.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Non IMA members 4000/- per person
+			Person per sport with choice of two disciplines in the same sport. For Participation in Additional sport
+			1500/- per sport, can choose two disciplines. He can also participate in any of two team games provided, his
+			name is taken by a team captain during the team submission.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Registration fees Includes –
+			Participation in one sport, can be a part of the team event ( maximum two team events) , Kit bag, one T
+			shirt, Transport within the vijayawada city from the accommodation booked through the website/ app to the
+			sporting arenas on scheduled timings, Breakfast, Lunch, High Tea & Banquet Night Dinner, E - certificate for
+			participation with credit hours for sports medicine CME.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Dinner except the Banquet &
+			Accommodation will not be Included.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Accommodation will be organised
+			by organisers on payment basis in the accommodation clusters for better connectivity to the venues.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Sports Medicine CME Certificate
+			(4 Credit Points Applied).</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Additional Sport will be
+			Subjected to availability of according the schedule posted. The risk of the participation in the more games
+			is upto the participant only. The organisers will make efforts in accommodating what is possible.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>For Season white Ball cricket
+			ball T- 20 Tournament franchise Fee will be Rs 30000 Per Team of 14 Players Each. Additional t shirt is
+			provided.Additional Player Will be charged Rs.2500/- Per player. The player has to be registered and the
+			player can be chosen by the franchise into the team by the captain.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>For Hard tennis cricket ball T-
+			20 Tournament franchise Fee will be Rs 20000 Per Team of 14 Players Each. Additional t shirt is
+			provided.Additional Player Will be charged Rs.2500/- Per player.The player has to be registered and the
+			player can be chosen by thy franchise into the team by the captain.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>For team games- all players have
+			to be registered individually, then the captain can select them into the franchise team by paying the
+			franchise fee for the team event. Additional T shirt will be provided for the team event.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Franchise fee for team games
+			Women box cricket (7 players) 10000, Basket ball (9 players) 10000, Volley ball ( 9 players) 10000, Tug of
+			war- (team of 10) 5000, Football- (11 players) 10000, Kho Kho -(12 players) 10000, Kabaddi- (10 players)
+			10000, throw ball- (10 players ) 10000,Ball badminton ( 7 players) 10000.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Sports Medicine CME Certificate (4 Credit Points Applied).</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Season Ball & Hard tennis ball
+			cricket players can participate in other games also but subject to availability of the slots at the players
+			risk. No reschedule of the matches will be changed once done. The player has to choose and if not present on
+			time, walk over to the opponent is given.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Attractive Prizes for each Sport
+			will be given.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>State winning maximum prizes will
+			be given Rotating State championship.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>Prior dates will be informed to
+			Participants by November 10th 2023.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>For all sports Professional
+			Umpires will be available & their decisions will be considered final. Any Team or Participant arguing will
+			be disqualified.</p>
+		<p><i class="fa-solid fa-circle-stop" style="color: #005cfa;">&nbsp; &nbsp;</i>The players should report one hour before the schedule.</p>
+		<!-- <form>
+			<label>
+
+				<dl>
+					<dt> <input type="checkbox" id="consentCheckbox" required><br>Accept</dt>
+					<dd>By checking this box, you are agreeing to our rules and regulations of games.</dd>
+				</dl>
+
+				<br>
+				<button class="btn btn-primary" type="submit">Submit</button>
+		</form> -->
+	</div>
+
+
+
+</section>
+{% endblock %}
+{% block script %}
+{% endblock %}
