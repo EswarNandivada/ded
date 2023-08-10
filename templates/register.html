@@ -41,6 +41,58 @@
         transform: translate(-50%, -50%);
         display: none;
     }
+    /* Add these styles to control the appearance of the popup */
+/* Add these styles to control the appearance of the popup */
+.shirt-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+.popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+/* Media query for mobile view */
+@media (max-width: 768px) {
+    .popup-content {
+        max-width: 90%; /* Adjust this value to your preference */
+    }
+
+    .popup-image {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* Adjust the image size for larger screens */
+@media (min-width: 769px) {
+    .popup-image {
+        max-width: 80%; /* Adjust this value to control image size on larger screens */
+        height: auto;
+    }
+}
+    
+
 </style>
 {% endblock %}
 
@@ -263,16 +315,25 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">Select Member<span style="color: red;">*</span></label>
-                        
-                        
-                                <select class="form-select" aria-label="Default select example" name="selectmember" onchange="imember()"
+                                <select class="form-select" aria-label="Default select example" name="selectmember" onchange="toggleInputField()"
                                     id="selectmember" required>
                                     <option disabled selected>Select Member</option>
-                        
                                     <option value="IMA Member">IMA Member-3500/</option>
                                     <option value="Non IMA Member">Non IMA Member-4000/</option>
                                 </select>
                             </div>
+                            <div class="form-outline" id="extraInput" style="display: none;">
+                                <label class="form-label" for="extraField">IMA Membership Number<span style="color: red;">*</span></label>
+                            
+                                <input type="text" name="imamembershipnumber" id="extraField" class="form-control form-control-lg" placeholder="Enter IMA Membership Number"
+                                    required />
+                            
+                            </div>
+                            
+                            <!-- <div id="extraInput" style="display: none;">
+                                <label for="extraField">Extra Input Field:</label>
+                                <input type="text" id="extraField" name="extraField">
+                            </div> -->
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
@@ -287,8 +348,8 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">Select Shirt Size<span style="color: red;">*</span></label>
-                                <select class="form-select" onclick="showShirt()" id="shirt-dropdown-id" aria-label="Default select example"
-                                    name="shirtsize" required>
+                                <select class="form-select" id="shirt-dropdown-id" aria-label="Default select example" name="shirtsize"
+                                    required>
                                     <option disabled selected>Select Shirt Size</option>
                                     <option value="S">S</option>
                                     <option value="M">M</option>
@@ -298,15 +359,57 @@
                                     <option value="XXXL">XXXL</option>
                                     <option value="XXXXL">XXXXL</option>
                                 </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <div class="btn btn-primary col-md-12 mt-4" onclick="showShirtPopup()">
+                                    View Shirt Sizes
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="shirtPopup" class="shirt-popup">
+                            <div class="popup-content">
+                                <span class="close-btn" onclick="closeShirtPopup()">&times;</span>
+                                <img src="{{url_for('static', filename='images/T-Shirts.jpg')}}" class="popup-image" alt="Shirt Image" />
+                            </div>
+                        </div>
+
+
+                        
+                    </div>
+
+
+
+                    <div class="row">
+
+
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label for="formFile" class="form-label" id="display-which-certificate">Upload
+                                    MCI certificate (max 5MB)<span style="color: red;">*</span></label>
+                                <input class="form-control" type="file" name="certificate" id="certificate" accept=".jpg .jpeg .png .pdf "
+                                    required>
                         
                             </div>
-                            <img src="{{url_for('static', filename='images/T-Shirts.jpg')}}" width id="shirt" class="shirt-image" />
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label" for="firstName">Select Game<span
-                                        style="color: red;">*</span></label>
+                                <label for="formFile" class="form-label">Upload Photo (max 5MB)<span style="color: red;">*</span></label>
+                                <input class="form-control" type="file" name="photo" id="photo" accept=".jpg .jpeg .png .pdf" required>
+                        
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="row">
+
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label" for="firstName">Select Game<span style="color: red;">*</span></label>
+                        
                                 <select class="form-select" aria-label="Default select example" name="game" id="game" required>
                                     <option value="" disabled selected>Select game</option>
                                     <option value="ATHLETICS">ATHLETICS</option>
@@ -336,36 +439,13 @@
                                     <option value="TUG OF WAR">TUG OF WAR</option>
                                     <option value="VOLLEYBALL">VOLLEY BALL</option>
                                     <option value="WALKETHON">WALKETHON</option>
-
+                        
                                 </select>
                             </div>
                         </div>
-                    </div>
 
 
 
-                    <div class="row">
-
-
-                        <div class="col-md-6 mb-4">
-                            <div class="form-outline">
-                                <label for="formFile" class="form-label" id="display-which-certificate">Upload
-                                    MCI certificate (max 5MB)<span style="color: red;">*</span></label>
-                                <input class="form-control" type="file" name="certificate" id="certificate" accept=".jpg .jpeg .png .pdf "
-                                    required>
-                        
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <div class="form-outline">
-                                <label for="formFile" class="form-label">Upload Photo (max 5MB)<span style="color: red;">*</span></label>
-                                <input class="form-control" type="file" name="photo" id="photo" accept=".jpg .jpeg .png .pdf" required>
-                        
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label" for="firstName">Food preference<span style="color: red;">*</span></label>
@@ -399,9 +479,18 @@
                     </div>
                     <div class="col-md-12 mb-4">
                         <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" value="" id="terms" required>
-                            <label class="form-check-label" for="terms">
-                                I agree that all the above information mentioned by me is true and abide to&nbsp;<a href="url_for('rules_nav')" target="_blank">Rules</a>&nbsp;of Doctors Olympiad 2023
+                            <input class="form-check-input" type="checkbox" value="" id="terms1" required>
+                            <label class="form-check-label" for="terms1">
+                                I agree that all the above information mentioned by me is true and abide to&nbsp;<a
+                                    href="{{url_for('rules_nav')}}" target="_blank">Rules</a>&nbsp;of Doctors Olympiad 2023
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-4">
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" value="" id="terms2" required>
+                            <label class="form-check-label" for="terms2">
+                                I agree to the <a href="{{url_for('terms_conditions')}}" target="_blank">Terms and Conditions</a> and <a href="{{url_for('privacy_policy')}}" target="_blank">Privacy Policy</a> and <a href="{{url_for('refund_returns')}}" target="_blank">Return Refund and Cancellation Policy</a>
                             </label>
                         </div>
                     </div>
@@ -409,6 +498,7 @@
                     <button id="formregister" class="btn btn-primary col-md-12 mb-4" disabled>
                         Register
                     </button>
+
 
                 </div>
             </form>
@@ -673,15 +763,38 @@
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-            const termsCheckbox = document.getElementById('terms');
+            const termsCheckbox1 = document.getElementById('terms1');
+            const termsCheckbox2 = document.getElementById('terms2');
             const registerButton = document.getElementById('formregister');
 
-            termsCheckbox.addEventListener('change', function () {
-                registerButton.disabled = !this.checked;
-            });
+            function checkCheckboxes() {
+                registerButton.disabled = !(termsCheckbox1.checked && termsCheckbox2.checked);
+            }
+
+            termsCheckbox1.addEventListener('change', checkCheckboxes);
+            termsCheckbox2.addEventListener('change', checkCheckboxes);
         });
 
 </script>
+
+  
+<script>
+    function showShirtPopup() {
+            var popup = document.getElementById('shirtPopup');
+            popup.style.display = 'block';
+        }
+
+        function closeShirtPopup() {
+            var popup = document.getElementById('shirtPopup');
+            popup.style.display = 'none';
+        }
+
+
+</script>     
+
+   
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -696,6 +809,18 @@
             });
         });
 
+</script>
+<script>
+    function toggleInputField() {
+        var selectElement = document.getElementById("selectmember");
+        var extraInputDiv = document.getElementById("extraInput");
+
+        if (selectElement.value === "IMA Member") {
+            extraInputDiv.style.display = "block";
+        } else {
+            extraInputDiv.style.display = "none";
+        }
+    }
 </script>
 
 <!-- <script>
