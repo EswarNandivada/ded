@@ -208,6 +208,11 @@ background-color: #fff;
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+	    function autoSubmitDelayed(inputNumber) {
+        setTimeout(function() {
+            autoSubmit(inputNumber);
+        }, 10000); // 10000 milliseconds = 10 seconds
+    }
         function autoSubmit(inputNumber) {
             const inputValue = document.getElementById(`input${inputNumber}`).value;
             // Here, you can perform any necessary processing on the inputValue before setting it in the output field.
