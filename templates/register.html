@@ -366,7 +366,16 @@
                     </div>
 
                     <div class="row">
-
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label" for="firstName">Food preference<span style="color: red;">*</span></label>
+                                <select class="form-select" aria-label="Default select example" name="degree" id="degree" required>
+                                    <option disabled selected>Select Preference</option>
+                                    <option value="Veg">Veg</option>
+                                    <option value="Non-Veg">Non-Veg</option>
+                                </select>
+                            </div>
+                        </div>
                         
                         
                     </div>
@@ -388,13 +397,19 @@
                             
                         </div>
                     </div>
-                    <div class="col-md-7 mb-4">
-
+                    <div class="col-md-12 mb-4">
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" value="" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I agree that all the above information mentioned by me is true and abide to&nbsp;<a href="url_for('rules_nav')" target="_blank">Rules</a>&nbsp;of Doctors Olympiad 2023
+                            </label>
+                        </div>
                     </div>
-
-                    <button id="formregister" class="btn btn-primary col-md-12 mb-4">
+                    
+                    <button id="formregister" class="btn btn-primary col-md-12 mb-4" disabled>
                         Register
                     </button>
+
                 </div>
             </form>
         </div>
@@ -652,6 +667,17 @@
 
             mobileInput.addEventListener('input', function () {
                 this.value = this.value.replace(/\D/g, ''); // Remove non-numeric characters
+            });
+        });
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            const termsCheckbox = document.getElementById('terms');
+            const registerButton = document.getElementById('formregister');
+
+            termsCheckbox.addEventListener('change', function () {
+                registerButton.disabled = !this.checked;
             });
         });
 
