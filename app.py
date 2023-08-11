@@ -402,8 +402,8 @@ def refund_returns():
 
 
 
-@app.route('/register/<user_accept>', methods=['GET', 'POST'])
-def register(user_accept):
+@app.route('/register, methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
         acception = user_accept
         fname = request.form['fname']
