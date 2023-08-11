@@ -126,7 +126,7 @@ color: grey;
                <div class="card-body">
                     <h5 class="card-title">{{i[0]}}</h5>
                     {% if i[0] in ivs %}
-                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Get your registered deatils</a>
+                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Get your registered details</a>
                     {% else %}
                     {% if i[1]>=40 %}
                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Select Options</a>
@@ -177,7 +177,7 @@ color: grey;
 
         
         <div>
-            <p>Total Price: $<span id="totalPrice">0</span></p>
+            <p>Total Price: ₹<span id="totalPrice">0</span></p>
             <a href="#" id="payNowButton" class="btn btn-primary">Pay Now</a>
         </div>
                 <h2>Team Games - Register as a Captain</h2><br />
