@@ -337,7 +337,7 @@ def tr():
         eid=session.get('user')
         cursor.execute("SELECT * FROM teams WHERE id=%s",[eid])
         data = cursor.fetchall()
-         print(data)
+        print(data)
         return render_template('tr.html',data=data)
 
 @app.route('/invitations')
