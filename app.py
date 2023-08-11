@@ -338,7 +338,8 @@ def tr():
         cursor.execute("SELECT * FROM teams WHERE id=%s",[eid])
         data = cursor.fetchall()
         return render_template('tr.html',data=data)
-
+    else:
+        return redirect(url_for('login'))
 @app.route('/invitations')
 def invitations():
     if session.get('user'):
@@ -347,7 +348,8 @@ def invitations():
         cursor.execute("SELECT * FROM teams WHERE id=%s",[eid])
         data = cursor.fetchall()
         return render_template('teaminvitations.html',data=data)
-
+    else:
+        return redirect(url_for('login'))
 @app.route('/ima_ap_state_committee')
 def ima_ap_state_committee():
     return render_template('ima-ap-state-committe.html')
