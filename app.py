@@ -1538,11 +1538,11 @@ def registeredgame(game):
                         else:
                             cursor.close()
                             return jsonify({'message':'Success','url':url_for('dashboard',_external=True)})
-            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)'''
+            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
         else:
             if request.method=='POST':
                 return {'message':"Updates are on the way"}
-            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
+            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)'''
 def check_teams(eid,game):
     cond=True
     message=''
