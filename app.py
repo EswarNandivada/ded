@@ -402,7 +402,7 @@ def refund_returns():
 
 
 
-@app.route('/register, methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         acception = user_accept
