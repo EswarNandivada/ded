@@ -53,6 +53,7 @@ with mysql.connector.connect(host=host,user=user,password=password,db=db) as con
      #cursor.execute('ALTER TABLE register drop column status')
      #cursor.execute('ALTER TABLE temporary drop column status')
      #cursor.execute('alter table register auto_increment=230001')
+     cursor.execute('delete from games where game_name="THROW"')
      cursor.close()
 mydb=mysql.connector.connect(host=host,user=user,password=password,db=db,pool_name='DED',pool_size=32)
 
