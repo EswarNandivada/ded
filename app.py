@@ -337,7 +337,6 @@ def tr():
         eid=session.get('user')
         cursor.execute("SELECT * FROM teams WHERE id=%s",[eid])
         data = cursor.fetchall()
-        print(data)
         return render_template('tr.html',data=data)
 
 @app.route('/invitations')
@@ -1750,7 +1749,7 @@ def registeron(token):
             #body=f'Thanks for the registration your unique for future reference is {eid}'
             #sendmail(to=email, subject=subject, body=body)
             #---------------------------------------------------------------
-            link=url_for('payment_add_on_c',eid=eid,game=data['game'],amount=amount,_external=True)
+            link=url_for('payment_add_on_c',eid=eid,game=data['game'],amount=amount,rid=rid,_external=True)
             return redirect(link)
         return render_template('register_referal.html',message='',rid=rid,email=email,tid=tid,game=game)
      
@@ -1781,7 +1780,6 @@ def payment_add_on_c(eid,game,amount,rid):
         eazypay_integration = Eazypay(url_for('c_success',rid=rid,_external=True))
         payment_url=eazypay_integration.get_payment_url(ref,amount,name,email,data1[0][3])
         cursor  = mydb.cursor(buffered=True)
-        cursor.execute('select count(*) from games where game_name=%s',[game])
         cursor.execute('insert into payments (ordid,id,game,amount) values(%s,%s,%s,%s)',[ref,eid,game,amount])
         mydb.commit()
         cursor.close()
@@ -1790,9 +1788,7 @@ def payment_add_on_c(eid,game,amount,rid):
 @app.route('/success_c/<rid>',methods=['POST'])
 def success_c(rid):
     response = request.form.to_dict()
-    print(response)
     response_code_value = response.get('Response Code','na')
-    print(response_code_value)
     if response_code_value != 'na':
         if payment_success_exec():
             ref = int(response['ReferenceNo'])
@@ -1815,13 +1811,19 @@ def success_c(rid):
             cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
             cursor.execute('DELETE FROM temporary where id=%s',[eid])
             mydb.commit()
-            if game in ('CHESS','ROWING','FENCING','CYCLOTHON','ARCHERY','ROLLER SKATING'):
-                 category="Men's singles" if gender=='Male' else "Women's singles"
-                 cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,uid,category])
-                 mydb.commit()
-                 cursor.execute('select * from payments')
-                 details = cursor.fetchall()
-                 print(details)
+            cursor.execute('SELECT count(*) from teams where reqid=%s')
+            t_count=cursor.fetchone()[0]
+            cursor.execute('SELECT count(*) from individual_teams where reqid=%s')
+            i_count=cursor.fetchone()[0]
+            message=''
+            if t_count!=0:
+                cursor.execute("UPDATE teams SET status='Accept' where reqid=%s",[rid])
+                mydb.commit()
+            elif i_count!=0:
+                cursor.execute("UPDATE individual_teams SET status='Accept' where reqid=%s",[rid])
+                mydb.commit()
+            else:
+                message=' Request Removed by captain,contact other captain'
             cursor.close()
             
             html = f"""
@@ -1892,7 +1894,7 @@ def success_c(rid):
             # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\ndef accept game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
             mail_with_atc(to=email, subject=subject, html=html)
             
-            flash('Payment Successful')
+            flash('Payment Successful'+message)
             return redirect(url_for('dashboard'))
             # print(response)
             # Payment is successful
