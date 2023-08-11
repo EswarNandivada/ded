@@ -818,7 +818,7 @@ def success():
             #status=cursor.fetchone()[0]
             cursor.execute('select gender,email from temporary where id=%s',[eid])
             gender,email=cursor.fetchone()
-            cursor.execute('insert into register (FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) select FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception from temporary where id=%s',[eid])
+            cursor.execute('insert into register (FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,food_preference,ima_reg_no) select FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,food_preference,ima_reg_no from temporary where id=%s',[eid])
             mydb.commit()
             cursor.execute('SELECT id from register where email=%s',[email])
             uid=cursor.fetchone()[0]
@@ -1775,7 +1775,7 @@ def success_c(rid):
             #status=cursor.fetchone()[0]
             cursor.execute('select gender,email from temporary where id=%s',[eid])
             gender,email=cursor.fetchone()
-            cursor.execute('insert into register (FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) select FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception from temporary where id=%s',[eid])
+            cursor.execute('insert into register (FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,food_preference,ima_reg_no) select FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,food_preference,ima_reg_no from temporary where id=%s',[eid])
             mydb.commit()
             cursor.execute('SELECT id from register where email=%s',[email])
             uid=cursor.fetchone()[0]
