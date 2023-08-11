@@ -4,9 +4,6 @@
 {% block style %}
 
 <style>
-    
-    
-
     .gamesSection {
         width: 90%;
         margin: 100px auto;
@@ -55,9 +52,9 @@
         margin-top: 180px;
     }
 
-   
 
-    
+
+
 
     body {
         font-family: Arial, sans-serif;
@@ -78,8 +75,7 @@
         font-weight: bold;
     }
 
-    input,
-    select {
+    .seth {
         width: 100%;
         padding: 10px;
         margin-bottom: 20px;
@@ -88,7 +84,7 @@
         font-size: 16px;
     }
 
-    select {
+    .seth {
         height: 40px;
     }
 
@@ -128,7 +124,7 @@
     }
 
     /* Center align the profile section */
-    .container {
+    .sent {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -156,7 +152,7 @@
 {% include "dashboard-head.html" %}
 
 <section class="gamesSection">
-    <div class="container">
+    <div class="container sent">
         <div class="media align-items-center py-3 mb-3">
             <img src="{{url_for('static',filename='uploads/photos/'+filename)}}" alt=""
                 class="d-block ui-w-50 rounded-circle">
@@ -171,34 +167,34 @@
             </div>
         </div>
     </div>
-    
+
     <form method="POST">
 
         <label>First Name</label>
-        <input type="text" name="fname" value="{{data[1]}}">
+        <input class="seth" type="text" name="fname" value="{{data[1]}}">
         <label>Last Name</label>
-        <input type="text" name="lname" value="{{data[2]}}">
+        <input class="seth" type="text" name="lname" value="{{data[2]}}">
         <label>Email</label>
-        <input type="email" name="email" value="{{data[3]}}" readonly>
+        <input class="seth" type="email" name="email" value="{{data[3]}}" readonly>
         <label>Mobile Number</label>
-        <input type="tel" name="mobile" value="{{data[5]}}" pattern="[0-9()#&amp;+*-=.]+"
+        <input class="seth" type="tel" name="mobile" value="{{data[5]}}" pattern="[0-9()#&amp;+*-=.]+"
             title="Only numbers and phone characters (#, -, *, etc) are accepted." readonly>
         <label>Age</label>
-        <input type="number" name="age" min="" max="" value="{{data[6]}}">
+        <input class="seth" type="number" name="age" min="" max="" value="{{data[6]}}">
         <label>Gender</label>
-        <select name="gender" value="{{data[7]}}">
+        <select class="seth" name="gender" value="{{data[7]}}">
             <option value="Male" {% if data[7]=='Male' %}selected{% endif %}>Male</option>
             <option value="Female" {% if data[7]=='Female' %}selected{% endif %}>Female</option>
             <option value="Other" {% if data[7]=='Other' %}selected{% endif %}>Other</option>
         </select>
         <label>Date Of Birth</label>
-        <input type="date" name="dob" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" value="{{data[8]}}">
+        <input class="seth" type="date" name="dob" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" value="{{data[8]}}">
         <label>City</label>
-        <input type="text" name="city" value="{{data[9]}}">
+        <input class="seth" type="text" name="city" value="{{data[9]}}">
         <label>Address</label>
-        <input type="text" name="address" value="{{data[10]}}">
+        <input class="seth" type="text" name="address" value="{{data[10]}}">
         <label>State</label>
-        <select name="state">
+        <select class="seth" name="state">
             <option value="Arunachal Pradesh" {% if data[11]=='Arunachal Pradesh' %}selected{% endif %}>Arunachal
                 Pradesh</option>
             <option value="Assam" {% if data[11]=='Assam' %}selected{% endif %}>Assam</option>
@@ -236,27 +232,27 @@
 
         </select>
         <label>Country</label>
-        <select name="country">
+        <select class="seth" name="country">
 
             <option value="{{data[12]}}" selected>{{data[12]}}</option>
             <!-- Options for countries here -->
         </select>
         <label>Degree-MBBS(Compulsory)</label>
-        <select name="degree">
+        <select class="seth" name="degree">
             <option>{{data[13]}}</option>
 
 
 
         </select>
         <label>State or MCI Registration No</label>
-        <input type="text" name="mci" value="{{data[14]}}" readonly>
+        <input class="seth" type="text" name="mci" value="{{data[14]}}" readonly>
         <label>Select Member</label>
-        <select name="selectmember" aria-required="true" readonly>
+        <select class="seth" name="selectmember" aria-required="true" readonly>
             <option>{{data[15]}}</option>
 
         </select>
         <label>Select Shirt Size</label>
-        <select name="shirtsize" value="{{data[16]}}">
+        <select class="seth" name="shirtsize" value="{{data[16]}}">
             <option value="S">S</option>
             <option value="M">M</option>
             <option value="L">L</option>
