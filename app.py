@@ -479,7 +479,7 @@ def register():
             'fname': fname, 'lname': lname, 'email': email, 'password': hashed_password, 'mobile': mobile,
             'age': age, 'gender': gender, 'dob': dob, 'city': city, 'address': address, 'state': state,
             'country': country, 'degree': degree, 'mci': mci, 'game': game, 'selectmember': selectmember,
-            'acception': acception, 'amount': amount,'shirtsize': shirtsize,'ima_membership_number':ima_membership_number,
+            'amount': amount,'shirtsize': shirtsize,'ima_membership_number':ima_membership_number,
             'food_preference':food_preference,
         }
         cursor=mydb.cursor(buffered=True)
