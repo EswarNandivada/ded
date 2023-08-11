@@ -1004,9 +1004,10 @@ def dashboard():
         cursor.execute('select email from register where id=%s',[session.get('user')])
         email_id=cursor.fetchone()[0]
         cursor.close()'''
-        ivs=['ATHLETICS', 'ARCHERY', 'BADMINTON', 'CARROMS', 'CHESS', 'CYCLOTHON', 'WALKATHON','SWIMMING', 'TENNIKOIT', 'THROW', 'ROWING', 'ROLLER SKATING', 'FENCING', 'SHOOTING','TABLE TENNIS', 'LAWN TENNIS']
+        ivs=['ATHLETICS', 'BADMINTON', 'CARROMS', 'WALKATHON','SWIMMING', 'TENNIKOIT', 'THROW', 'SHOOTING','TABLE TENNIS', 'LAWN TENNIS']
+        sls=['ARCHERY','CYCLOTHON','CHESS','FENCING','ROWING','ROLLER SKATING']
         tms=['BALL BADMINTON','BASKET BALL','CRICKET WHITE BALL','FOOTBALL','HARD TENNIS CRICKET','KABADDI','KHO KHO','THROW BALL','TUG OF WAR','VOLLEY BALL','WOMEN BOX CRICKET']
-        return render_template('my-account.html',games=games,add_individual_games=add_individual_games,add_teams_games=add_teams_games,ivs=ivs,tms=tms)
+        return render_template('my-account.html',games=games,add_individual_games=add_individual_games,add_teams_games=add_teams_games,ivs=ivs,tms=tms,sls=sls)
     else:
         return redirect(url_for('login'))
 @app.route('/edit',methods=['GET','POST'])
