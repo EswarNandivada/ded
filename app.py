@@ -1068,7 +1068,7 @@ def team():
     else:
         return redirect(url_for('login'))
 
-@app.route('/buyaddon/', methods=['GET','POST'])
+@app.route('/buyaddon/', methods=['GET', 'POST'])
 def buyaddon():
     if session.get('user'):
         selected_games = request.get_json()  # Get the selected games from the request JSON
@@ -1081,9 +1081,19 @@ def buyaddon():
             total_amount += amount
 
         cursor.close()
-        return jsonify({"payment_url": url_for('addonpayment', eid=session.get('user'), game=','.join(selected_games), amount=total_amount)})
+
+        eid = session.get('user')  # Assuming eid is already an integer in the session
+        game_names = ','.join(selected_games)
+        print(game_names)
+        return jsonify({
+            "eid": eid,
+            "game_names": list(game_names),
+            "amount": total_amount
+        })
     else:
         return redirect(url_for('login'))
+
+
 
 @app.route('/buyaddons/<game>')
 def buyaddons(game):
