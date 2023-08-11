@@ -123,12 +123,16 @@ color: grey;
             <div class="card col-12 col-md-3 m-3" style="width: 15rem;">
                 <img src="{{ url_for('static', filename='games/' + i[0] + '.webp') }}" class="card-img-top p-2" alt="...">
     
-                <div class="card-body">
+               <div class="card-body">
                     <h5 class="card-title">{{i[0]}}</h5>
-                    {% if i[1]>=30 %}
+                    {% if i[0] in ivs %}
+                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Get your registered deatils</a>
+                    {% else %}
+                    {% if i[1]>=40 %}
                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Select Options</a>
                     {% else %}
                     <a href="{{url_for('registeronteam')}}" class="btn btn-primary">Select Options</a>
+                    {% endif %}
                     {% endif %}
 
                 </div>
