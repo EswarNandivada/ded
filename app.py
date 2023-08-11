@@ -1012,7 +1012,7 @@ def edit_profile():
             country=request.form['country']
             shirtsize=request.form['shirtsize']
             cursor=mydb.cursor(buffered=True)
-            cursor.execute('update register set FirstName=%s,LastName=%s,Email=%s,mobileno=%s,age=%s,gender=%s,DOB=%s,city=%s,address=%s,state=%s,country=%s,SHIRT_SIZE=%s where id=230024',[firstname,lastname,email,mobile,age,gender,dob,city,address,state,country,shirtsize])
+            cursor.execute('update register set FirstName=%s,LastName=%s,Email=%s,mobileno=%s,age=%s,gender=%s,DOB=%s,city=%s,address=%s,state=%s,country=%s,SHIRT_SIZE=%s where id=%s',[firstname,lastname,email,mobile,age,gender,dob,city,address,state,country,shirtsize,session.get('user')])
             mydb.commit()
             cursor.close()
             cursor=mydb.cursor(buffered=True)
