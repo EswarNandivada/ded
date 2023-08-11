@@ -767,37 +767,6 @@ def payment(eid,game,amount):
     return render_template('payment.html', data1=data1,game=game,amount=amount,eid=eid,name=name,email=email)
 
 
-# @app.route('/pay/<eid>/<game>/<ref>',methods=['POST'])
-# def pay(eid,game,ref):
-#     cursor = mydb.cursor(buffered=True)
-#     cursor.execute('SELECT status from register WHERE id=%s', [eid])
-#     status=cursor.fetchone()[0]
-#     if status=='pending':
-#         cursor.execute('SELECT amount FROM game WHERE id=%s', [eid])
-#         amount = cursor.fetchone()[0]
-#         cursor.close()
-#     else:
-#         cursor.execute('select amount from games where game_name=%s',[game])
-#         amount=cursor.fetchone()[0]
-#         #q=int(request.form['qty'])
-#     q = 1
-#     checkout_session=stripe.checkout.Session.create(
-#         success_url=url_for('success',eid=eid,game=game,amount=amount,ref=ref,_external=True),
-#         line_items=[
-#             {
-#                 'price_data': {
-#                     'product_data': {
-#                         'name': game,
-#                     },
-#                     'unit_amount': amount*100,
-#                     'currency': 'inr',
-#                 },
-#                 'quantity':q
-#             },
-#             ],
-#         mode="payment",)
-#     return redirect(checkout_session.url)
-
 
 @app.route('/success',methods=['POST'])
 def success():
@@ -1377,7 +1346,8 @@ def registeredgame(game):
         return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
 
     elif game=='ATHLETICS':
-        cursor = mydb.cursor(buffered=True)
+        return '<h1> Updates are On the Way....!</h1>'
+        '''cursor = mydb.cursor(buffered=True)
         cursor.execute('select count(*) from sub_games where game=%s and id=%s',[game,session.get('user')])
         count = cursor.fetchone()[0]
         cursor.execute('select gender from register where id=%s',[session.get('user')])
@@ -1434,22 +1404,16 @@ def registeredgame(game):
                 body=f'You are successfully def accept to {" ".join(values)}\n\nThanks and regards\nDoctors Olympiad 2023'
                 sendmail(email_id,subject,body)
                 return redirect(url_for('dashboard'))
-        return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
+        return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)'''
 
     elif game in ('BADMINTON','TABLETENNIS','LAWNTENNIS','CARROMS'):
-        ds="Mens Doubles" if gender=="Male" else "Womens Doubles"
+        return '<h1> Updates are On the Way....!</h1>'
+        '''ds="Mens Doubles" if gender=="Male" else "Womens Doubles"
         singles=["Womens Single","Mens Single"]
         cursor = mydb.cursor(buffered=True)
         cursor.execute("SELECT count(*) from sub_games where game=%s",[game])
         count=cursor.fetchone()[0]
         print(count)
-        '''cursor.execute('select category from sub_games where game=%s and id=%s',[game,session.get('user')])
-        singles_data=cursor.fetchall()
-        cursor = mydb.cursor(buffered=True)'''
-        #cursor.execute('''SELECT status from teams as t inner join sub_games as s on t.teamid=s.team_number where t.game=%s''',[game])
-        #cursor.close()
-        #data=[i[0] for i in cursor.                                () if i[0]=='Pending']
-        #cond=True
         if request.method=='POST':
             dicts=request.form.to_dict()
             for i in dicts:
@@ -1497,10 +1461,11 @@ def registeredgame(game):
             else:
                 flash('Request sent')
                 return redirect(url_for('dashboard'))
-        return render_template('individualdubles.html',gender=gender,game=game,ds=ds)
+        return render_template('individualdubles.html',gender=gender,game=game,ds=ds)'''
             
     else:
-        cursor=mydb.cursor(buffered=True)
+        return '<h1> Updates are On the Way....!</h1>'
+        '''cursor=mydb.cursor(buffered=True)
         cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[session.get('user'),game])
         count=cursor.fetchone()[0]
         if count==0:
@@ -1573,7 +1538,7 @@ def registeredgame(game):
                         else:
                             cursor.close()
                             return jsonify({'message':'Success','url':url_for('dashboard',_external=True)})
-            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
+            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)'''
         else:
             if request.method=='POST':
                 return {'message':"Updates are on the way"}
