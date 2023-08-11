@@ -942,7 +942,7 @@ def dashboard():
     if session.get('user'):
         cursor = mydb.cursor(buffered=True)
         query1="""
-        SELECT game_name 
+        SELECT game_name,amount 
         FROM games 
         WHERE game_name NOT IN (
             SELECT game FROM game WHERE id = %s
@@ -954,7 +954,7 @@ def dashboard():
         cursor.execute(query1,[session.get('user')])
         add_individual_games=cursor.fetchall()
         query2 = """
-        SELECT game_name 
+        SELECT game_name,amount 
         FROM games 
         WHERE game_name NOT IN (
             SELECT game FROM game WHERE id = %s) AND game_name not IN (
