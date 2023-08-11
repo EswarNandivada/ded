@@ -2000,8 +2000,8 @@ def accept(token):
                     cursor.execute('select count(*) from game where id=%s and game=%s',[eid,game])
                     count=cursor.fetchone()[0]
                     if count==0:
-                            cursor.execute('insert into game values(%s,%s,%s)',[eid,game,0])
-                            mydb.commit()
+                        cursor.execute('insert into game values(%s,%s,%s)',[eid,game,0])
+                        mydb.commit()
                     subject=f"{participant} Accepted your {game} team request"
                     body=f"Hi,\n\n{name}\n\n\n {participant} just accepted your team request for {game}.See others status in your dashboard\n\n{url_for('dashboard',_external=True)}"
                     sendmail(to=email,subject=subject,body=body)
