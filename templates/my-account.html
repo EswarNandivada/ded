@@ -121,14 +121,15 @@ color: grey;
         <div class="row">
             {% for i in games %}
             <div class="card col-12 col-md-3 m-3" style="width: 15rem;">
-                <img src="{{ url_for('static', filename='games/' + i[0] + '.webp') }}" class="card-img-top p-2" alt="...">
-    
-               <div class="card-body">
+                <img src="{{ url_for('static', filename='games/' + i[0] + '.webp') }}" class="card-img-top p-2"
+                    alt="...">
+
+                <div class="card-body">
                     <h5 class="card-title">{{i[0]}}</h5>
                     {% if i[0] in sls %}
-                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">see details</a>
+                    <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">See Details</a>
                     {% elif i[0] in ivs %}
-                   <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">select options</a>
+                    <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Select Options</a>
                     {% else %}
                     {% if i[1]>=40 %}
                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Select Options</a>
@@ -164,8 +165,8 @@ color: grey;
                 </div>
                 <div class="select-box-container">
                     <select class="custom-select select-game">
-                        <option value="" selected disabled>Select Option</option>
-                        <option value="{{ i[0] }}">Select {{ i[0] }}</option>
+                        <!-- <option value="" selected disabled>Select Option</option> -->
+                        <option value="{{ i[1] }}">Select {{ i[0] }}</option>
                     </select>
                 </div>
             </div>
@@ -179,10 +180,13 @@ color: grey;
 
         
         <div>
-            <p>Total Price: ₹<span id="totalPrice">0</span></p>
-            <a href="#" id="payNowButton" class="btn btn-primary">Pay Now</a>
+            <p>Total Price:₹ <span id="totalPrice">0</span></p>
+            <a id="payNowButton" class="btn btn-primary">Pay Now</a>
         </div>
-                <h2>Team Games - Register as a Captain</h2><br />
+        
+        <br>
+
+                <h2>Team Games</h2><br />
                 <div class="container">
                     <!-- 1 -->
                     <div class="row">
@@ -210,129 +214,79 @@ color: grey;
 
 {% block script %}
 
-<!-- Include your previous HTML code here -->
-<script>
-    // JavaScript to toggle between card and select box
-    document.querySelectorAll('.card').forEach(card => {
-        const selectBoxContainer = card.querySelector('.select-box-container');
-        const selectBox = card.querySelector('.select-game');
 
-        // Add click event listener to each card
-        card.addEventListener('click', () => {
-            // Toggle visibility of card and select box
-            card.style.display = 'none';
-            selectBoxContainer.style.display = 'block';
-        });
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Get references to the necessary elements
+        const checkboxes = document.querySelectorAll('.game-checkbox');
+        const totalPriceElement = document.getElementById('totalPrice');
+        const payNowButton = document.getElementById('payNowButton');
 
-        // Add change event listener to select box
-        selectBox.addEventListener('change', () => {
-            if (selectBox.value === '') {
-                card.style.display = 'block';
-                selectBoxContainer.style.display = 'none';
-            }
-        });
-    });
-</script>
+        // Calculate the total price and update the price box
+        function calculateTotalPrice() {
+            let totalPrice = 0;
 
-<script>
-    const checkboxes = document.querySelectorAll('.game-checkbox');
-    const totalPriceElement = document.getElementById('totalPrice');
-    const payNowButton = document.getElementById('payNowButton');
-    let totalPrice = 0;
-
-    checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                const gameName = checkbox.value;
-                const gamePrice = 1500; // Fixed price for each game (you can change this as needed)
-
+            checkboxes.forEach(checkbox => {
                 if (checkbox.checked) {
-                    totalPrice += gamePrice;
-                } else {
-                    totalPrice -= gamePrice;
+                    const card = checkbox.closest('.card');
+                    const priceSelect = card.querySelector('.select-game');
+                    const selectedPrice = parseFloat(priceSelect.value);
+                    totalPrice += selectedPrice;
                 }
-                totalPriceElement.textContent = totalPrice.toFixed(2);
             });
-        });
 
-    // payNowButton.addEventListener('click', () => {
-    //         // Disable the button to prevent multiple clicks
-    //         payNowButton.disabled = true;
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+        }
 
-    //         // Make an AJAX call to initiate the payment process
-    //         $.ajax({
-    //             url: "{{url_for('buyaddons',game=game)}}",
-    //             method: 'POST',
-    //             dataType: 'json',
-    //             success: function (data) {
-    //                 // Redirect the user to the payment gateway page
-    //                 window.location.href = data.payment_url;
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error('Error initiating payment:', error);
-    //                 // Re-enable the button so the user can try again
-    //                 payNowButton.disabled = false;
-    //             }
-    //         });
-    //     });
-</script>
-
-<script>
-    // Create an array to store selected game names
-        const selectedGames = [];
-
-        // Add event listeners to checkboxes
+        // Add event listeners to checkboxes and selects
         checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                const gameName = checkbox.value;
-
-                if (checkbox.checked) {
-                    selectedGames.push(gameName);
-                    totalPrice += gamePrice;
-                } else {
-                    const index = selectedGames.indexOf(gameName);
-                    if (index > -1) {
-                        selectedGames.splice(index, 1);
-                    }
-                    totalPrice -= gamePrice;
-                }
-                totalPriceElement.textContent = totalPrice.toFixed(2);
-            });
+            checkbox.addEventListener('change', calculateTotalPrice);
         });
 
+        // Call calculateTotalPrice on page load
+        calculateTotalPrice();
+
+        // Add click event listener to the "Pay Now" button
         payNowButton.addEventListener('click', () => {
-                // Disable the button to prevent multiple clicks
-                payNowButton.disabled = true;
+            // Disable the button to prevent multiple clicks
+            payNowButton.disabled = true;
 
-                // Create an array to store selected game names
-                const selectedGames = [];
+            // Create an array to store selected game names
+            const selectedGames = [];
 
-                checkboxes.forEach(checkbox => {
-                    if (checkbox.checked) {
-                        selectedGames.push(checkbox.value);
-                    }
-                });
-
-                // Make an AJAX POST request to initiate the payment process
-                $.ajax({
-                    url: "{{ url_for('buyaddon') }}",  // Correct URL construction
-                    method: 'POST',
-                    data: JSON.stringify(selectedGames),
-                    contentType: 'application/json',
-                    success: function (data) {
-                        // Redirect the user to the payment gateway page
-                        window.location.href = data.payment_url;
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error initiating payment:', error);
-                        // Re-enable the button so the user can try again
-                        payNowButton.disabled = false;
-                    }
-                });
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedGames.push(checkbox.value);
+                }
             });
 
+            // Make an AJAX POST request to initiate the payment process
+            $.ajax({
+                url: "/buyaddon", // Replace with the correct URL
+                method: 'POST',
+                data: JSON.stringify(selectedGames),
+                contentType: 'application/json',
+                success: function (data) {
+                    // Calculate total price
+                    const totalPrice = parseFloat(totalPriceElement.textContent);
+
+                    // Construct the payment URL with eid, game names, and total amount
+                    const paymentUrl = `/addonpayment/${data.eid}/${selectedGames.join(',')}/${data.amount}`;
+
+                    // Redirect the user to the payment gateway page
+                    window.location.href = paymentUrl;
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error initiating payment:', error);
+                    // Re-enable the button so the user can try again
+                    payNowButton.disabled = false;
+                }
+            });
+        });
+    </script>
 
 
-</script>
+
 
 <!-- Rest of your HTML code -->
 
