@@ -1638,109 +1638,117 @@ def check_teams(eid,game):
     return {'cond':cond,'message':message}
   
 
-@app.route('/registeron/<game>/<email>/<rid>')
-def registeron(game,email,rid):
-    if request.method == 'POST':
-        print(request.form)
-        acception = 'Yes'
-        fname = request.form['fname']
-        lname = request.form['lname']
-        email = request.form['email']
-        password = request.form['password']
-        mobile = request.form['mobile']
-        age = request.form['age']
-        gender = request.form['gender']
-        dob = request.form['dob']
-        city = request.form['city']
-        address = request.form['address']
-        state = request.form['state']
-        country = request.form['country']
-        degree = request.form['degree']
-        mci = request.form['mci']
-        game = request.form['game']
-        selectmember = request.form['selectmember']
-        shirtsize = request.form['shirtsize']
-        otp=request.form['otp']
-        dobfile=request.files['dobfile']
-        cursor = mydb.cursor(buffered=True)
-        # cursor.execute('SELECT COUNT(*) FROM register WHERE CONCAT(FirstName, " ", LastName) = %s', [full_name])
-        # count = cursor.fetchone()[0]
-        cursor.execute('SELECT COUNT(*) FROM register WHERE Email = %s', [email])
-        count1 = cursor.fetchone()[0]
-        cursor.execute('SELECT COUNT(*) FROM register WHERE mobileno = %s', [mobile])
-        count2 = cursor.fetchone()[0]
-        cursor.close()
-        if count2 == 1:
-            message='Mobile number already exists.'
-            return render_template('register.html',message=message)
-        if count1 == 1:
-            message='Email already in use'
-            return render_template('register.html',message=message)
-        cond=True if session.get('email') else False
-        if cond!=True:
-            message='Please verify your email'
-            return render_template('register.html',message=message)
-        if session['otp']!=otp:
-            message='Invalid OTP'
-            return render_template('register.html',message=message)
-        if session.get('email')!=request.form['email']:
-            message='Email address changed verify otp again'
-            return render_template('register.html',message=message)
-        # Get the uploaded certificate and photo files
-        certificate_file = request.files['certificate']
-        photo_file = request.files['photo']
+@app.route('/registeron/<token>')
+def registeron(token):
+    data=link_validator(token)
+    if data=='link expired':
+        flash('link expired!')
+        return render_template('register.html',message='')
+    else:
+        rid=data.get('rid')
+        tid=data.get('teamid')
+        email=data.get('email')
+        game=data.get('game')
+        if request.method == 'POST':
+            acception = 'Yes'
+            fname = request.form['fname']
+            lname = request.form['lname']
+            email = request.form['email']
+            password = request.form['password']
+            mobile = request.form['mobile']
+            age = request.form['age']
+            gender = request.form['gender']
+            dob = request.form['dob']
+            city = request.form['city']
+            address = request.form['address']
+            state = request.form['state']
+            country = request.form['country']
+            degree = request.form['degree']
+            mci = request.form['mci']
+            game = request.form['game']
+            selectmember = request.form['selectmember']
+            shirtsize = request.form['shirtsize']
+            otp=request.form['otp']
+            dobfile=request.files['dobfile']
+            cursor = mydb.cursor(buffered=True)
+            # cursor.execute('SELECT COUNT(*) FROM register WHERE CONCAT(FirstName, " ", LastName) = %s', [full_name])
+            # count = cursor.fetchone()[0]
+            cursor.execute('SELECT COUNT(*) FROM register WHERE Email = %s', [email])
+            count1 = cursor.fetchone()[0]
+            cursor.execute('SELECT COUNT(*) FROM register WHERE mobileno = %s', [mobile])
+            count2 = cursor.fetchone()[0]
+            cursor.close()
+            if count2 == 1:
+                message='Mobile number already exists.'
+                return render_template('register.html',message=message)
+            if count1 == 1:
+                message='Email already in use'
+                return render_template('register.html',message=message)
+            cond=True if session.get('email') else False
+            if cond!=True:
+                message='Please verify your email'
+                return render_template('register.html',message=message)
+            if session['otp']!=otp:
+                message='Invalid OTP'
+                return render_template('register.html',message=message)
+            if session.get('email')!=request.form['email']:
+                message='Email address changed verify otp again'
+                return render_template('register.html',message=message)
+            # Get the uploaded certificate and photo files
+            certificate_file = request.files['certificate']
+            photo_file = request.files['photo']
 
-        # Generate unique filenames for certificate and photo using UUID
-        certificate_filename = f'{mobile}.{certificate_file.filename.split(".")[-1]}'
-        photo_filename = f'{mobile}.{photo_file.filename.split(".")[-1]}'
-        dob_filename = f'{mobile}.{dobfile.filename.split(".")[-1]}'
+            # Generate unique filenames for certificate and photo using UUID
+            certificate_filename = f'{mobile}.{certificate_file.filename.split(".")[-1]}'
+            photo_filename = f'{mobile}.{photo_file.filename.split(".")[-1]}'
+            dob_filename = f'{mobile}.{dobfile.filename.split(".")[-1]}'
 
 
-        # Save the certificate and photo files to the upload folder
-        certificate_file.save(os.path.join(app.config['UPLOAD_FOLDER'], certificate_filename))
-        photo_file.save(os.path.join(app.config['UPLOAD_FOLDERS'], photo_filename))
-        dobfile.save(os.path.join(app.config['UPLOAD_FOLDERSS'], dob_filename))
+            # Save the certificate and photo files to the upload folder
+            certificate_file.save(os.path.join(app.config['UPLOAD_FOLDER'], certificate_filename))
+            photo_file.save(os.path.join(app.config['UPLOAD_FOLDERS'], photo_filename))
+            dobfile.save(os.path.join(app.config['UPLOAD_FOLDERSS'], dob_filename))
 
-        
-        if selectmember == 'IMA Member':
-            amount = 30
-        else:
-            amount = 35
-        
-        full_name = fname + ' ' + lname  # Combine first name and last name
+            
+            if selectmember == 'IMA Member':
+                amount = 30
+            else:
+                amount = 35
+            
+            full_name = fname + ' ' + lname  # Combine first name and last name
 
-        
-        # Hash the password using bcrypt
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        
+            
+            # Hash the password using bcrypt
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            
 
-        data = {
-            'fname': fname, 'lname': lname, 'email': email, 'password': hashed_password, 'mobile': mobile,
-            'age': age, 'gender': gender, 'dob': dob, 'city': city, 'address': address, 'state': state,
-            'country': country, 'degree': degree, 'mci': mci, 'game': game, 'selectmember': selectmember,
-            'acception': acception, 'amount': amount,'shirtsize': shirtsize,
-        }
-        cursor=mydb.cursor(buffered=True)
-        cursor.execute('INSERT INTO temporary(FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', [data['fname'], data['lname'], data['email'], data['password'], data['mobile'], data['age'], data['gender'], data['dob'], data['city'], data['address'], data['state'], data['country'], data['degree'], data['mci'], data['selectmember'],data['shirtsize'], data['acception']])
-        mydb.commit()
-        cursor.execute('select id from temporary where Email=%s and mobileno=%s', [data['email'], data['mobile']])
-        eid=cursor.fetchone()[0]
+            data = {
+                'fname': fname, 'lname': lname, 'email': email, 'password': hashed_password, 'mobile': mobile,
+                'age': age, 'gender': gender, 'dob': dob, 'city': city, 'address': address, 'state': state,
+                'country': country, 'degree': degree, 'mci': mci, 'game': game, 'selectmember': selectmember,
+                'acception': acception, 'amount': amount,'shirtsize': shirtsize,
+            }
+            cursor=mydb.cursor(buffered=True)
+            cursor.execute('INSERT INTO temporary(FirstName,LastName,Email,password,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,acception) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', [data['fname'], data['lname'], data['email'], data['password'], data['mobile'], data['age'], data['gender'], data['dob'], data['city'], data['address'], data['state'], data['country'], data['degree'], data['mci'], data['selectmember'],data['shirtsize'], data['acception']])
+            mydb.commit()
+            cursor.execute('select id from temporary where Email=%s and mobileno=%s', [data['email'], data['mobile']])
+            eid=cursor.fetchone()[0]
 
-        #updated code------------------------- --------------------------------
-        #cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,data['game'],data['amount']])
-        #print(game)
-        
-        cursor.close()
-        session.pop('otp')
-        session.pop('email')
-        #flash ('Registration successful! Complete the payment process.')
-        #subject='IMA Doctors Olympiad Registration'
-        #body=f'Thanks for the registration your unique for future reference is {eid}'
-        #sendmail(to=email, subject=subject, body=body)
-        #---------------------------------------------------------------
-        link=url_for('payment_add_on_c',eid=eid,game=data['game'],amount=amount,_external=True)
-        return redirect(link)
-    return render_template('register.html',message='')
+            #updated code------------------------- --------------------------------
+            #cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,data['game'],data['amount']])
+            #print(game)
+            
+            cursor.close()
+            session.pop('otp')
+            session.pop('email')
+            #flash ('Registration successful! Complete the payment process.')
+            #subject='IMA Doctors Olympiad Registration'
+            #body=f'Thanks for the registration your unique for future reference is {eid}'
+            #sendmail(to=email, subject=subject, body=body)
+            #---------------------------------------------------------------
+            link=url_for('payment_add_on_c',eid=eid,game=data['game'],amount=amount,_external=True)
+            return redirect(link)
+        return render_template('register_referal.html',message='',rid=rid,email=email,tid=tid,game=game)
      
 def link_validator(token):
     today_date=datetime.now()
@@ -2022,6 +2030,8 @@ def accept(token):
                     return redirect(url_for('dashboard'))
                 else:
                     return f"<h1>{criteria['message']}</h1>"
+        else:
+            return redirect(url_for('registeron',token=token))
 @app.route('/update/<game>', methods=['POST'])
 def update(game):
     if session.get('user'):
