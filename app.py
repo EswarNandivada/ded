@@ -1308,7 +1308,6 @@ def registeredgame(game):
         count = cursor.fetchone()[0]
         cursor.close()
         if count>=1:
-            flash('Already def accept!refer your games profile')
             return redirect(url_for('individual'))
         if request.method=='POST':
             cursor = mydb.cursor(buffered=True)
@@ -1327,7 +1326,6 @@ def registeredgame(game):
         count = cursor.fetchone()[0]
         cursor.close()
         if count>=1:
-            flash('Already def accept!refer your games profile')
             return redirect(url_for('dashboard'))
         if request.method=='POST':
             if len(request.form)==0:
@@ -1349,7 +1347,6 @@ def registeredgame(game):
         count = cursor.fetchone()[0]
         cursor.close()
         if count>=1:
-            flash('Already def accept!refer your games profile')
             return redirect(url_for('dashboard'))
         if request.method=='POST':
             s_styles={'Butterfly Stroke','Breaststroke','Backstroke','Freestyle'}
