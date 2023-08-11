@@ -125,8 +125,10 @@ color: grey;
     
                <div class="card-body">
                     <h5 class="card-title">{{i[0]}}</h5>
-                    {% if i[0] in ivs %}
-                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Get your registered details</a>
+                    {% if i[0] in sls %}
+                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">seedetails</a>
+                    {% elif i[0] in sls %}
+                   <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">select options</a>
                     {% else %}
                     {% if i[1]>=40 %}
                     <a href="{{url_for('registeredgame',game=i[0])}}" class="btn btn-primary">Select Options</a>
