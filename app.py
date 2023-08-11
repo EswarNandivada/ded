@@ -1648,7 +1648,10 @@ def registeron(token):
         rid=data.get('rid')
         tid=data.get('teamid')
         email=data.get('email')
-        game=data.get('game')
+        cursor = mydb.cursor(buffered=True)
+        cursor.execute('SELECT game from sub_games where team_number=%s')
+        game=cursor.fetchone()[0]
+        cursor.close()
         if request.method == 'POST':
             acception = 'Yes'
             fname = request.form['fname']
