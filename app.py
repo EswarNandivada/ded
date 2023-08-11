@@ -405,7 +405,6 @@ def refund_returns():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        acception = user_accept
         fname = request.form['fname']
         lname = request.form['lname']
         email = request.form['email']
@@ -424,7 +423,7 @@ def register():
         selectmember = request.form['selectmember']
         shirtsize = request.form['shirtsize']
         otp=request.form['otp']
-        ima_membership_number=request.form['imamembershipnumber']
+        ima_membership_number=request.form['imamembershipnumber'] if request.form['imamembershipnumber']!='' else None
         food_preference=request.form['food']    
         cursor = mydb.cursor(buffered=True)
         # cursor.execute('SELECT COUNT(*) FROM register WHERE CONCAT(FirstName, " ", LastName) = %s', [full_name])
@@ -1651,7 +1650,7 @@ def registeron(token):
             selectmember = request.form['selectmember']
             shirtsize = request.form['shirtsize']
             otp=request.form['otp']
-            ima_membership_number=request.form['imamembershipnumber']
+            ima_membership_number=request.form['imamembershipnumber'] if request.form['imamembershipnumber']!='' else None
             food_preference=request.form['food']    
             cursor = mydb.cursor(buffered=True)
             # cursor.execute('SELECT COUNT(*) FROM register WHERE CONCAT(FirstName, " ", LastName) = %s', [full_name])
