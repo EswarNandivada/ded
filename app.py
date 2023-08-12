@@ -1495,7 +1495,7 @@ def registeredgame(game):
         if request.method=='POST':
             if request.form['input'].isdigit(): 
                 uid=request.form['input']
-                cursor.execute('SELECT count(*) from teams where id=%s and game=%s teamid=%s',[uid,game,team_id])
+                cursor.execute('SELECT count(*) from teams where id=%s and game=%s and teamid=%s',[uid,game,team_id])
                 u_count=cursor.fetchone()[0]
                 if u_count==0 :
                     requestid=adotp()
@@ -1516,7 +1516,7 @@ def registeredgame(game):
                 if count!=0:
                     cursor.execute("SELECT id,concat(FirstName,' ',LastName) from register where email=%s",[request.form['input']])
                     uid,name=cursor.fetchone()
-                    cursor.execute('SELECT count(*) from teams where id=%s and game=%s teamid=%s',[uid,game,team_id])
+                    cursor.execute('SELECT count(*) from teams where id=%s and game=%s and teamid=%s',[uid,game,team_id])
                     u_count=cursor.fetchone()[0]
                     if u_count==0 :
                         requestid=adotp()
