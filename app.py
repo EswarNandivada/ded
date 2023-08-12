@@ -1496,10 +1496,10 @@ def registeredgame(game):
             if request.form['input'].isdigit(): 
                 uid=request.form['input']
                 requestid=adotp()
-                cursor.execute("insert into teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
+                cursor.execute("SELECT email,concat(FirstName,' ',LastName) from register where id=%s",[uid])
+                r_email,name=cursor.fetchone()
+                cursor.execute("insert into teams (reqid,teamid,id,fullname,email,game) values(%s,%s,%s,%s,%s,%s)",[requestid,team_id,uid,name,r_email,game])
                 mydb.commit()
-                cursor.execute("SELECT email from register where id=%s",[uid])
-                r_email=cursor.fetchone()[0]
                 one_time_token=token2(team_id,requestid,salt=salt2)
                 link=url_for('accept',token=one_time_token,_external=True)
                 subject=f'Team Request for {game}'
@@ -1509,10 +1509,10 @@ def registeredgame(game):
                 cursor.execute("SELECT count(*) from register where email=%s",[request.form['input']])
                 count=cursor.fetchone()[0]
                 if count!=0:
-                    cursor.execute("SELECT id from register where email=%s",[request.form['input']])
-                    uid=cursor.fetchone()[0]
+                    cursor.execute("SELECT id,concat(FirstName,' ',LastName) from register where email=%s",[request.form['input']])
+                    uid,name=cursor.fetchone()
                     requestid=adotp()
-                    cursor.execute("insert into teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
+                    cursor.execute("insert into teams (reqid,teamid,id,fullname,email,game) values(%s,%s,%s,%s,%s,%s)",[requestid,team_id,uid,name,request.form['input'],game])
                     mydb.commit()
                     one_time_token=token2(team_id,requestid,salt=salt2)
                     link=url_for('accept',token=one_time_token,_external=True)
@@ -1521,7 +1521,7 @@ def registeredgame(game):
                     sendmail(request.form[i],subject=subject,body=body)
                 else:
                     requestid=adotp()
-                    cursor.execute("insert into teams (reqid,teamid,game) values(%s,%s,%s)",[requestid,team_id,game])
+                    cursor.execute("insert into teams (reqid,teamid,email,game) values(%s,%s,%s)",[requestid,team_id,request.form['input'],game])
                     mydb.commit()
                     one_time_token=token2(team_id,requestid,salt=salt2,email=request.form['input'])
                     link=url_for('accept',token=one_time_token,_external=True)
