@@ -1474,85 +1474,76 @@ def registeredgame(game):
         return render_template('individualdubles.html',gender=gender,game=game,ds=ds)'''
             
     else:
-        return '<h1> Updates are On the Way....!</h1>'
-        '''cursor=mydb.cursor(buffered=True)
+        #return '<h1> Updates are On the Way....!</h1>'
+        cursor=mydb.cursor(buffered=True)
         cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[session.get('user'),game])
         count=cursor.fetchone()[0]
         if count==0:
-            if request.method=='POST':
-                for i in request.form:
-                    if i.startswith('output'):
-                        if request.form[i] in ("Id not found","User Gender doesnot match","User registered to other team" ,'User already in two teams','You cannot add yourself.','User registered to other cricket team'):
-                            return jsonify({'message':request.form[i]})
-                else:
-                    names=[]
-                    for i in request.form:
-                        if i.startswith('input'):
-                            if request.form[i].isdigit():
-                                uid=int(request.form[i])
-                                if uid not in names:
-                                    names.append(uid)
-                                else:
-                                    return jsonify({'message':"You added a person twice"})
-                            else:
-                                cursor.execute("SELECT count(*) from register where email=%s",[request.form[i]])
-                                count=cursor.fetchone()[0]
-                                if count!=0:
-                                    cursor.execute("SELECT id from register where email=%s",[request.form[i]])
-                                    uid=cursor.fetchone()[0]
-                                    if uid not in names:
-                                        names.append(uid)
-                                    else:
-                                        return jsonify({'message':"You added a person twice"})
-                    else:
-                        team_id=genteamid()
-                        cursor.execute('INSERT INTO sub_games (game,id,team_number) values(%s,%s,%s)',[game,session.get('user'),team_id])                  
-                        mydb.commit()
-                        for i in request.form:
-                            if i.startswith('input'):
-                                if request.form[i].isdigit(): 
-                                    uid=request.form[i]
-                                    requestid=adotp()
-                                    cursor.execute("insert into teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
-                                    mydb.commit()
-                                    cursor.execute("SELECT email from register where id=%s",[uid])
-                                    r_email=cursor.fetchone()[0]
-                                    one_time_token=token2(team_id,requestid,salt=salt2)
-                                    link=url_for('accept',token=one_time_token,_external=True)
-                                    subject=f'Team Request for {game}'
-                                    body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
-                                    sendmail(r_email,subject=subject,body=body)
-                                else:
-                                    cursor.execute("SELECT count(*) from register where email=%s",[request.form[i]])
-                                    count=cursor.fetchone()[0]
-                                    if count!=0:
-                                        cursor.execute("SELECT id from register where email=%s",[request.form[i]])
-                                        uid=cursor.fetchone()[0]
-                                        requestid=adotp()
-                                        cursor.execute("insert into teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
-                                        mydb.commit()
-                                        one_time_token=token2(team_id,requestid,salt=salt2)
-                                        link=url_for('accept',token=one_time_token,_external=True)
-                                        subject=f'Team Request for {game}'
-                                        body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
-                                        sendmail(request.form[i],subject=subject,body=body)
-                                    else:
-                                        requestid=adotp()
-                                        cursor.execute("insert into teams (reqid,teamid,game) values(%s,%s,%s)",[requestid,team_id,game])
-                                        mydb.commit()
-                                        one_time_token=token2(team_id,requestid,salt=salt2,email=request.form[i])
-                                        link=url_for('accept',token=one_time_token,_external=True)
-                                        subject=f'Team Request for {game}'
-                                        body=f"Hello,\n\n Register to doctors olympiad and join our team by using this using the below url.\nPlease click on this link to join -{link}"
-                                        sendmail(request.form[i],subject=subject,body=body)
-                        else:
-                            cursor.close()
-                            return jsonify({'message':'Success','url':url_for('dashboard',_external=True)})
-            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
+            team_id=genteamid()
+            cursor.execute('INSERT INTO sub_games (game,id,team_number) values(%s,%s,%s)',[game,session.get('user'),team_id])            
+            mydb.commit()
         else:
-            if request.method=='POST':
-                return {'message':"Updates are on the way"}
-            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)'''
+            cursor.execute('SELECT team_number from sub_games where id=%s and game=%s',[session.get('user'),game])
+            team_id=cursor.fetchone()[0]
+        cursor.execute('SELECT * from teams where teamid=%s',[team_id])
+        participants_data=cursor.fetchall()
+        args={}
+        p_count=1
+        for i in range(0,len(participants_data)):
+            args[f'input{p_count}']=participants_data[i]
+            p_count+=1
+        if request.method=='POST':
+            if request.form['input'].isdigit(): 
+                uid=request.form['input']
+                requestid=adotp()
+                cursor.execute("insert into teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
+                mydb.commit()
+                cursor.execute("SELECT email from register where id=%s",[uid])
+                r_email=cursor.fetchone()[0]
+                one_time_token=token2(team_id,requestid,salt=salt2)
+                link=url_for('accept',token=one_time_token,_external=True)
+                subject=f'Team Request for {game}'
+                body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
+                sendmail(r_email,subject=subject,body=body)
+            else:
+                cursor.execute("SELECT count(*) from register where email=%s",[request.form['input']])
+                count=cursor.fetchone()[0]
+                if count!=0:
+                    cursor.execute("SELECT id from register where email=%s",[request.form['input']])
+                    uid=cursor.fetchone()[0]
+                    requestid=adotp()
+                    cursor.execute("insert into teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
+                    mydb.commit()
+                    one_time_token=token2(team_id,requestid,salt=salt2)
+                    link=url_for('accept',token=one_time_token,_external=True)
+                    subject=f'Team Request for {game}'
+                    body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
+                    sendmail(request.form[i],subject=subject,body=body)
+                else:
+                    requestid=adotp()
+                    cursor.execute("insert into teams (reqid,teamid,game) values(%s,%s,%s)",[requestid,team_id,game])
+                    mydb.commit()
+                    one_time_token=token2(team_id,requestid,salt=salt2,email=request.form['input'])
+                    link=url_for('accept',token=one_time_token,_external=True)
+                    subject=f'Team Request for {game}'
+                    body=f"Hello,\n\n Register to doctors olympiad and join our team by using this using the below url.\nPlease click on this link to join -{link}"
+                    sendmail(request.form['input'],subject=subject,body=body)
+            cursor.close()
+            return jsonify({'message':'Success','url':url_for('registeredgame',game=game,_external=True)})
+        if len(args)!=0:
+            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count,**args)
+        else:
+            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
+@app.route('/remove/<rid>/<game>')
+def remove(rid,game):
+    if session.get('user'):
+        eid=session['user']
+        cursor=mydb.cursor()
+        cursor.execute('delete from teams where reqid=%s',[rid])
+        mydb.commit()
+        return redirect(url_for('registeredgame',game=game))
+    else:
+        return redirect(url_for('login'))
 def check_teams(eid,game):
     cond=True
     message=''
