@@ -122,7 +122,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <a href="{{url_for('remove',game=game,rid=input1[0])}}">Remove</a>
+                                    <a href="{{url_for('remove',game=game,rid=input1[0])}}" class="btn btn-primary">Remove</a>
                                 </div>
                             </div>
                             {% else %}
@@ -142,7 +142,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send1" onclick="send_invite(1)">invite</button>
+                                    <button id="send1" onclick="send_invite(1)"  class="btn btn-primary" hidden>invite</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -178,7 +178,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <a href="{{url_for('remove',game=game,rid=input2[0])}}">Remove</a>
+                                    <a href="{{url_for('remove',game=game,rid=input2[0])}}" class="btn btn-primary" >Remove</a>
                                 </div>
                             </div>
                             {% else %}
@@ -198,7 +198,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send2" onclick="send_invite(2)">invite</button>
+                                    <button id="send2" onclick="send_invite(2)" class="btn btn-primary" hidden>invite</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -235,7 +235,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <a href="{{url_for('remove',game=game,rid=input3[0])}}">Remove</a>
+                                    <a href="{{url_for('remove',game=game,rid=input3[0])}}" class="btn btn-primary">Remove</a>
                                 </div>
                             </div>
                             {% else %}
@@ -257,7 +257,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send3" onclick="send_invite(3)">invite</button>
+                                    <button id="send3" onclick="send_invite(3)" class="btn btn-primary" hidden>invite</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -293,7 +293,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <a href="{{url_for('remove',game=game,rid=input4[0])}}">Remove</a>
+                                    <a href="{{url_for('remove',game=game,rid=input4[0])}}" class="btn btn-primary">Remove</a>
                                 </div>
                             </div>
                             {% else %}
@@ -314,7 +314,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send4" onclick="send_invite(4)">invite</button>
+                                    <button id="send4" onclick="send_invite(4)" class="btn btn-primary" hidden>invite</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -351,7 +351,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <a href="{{url_for('remove',game=game,rid=input5[0])}}">Remove</a>
+                                    <a href="{{url_for('remove',game=game,rid=input5[0])}}" class="btn btn-primary">Remove</a>
                                 </div>
                             </div>
                             {% else %}
@@ -373,7 +373,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send5"  onclick="send_invite(5)">invite</button>
+                                    <button id="send5"  onclick="send_invite(5)" class="btn btn-primary" hidden>invite</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -410,14 +410,14 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <a href="{{url_for('remove',game=game,rid=input6[0])}}">Remove</a>
+                                    <a href="{{url_for('remove',game=game,rid=input6[0])}}" class="btn btn-primary" >Remove</a>
                                 </div>
                             </div>
                             {% else %}
                             <div class="row">
                                 <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
-                                        <label class="form-label" for="DetailsAddress">Unique Id</label>
+                                        <label class="form-label" for="DetailsAddress">Enter Email or Unique Id</label>
                                         <input type="Details" id="input6" name="n10" oninput="autoSubmit(6)"
                                             class="form-control form-control-lg" />
                                         
@@ -425,20 +425,13 @@ background-color: #fff;
                                 </div>
                                 <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
-                                        <label class="form-label" for="phoneNumber">Name</label>
+                                        <label class="form-label" for="phoneNumber">Details</label>
                                         <input type="tel" id="output6" name="n11"
                                             class="form-control form-control-lg" />
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <label class="form-label" for="firstName">Email</label>
-                                        <input type="text" id="input71" name="input71"
-                                            class="form-control form-control-lg" readonly/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <button id="send6" onclick="send_invite(6)">invite</button>
+                                    <button id="send6" onclick="send_invite(6)" class="btn btn-primary" hidden>invite</button>
                                 </div>
                             </div>
                             {% endif %}
