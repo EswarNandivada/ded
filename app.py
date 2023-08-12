@@ -19,6 +19,8 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad,unpad
 import hashlib
 from datetime import datetime
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 app = Flask(__name__)
 app.secret_key = secret_key
@@ -491,8 +493,15 @@ def register():
         #updated code------------------------- --------------------------------
         #cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [eid,data['game'],data['amount']])
         #print(game)
-        
         cursor.close()
+        #Excel dumping data
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        credentials = ServiceAccountCredentials.from_json_keyfile_name('doctors-395609-f33b54a9ab5b.json', scope)
+        client = gspread.authorize(credentials)
+        spreadsheet = client.open('doctors') 
+        worksheet = spreadsheet.get_worksheet(0)
+        deta = [fname,lname, email, password,mobile,age,gender,dob,city,address,state,country,degree,mci,game,selectmember,amount,shirtsize,ima_membership_number,food_preference]  
+        worksheet.append_row(deta)
         session.pop('otp')
         session.pop('email')
         #flash ('Registration successful! Complete the payment process.')
@@ -1356,36 +1365,35 @@ def registeredgame(game):
         return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
 
     elif game=='ATHLETICS':
-        return '<h1> Updates are On the Way....!</h1>'
-        '''cursor = mydb.cursor(buffered=True)
+        cursor = mydb.cursor(buffered=True)
         cursor.execute('select count(*) from sub_games where game=%s and id=%s',[game,session.get('user')])
         count = cursor.fetchone()[0]
         cursor.execute('select gender from register where id=%s',[session.get('user')])
         gender=cursor.fetchone()[0]
         cursor.close()
         if count>=1:
-            flash('Already def accept!refer your games profile')
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('individual'))
         if request.method=='POST':
-            print(request.form)
-            a_styles={'Sprint', 'Pole Vault', 'Walkathon','Marathon'}
+            print('!...',request.form)
+            a_styles={'Sprint', 'Pole Vault', 'Walkathon','Marathon','Throw','Jumps'}
             styles={i for i in request.form.keys() if i in a_styles}
             values=set(request.form.values())
             form_values=values.difference(a_styles)
             print(form_values)
-            s_styles={'100m Sprint', 'Sprint', '200m Sprint', '400m Sprint', '800m Sprint'}
+            s_styles={'100m Sprint','200m Sprint', '400m Sprint', '800m Sprint'}
             p_styles={'100 m Hurdles Pole Vault', '4 x 100 m Relay Pole Vault'}
-            d_styles={"Men's 10 km Walkathon","Women's 10 km Walkathon"}
-            f_styles={"Men's 10 km Marathon", "Men's 21 km Marathon","Women's 10 km Marathon", "Women's 21 km-Marathon"}
-        
-
+            d_styles={"Mens 10 km Walkathon","Womens 10 km Walkathon"}
+            f_styles={"Mens 10 km Marathon", "Mens 21 km Marathon","Womens 10 km Marathon", "Womens 21 km Marathon"}
+            t_styles={"Javelin Throw", "Discus Throw", "ShotPut Throw"}
+            j_styles={"Long Jump", "Short Jump"}
             if len(styles)==0:
-                flash('Select a category')
+                flash('Select a category') 
                 return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
             for i in styles:
                 if i=='Sprint':
                     result1=s_styles.difference(form_values)
                     if len(result1)==len(s_styles):
+                        #print('------------',result1)
                         flash('Select atleast one of the sub category')
                         break
                 elif i=='Pole Vault':
@@ -1403,6 +1411,16 @@ def registeredgame(game):
                     if len(result4)==len(f_styles):
                         flash('Select atleast one of the sub category')
                         break
+                elif i=='Jumps':
+                    result5=f_styles.difference(form_values)
+                    if len(result5)==len(j_styles):
+                        flash('Select atleast one of the sub category')
+                        break
+                elif i=='Throw':
+                    result6=f_styles.difference(form_values)
+                    if len(result6)==len(t_styles):
+                        flash('Select atleast one of the sub category')
+                        break
             else:
                 cursor = mydb.cursor(buffered=True)
                 for i in form_values:
@@ -1414,8 +1432,8 @@ def registeredgame(game):
                 body=f'You are successfully def accept to {" ".join(values)}\n\nThanks and regards\nDoctors Olympiad 2023'
                 sendmail(email_id,subject,body)
                 return redirect(url_for('dashboard'))
-        return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)'''
-
+        return render_template(f'/games-individual-team/Individual/{game}.html',gender=gender)
+         
     elif game in ('BADMINTON','TABLETENNIS','LAWNTENNIS','CARROMS'):
         return '<h1> Updates are On the Way....!</h1>'
         '''ds="Mens Doubles" if gender=="Male" else "Womens Doubles"
