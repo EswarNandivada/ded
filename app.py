@@ -19,6 +19,8 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad,unpad
 import hashlib
 from datetime import datetime
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 app = Flask(__name__)
 app.secret_key = secret_key
@@ -493,6 +495,13 @@ def register():
         #print(game)
         
         cursor.close()
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        credentials = ServiceAccountCredentials.from_json_keyfile_name('doctors-395609-f33b54a9ab5b.json', scope)
+        client = gspread.authorize(credentials)
+        spreadsheet = client.open('doctors') 
+        worksheet = spreadsheet.get_worksheet(0)
+        deta = [fname,lname, email, password,mobile,age,gender,dob,city,address,state,country,degree,mci,game,selectmember,amount,shirtsize,ima_membership_number,food_preference]  
+        worksheet.append_row(deta
         session.pop('otp')
         session.pop('email')
         #flash ('Registration successful! Complete the payment process.')
