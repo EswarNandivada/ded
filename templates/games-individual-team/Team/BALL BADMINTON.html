@@ -503,8 +503,12 @@ background-color: #fff;
                     input : inputValue,
                 },
                 success: function(response) {
-                    alert('Succes! Invitation sent')
-                    window.location.href=response.url
+                    if (response.message!='Success'){
+                        alert(response.message)
+                    }else{
+                        location.reload();
+                    }
+
                 },
                 error: function(error) {
                     // Handle errors if any
