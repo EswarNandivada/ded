@@ -496,6 +496,7 @@ background-color: #fff;
         function send_invite(inputNumber){
             const inputValue = document.getElementById(`input${inputNumber}`).value;
             document.getElementById(`output${inputNumber}`).value = inputValue;
+            $("#buffering").show();
             $.ajax({
                 url: "{{url_for('registeredgame',game=game)}}",
                 method: 'POST',
@@ -503,6 +504,7 @@ background-color: #fff;
                     input : inputValue,
                 },
                 success: function(response) {
+                    $("#buffering").hide();
                     if (response.message!='Success'){
                         alert(response.message)
                     }else{
@@ -517,9 +519,7 @@ background-color: #fff;
             });
         }
     </script>
-    <script>
-
-    </script>
+   
 	<!--<script>
 		$(document).ready(function() {
 			// Handle form submission using AJAX
