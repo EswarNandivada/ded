@@ -28,3 +28,6 @@ urllib3==2.0.3
 Werkzeug==2.3.4
 Flask-Bcrypt==1.0.1
 pycryptodome==3.18.0
+google-auth==2.22.0
+google-auth-oauthlib==1.0.0
+gspread==5.10.0
