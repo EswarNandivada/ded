@@ -84,12 +84,48 @@ background-color: #fff;
             <div class="col-12 col-lg-9 col-xl-7">
                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px" id="good">
                    <div class="god">
-                    <h1 style="font-size:50px">BASKET BALL</h1>
+                    <h1 style="font-size:50px">BALL BADMINTON</h1>
                     <h2 style="text-align: center;">Enter Team Details</h2>
 
                    </div>
                     <div class="card-body p-2 p-md-5" id="imp">
                         <form method="POST">
+                            {% if input1 is defined %}
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">Unique Id</label>
+                                        <input type="text" id="input1" name="input1"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="lastName">Name</label>
+                                        <input type="text" id="output1" name="output1"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">Email</label>
+                                        <input type="text" id="input12" name="input12"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="lastName">Status</label>
+                                        <input type="text" id="status" name="status"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <a href="{{url_for('remove',game=game,rid=input1[0])}}">Remove</a>
+                                </div>
+                            </div>
+                            {% else %}
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
@@ -106,16 +142,39 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
+                                    <button id="send1" onclick="send_invite(1)">invite</button>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if input2 is defined %}
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
-                                        <label class="form-label" for="lastName">Status</label>
-                                        <input type="text" id="status" name="status"
-                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="DetailsAddress">Unique Id</label>
+                                        <input type="Details" id="input2" name="input2"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="phoneNumber">Name</label>
+                                        <input type="tel" id="output2" name="n3" class="form-control form-control-lg" readonly/>
+                                        
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send1">invite</button>
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">Email</label>
+                                        <input type="text" id="input21" name="input21"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <a href="{{url_for('remove',game=game,rid=input1[1])}}">Remove</a>
                                 </div>
                             </div>
+                            {% else %}
                             <div class="row">
                                 <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
@@ -132,23 +191,47 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <label class="form-label" for="lastName">Status</label>
-                                        <input type="text" id="status" name="status"
-                                            class="form-control form-control-lg" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <label class="form-label" for="lastName">Status</label>
-                                        <input type="text" id="status" name="status"
-                                            class="form-control form-control-lg" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <button id="send2">invite</button>
+                                    <button id="send2" onclick="send_invite(2)">invite</button>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if input3 is defined %}
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">Unique Id</label>
+                                        <input type="text" id="input3" name="n4" 
+                                            class="form-control form-control-lg" />
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="lastName">Name</label>
+                                        <input type="text" id="output3" name="n5"
+                                            class="form-control form-control-lg" />
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">Email</label>
+                                        <input type="text" id="input31" name="input31"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="lastName">Status</label>
+                                        <input type="text" id="status" name="status"
+                                            class="form-control form-control-lg" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <a href="{{url_for('remove',game=game,rid=input1[2])}}">Remove</a>
+                                </div>
+                            </div>
+                            {% else %}
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
@@ -167,6 +250,35 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
+                                    <button id="send3" onclick="send_invite(3)">invite</button>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if input4 is defined %}
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="DetailsAddress">Unique Id</label>
+                                        <input type="Details" id="input4" name="n6" oninput="autoSubmit(4)"
+                                            class="form-control form-control-lg" />
+                                       
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="phoneNumber">Name</label>
+                                        <input type="tel" id="output4" name="n7" class="form-control form-control-lg" />
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">Email</label>
+                                        <input type="text" id="input41" name="input41"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
                                     <div class="form-outline">
                                         <label class="form-label" for="lastName">Status</label>
                                         <input type="text" id="status" name="status"
@@ -174,14 +286,15 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send3">invite</button>
+                                    <a href="{{url_for('remove',game=game,rid=input1[3])}}">Remove</a>
                                 </div>
                             </div>
+                            {% else %}
                             <div class="row">
                                 <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
                                         <label class="form-label" for="DetailsAddress">Enter Email or Unique Id</label>
-                                        <input type="Details" id="input4" name="n6" oninput="autoSubmit(4)"
+                                        <input type="Details" id="input4" name="n6" 
                                             class="form-control form-control-lg" />
                                        
                                     </div>
@@ -194,6 +307,36 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
+                                    <button id="send4" onclick="send_invite(4)">invite</button>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if input5 is defined %}
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">Unique Id</label>
+                                        <input type="text" id="input5" name="n8" 
+                                            class="form-control form-control-lg" />
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="lastName">Name</label>
+                                        <input type="text" id="output5" name="n9"
+                                            class="form-control form-control-lg" />
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">Email</label>
+                                        <input type="text" id="input51" name="input51"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
                                     <div class="form-outline">
                                         <label class="form-label" for="lastName">Status</label>
                                         <input type="text" id="status" name="status"
@@ -201,9 +344,10 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send4">invite</button>
+                                    <a href="{{url_for('remove',game=game,rid=input1[4])}}">Remove</a>
                                 </div>
                             </div>
+                            {% else %}
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
@@ -222,28 +366,23 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <div class="form-outline">
-                                        <label class="form-label" for="lastName">Status</label>
-                                        <input type="text" id="status" name="status"
-                                            class="form-control form-control-lg" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-4">
-                                    <button id="send5">invite</button>
+                                    <button id="send5"  onclick="send_invite(5)">invite</button>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if input6 is defined %}
                             <div class="row">
                                 <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
-                                        <label class="form-label" for="DetailsAddress">Enter Email or Unique Id</label>
-                                        <input type="Details" id="input6" name="n10" oninput="autoSubmit(6)"
+                                        <label class="form-label" for="DetailsAddress">Unique Id</label>
+                                        <input type="Details" id="input6" name="n10"
                                             class="form-control form-control-lg" />
                                         
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
-                                        <label class="form-label" for="phoneNumber">Details</label>
+                                        <label class="form-label" for="phoneNumber">Name</label>
                                         <input type="tel" id="output6" name="n11"
                                             class="form-control form-control-lg" />
                                        
@@ -251,18 +390,51 @@ background-color: #fff;
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
+                                        <label class="form-label" for="firstName">Email</label>
+                                        <input type="text" id="input61" name="input61"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
                                         <label class="form-label" for="lastName">Status</label>
                                         <input type="text" id="status" name="status"
                                             class="form-control form-control-lg" />
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send6">invite</button>
+                                    <a href="{{url_for('remove',game=game,rid=input1[5])}}">Remove</a>
                                 </div>
                             </div>
-                            <div class="mt-4 pt-2">
-                                <button class="btn btn-primary btn-lg" id="formregister">submit</button>
+                            {% else %}
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="DetailsAddress">Unique Id</label>
+                                        <input type="Details" id="input6" name="n10" oninput="autoSubmit(6)"
+                                            class="form-control form-control-lg" />
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4 pb-2">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="phoneNumber">Name</label>
+                                        <input type="tel" id="output6" name="n11"
+                                            class="form-control form-control-lg" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <label class="form-label" for="firstName">Email</label>
+                                        <input type="text" id="input71" name="input71"
+                                            class="form-control form-control-lg" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <button id="send6" onclick="send_invite(6)">invite</button>
+                                </div>
                             </div>
+                            {% endif %}
                         </form>
                     </div>
                 </div>
@@ -300,8 +472,34 @@ background-color: #fff;
                 success: function(response) {
                     // Update the corresponding output field with the response from the server
                     document.getElementById(`output${inputNumber}`).value = response.outputValue;
-                   
-                    document.getElementById(`output${inputNumber}`).readOnly=true
+                    if (response.outputValue=="Id not found" || response.outputValue=="User Gender doesnot match" || response.outputValue=="User registered to other team" || response.outputValue=='User already in two teams' || response.outputValue=='You cannot add yourself.' || response.outputValue=='User registered to other cricket team'){
+                        $(`#send${inputNumber}`).hide();
+                    } else {
+                        $(`#send${inputNumber}`).show();
+                        
+                    }
+    
+
+                    //document.getElementById(`input${inputNumber}`).readOnly=true
+                    
+
+                },
+                error: function(error) {
+                    // Handle errors if any
+                    console.error(error);
+                }
+            });
+        }
+        function send_invite(inputNumber){
+            const inputValue = document.getElementById(`input${inputNumber}`).value;
+            document.getElementById(`output${inputNumber}`).value = inputValue;
+            $.ajax({
+                url: "{{url_for('registeredgame',game=game)}}",
+                method: 'POST',
+                data: {
+                    input : inputValue,
+                },
+                success: function(response) {
 
                 },
                 error: function(error) {
@@ -311,7 +509,10 @@ background-color: #fff;
             });
         }
     </script>
-	<script>
+    <script>
+
+    </script>
+	<!--<script>
 		$(document).ready(function() {
 			// Handle form submission using AJAX
 			$("#formregister").click(function(event) {
@@ -381,6 +582,6 @@ background-color: #fff;
 
 			});
 		});
-	</script>
+	</script>-->
 
 {% endblock %}
