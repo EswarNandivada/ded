@@ -1959,8 +1959,10 @@ def accept(token):
                 return "<h1>Request already Accepted<h1>"
             else:
                 criteria=check_teams(eid,game)
-                if criteria['cond']: 
-                    cursor.execute('update teams set status="Accept" where reqid=%s',[rid])
+                if criteria['cond']:
+                    cursor.execute('SELECT concat(FullName,' ',LastName),email from register where id=%s',[eid])
+                    full_name,user_email=cursor.fetchone()
+                    cursor.execute('update teams set fullname=%s,email=%s,status="Accept" where reqid=%s',[full_name,user_email,rid])
                     mydb.commit()
                     cursor.execute('select count(*) from game where id=%s and game=%s',[eid,game])
                     count=cursor.fetchone()[0]
