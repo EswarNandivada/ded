@@ -1970,7 +1970,7 @@ def accept(token):
             else:
                 criteria=check_teams(eid,game)
                 if criteria['cond']:
-                    cursor.execute('SELECT concat(FullName,' ',LastName),email from register where id=%s',[eid])
+                    cursor.execute("SELECT concat(FullName,' ',LastName),email from register where id=%s",[eid])
                     full_name,user_email=cursor.fetchone()
                     cursor.execute('update teams set fullname=%s,email=%s,status="Accept" where reqid=%s',[full_name,user_email,rid])
                     mydb.commit()
