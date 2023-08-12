@@ -1518,7 +1518,7 @@ def registeredgame(game):
                     link=url_for('accept',token=one_time_token,_external=True)
                     subject=f'Team Request for {game}'
                     body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
-                    sendmail(request.form[i],subject=subject,body=body)
+                    sendmail(request.form['input'],subject=subject,body=body)
                 else:
                     requestid=adotp()
                     cursor.execute("insert into teams (reqid,teamid,email,game) values(%s,%s,%s)",[requestid,team_id,request.form['input'],game])
