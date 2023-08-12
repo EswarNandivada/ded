@@ -1540,10 +1540,7 @@ def registeredgame(game):
                     sendmail(request.form['input'],subject=subject,body=body)
             cursor.close()
             return jsonify({'message':'Success','url':url_for('registeredgame',game=game,_external=True)})
-        if len(args)!=0:
-            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count,**args)
-        else:
-            return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count)
+        return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count,**args)
 @app.route('/remove/<rid>/<game>')
 def remove(rid,game):
     if session.get('user'):
