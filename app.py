@@ -495,13 +495,6 @@ def register():
         #print(game)
         
         cursor.close()
-        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-        credentials = ServiceAccountCredentials.from_json_keyfile_name('doctors-395609-f33b54a9ab5b.json', scope)
-        client = gspread.authorize(credentials)
-        spreadsheet = client.open('doctors') 
-        worksheet = spreadsheet.get_worksheet(0)
-        deta = [fname,lname, email, password,mobile,age,gender,dob,city,address,state,country,degree,mci,game,selectmember,amount,shirtsize,ima_membership_number,food_preference]  
-        worksheet.append_row(deta
         session.pop('otp')
         session.pop('email')
         #flash ('Registration successful! Complete the payment process.')
@@ -812,8 +805,9 @@ def success():
                  cursor.execute('select * from payments')
                  details = cursor.fetchall()
                  print(details)
+            cursor.execute('select FirstName,LastName,Email,mobileno,age,gender,DOB,city,address,state,country,degree,MCI_ID,member,shirt_size,food_preference,ima_reg_no from register where id=%s',[uid])
+            deta=cursor.fetchone()+(game,)
             cursor.close()
-            
             html = f"""
             <!DOCTYPE html>
             <html lang="en">
@@ -881,7 +875,12 @@ def success():
             subject='Registration Successful for Doctors Olympiad 2023'
             # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\ndef accept game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
             mail_with_atc(to=email, subject=subject, html=html)
-            
+            scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+            credentials = ServiceAccountCredentials.from_json_keyfile_name('doctors-395609-f33b54a9ab5b.json', scope)
+            client = gspread.authorize(credentials)
+            spreadsheet = client.open('doctors') 
+            worksheet = spreadsheet.get_worksheet(0)
+            worksheet.append_row(deta)
             flash('Payment Successful')
             return redirect(url_for('dashboard'))
             # print(response)
