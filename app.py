@@ -1495,30 +1495,40 @@ def registeredgame(game):
         if request.method=='POST':
             if request.form['input'].isdigit(): 
                 uid=request.form['input']
-                requestid=adotp()
-                cursor.execute("SELECT email,concat(FirstName,' ',LastName) from register where id=%s",[uid])
-                r_email,name=cursor.fetchone()
-                cursor.execute("insert into teams (reqid,teamid,id,fullname,email,game) values(%s,%s,%s,%s,%s,%s)",[requestid,team_id,uid,name,r_email,game])
-                mydb.commit()
-                one_time_token=token2(team_id,requestid,salt=salt2)
-                link=url_for('accept',token=one_time_token,_external=True)
-                subject=f'Team Request for {game}'
-                body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
-                sendmail(r_email,subject=subject,body=body)
+                cursor.execute('SELECT count(*) from teams where id=%s and game=%s',[uid,game])
+                u_count=cursor.fetchone()[0]
+                if u_count!=0 :
+                    requestid=adotp()
+                    cursor.execute("SELECT email,concat(FirstName,' ',LastName) from register where id=%s",[uid])
+                    r_email,name=cursor.fetchone()
+                    cursor.execute("insert into teams (reqid,teamid,id,fullname,email,game) values(%s,%s,%s,%s,%s,%s)",[requestid,team_id,uid,name,r_email,game])
+                    mydb.commit()
+                    one_time_token=token2(team_id,requestid,salt=salt2)
+                    link=url_for('accept',token=one_time_token,_external=True)
+                    subject=f'Team Request for {game}'
+                    body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
+                    sendmail(r_email,subject=subject,body=body)
+                else:
+                    return jsonify({'message':f'{uid} already exist in team'})
             else:
                 cursor.execute("SELECT count(*) from register where email=%s",[request.form['input']])
                 count=cursor.fetchone()[0]
                 if count!=0:
                     cursor.execute("SELECT id,concat(FirstName,' ',LastName) from register where email=%s",[request.form['input']])
                     uid,name=cursor.fetchone()
-                    requestid=adotp()
-                    cursor.execute("insert into teams (reqid,teamid,id,fullname,email,game) values(%s,%s,%s,%s,%s,%s)",[requestid,team_id,uid,name,request.form['input'],game])
-                    mydb.commit()
-                    one_time_token=token2(team_id,requestid,salt=salt2)
-                    link=url_for('accept',token=one_time_token,_external=True)
-                    subject=f'Team Request for {game}'
-                    body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
-                    sendmail(request.form['input'],subject=subject,body=body)
+                    cursor.execute('SELECT count(*) from teams where id=%s and game=%s',[uid,game])
+                    u_count=cursor.fetchone()[0]
+                    if u_count!=0 :
+                        requestid=adotp()
+                        cursor.execute("insert into teams (reqid,teamid,id,fullname,email,game) values(%s,%s,%s,%s,%s,%s)",[requestid,team_id,uid,name,request.form['input'],game])
+                        mydb.commit()
+                        one_time_token=token2(team_id,requestid,salt=salt2)
+                        link=url_for('accept',token=one_time_token,_external=True)
+                        subject=f'Team Request for {game}'
+                        body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
+                        sendmail(request.form[i],subject=subject,body=body)
+                    else:
+                        return jsonify({'message':f'{uid} already in team'})
                 else:
                     requestid=adotp()
                     cursor.execute("insert into teams (reqid,teamid,email,game) values(%s,%s,%s)",[requestid,team_id,request.form['input'],game])
