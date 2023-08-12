@@ -1857,7 +1857,7 @@ def success_c(rid):
         return "Invalid response received from payment gateway."
 
 def update_teams(input_value,game,add_gender):
-    cursor=mydb.cursor()
+    cursor=mydb.cursor(buffered=True)
     if input_value.isdigit():
         cursor.execute('select count(*) from register where id=%s',[input_value])
         data=cursor.fetchone()[0]
