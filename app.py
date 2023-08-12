@@ -1497,7 +1497,7 @@ def registeredgame(game):
                 uid=request.form['input']
                 cursor.execute('SELECT count(*) from teams where id=%s and game=%s',[uid,game])
                 u_count=cursor.fetchone()[0]
-                if u_count!=0 :
+                if u_count==0 :
                     requestid=adotp()
                     cursor.execute("SELECT email,concat(FirstName,' ',LastName) from register where id=%s",[uid])
                     r_email,name=cursor.fetchone()
@@ -1518,7 +1518,7 @@ def registeredgame(game):
                     uid,name=cursor.fetchone()
                     cursor.execute('SELECT count(*) from teams where id=%s and game=%s',[uid,game])
                     u_count=cursor.fetchone()[0]
-                    if u_count!=0 :
+                    if u_count==0 :
                         requestid=adotp()
                         cursor.execute("insert into teams (reqid,teamid,id,fullname,email,game) values(%s,%s,%s,%s,%s,%s)",[requestid,team_id,uid,name,request.form['input'],game])
                         mydb.commit()
