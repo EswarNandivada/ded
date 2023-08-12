@@ -475,7 +475,7 @@ background-color: #fff;
                 success: function(response) {
                     // Update the corresponding output field with the response from the server
                     document.getElementById(`output${inputNumber}`).value = response.outputValue;
-                    if (response.outputValue=="Id not found" || response.outputValue=="User Gender doesnot match" || response.outputValue=="User registered to other team" || response.outputValue=='User already in two teams' || response.outputValue=='You cannot add yourself.' || response.outputValue=='User registered to other cricket team'){
+                    if (response.outputValue=="Id not found" || inputValue=='' || response.outputValue=="User Gender doesnot match" || response.outputValue=="User registered to other team" || response.outputValue=='User already in two teams' || response.outputValue=='You cannot add yourself.' || response.outputValue=='User registered to other cricket team'){
                         $(`#send${inputNumber}`).hide();
                     } else {
                         $(`#send${inputNumber}`).show();
@@ -499,6 +499,8 @@ background-color: #fff;
             const inputValue = document.getElementById(`input${inputNumber}`).value;
             document.getElementById(`output${inputNumber}`).value = inputValue;
             $("#buffering").show();
+            $(`#send${inputNumber}`).prop("disabled", true);
+
             $.ajax({
                 url: "{{url_for('registeredgame',game=game)}}",
                 method: 'POST',
@@ -506,15 +508,19 @@ background-color: #fff;
                     input : inputValue,
                 },
                 success: function(response) {
+                    $(`#send${inputNumber}`).prop("disabled", false);
                     $("#buffering").hide();
                     if (response.message!='Success'){
                         alert(response.message)
+                        location.href="{{url_for('registeredgame',game=game)}}"
                     }else{
-                        location.reload();
+                        alert('Invitation sent')
+                        location.href="{{url_for('registeredgame',game=game)}}"
                     }
 
                 },
                 error: function(error) {
+                    $(`#send${inputNumber}`).prop("disabled", false);
                     // Handle errors if any
                     console.error(error);
                 }
