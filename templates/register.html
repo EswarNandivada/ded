@@ -149,11 +149,11 @@
                             <div class="form-outline">
                                 <label class="form-label" id="passcodetext" for="firstName">Password<span style="color: red;">*</span></label>
                                 <input type="password" name="password" id="password" class="form-control form-control-lg"
-                                    placeholder="Enter Password" onkeyup="validatePassword()"
-                                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z]).{8,}$"
-                                    title="Password must contain at least one lowercase letter, one uppercase letter, one special character, and be at least 8 characters long."
-                                    required />
-                                <div id="passwordMessage" style="color: red;"></div>
+                                       placeholder="Enter Password" minlength="8"
+                                       title="Password must contain at least 8 characters long." required />
+                                <div id="passwordMessage" class="error-message"></div>
+
+<!--                                 <div id="passwordMessage" style="color: red;"></div> -->
                             </div>
                         </div>
 
@@ -689,21 +689,16 @@
     });
 </script>
 <script>
-   function validatePassword() {
+    function validatePassword() {
         const passwordInput = document.getElementById('password');
         const passwordMessage = document.getElementById('passwordMessage');
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z]).{8,}$/;
 
-        if (regex.test(passwordInput.value)) {
+        if (passwordInput.value.length < 8) {
+            passwordMessage.textContent = 'Password must contain at least 8 characters.';
+            passwordInput.setCustomValidity('Password requirements not met.');
+        } else {
             passwordMessage.textContent = ''; // Clear the message
             passwordInput.setCustomValidity(''); // Clear any custom validity
-        } else {
-            if (passwordInput.value.length < 8) {
-                passwordMessage.textContent = 'Password must contain 8 Characters at least one lowercase letter, one uppercase letter, one special character.';
-            } else {
-                passwordMessage.textContent = 'Password is Valid';
-            }
-            passwordInput.setCustomValidity('Password requirements not met.');
         }
     }
 
@@ -717,8 +712,6 @@
             passwordMessage.textContent = '';
         });
     });
-
-
 </script>
 
 <script>
