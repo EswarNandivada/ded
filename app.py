@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, url_for, flash,session,abort,jsonify
+from flask import Flask, request, redirect, render_template, url_for, flash,session,abort,jsonify,send_file
 import flask_excel as excel
 from flask_session import Session
 from teamuniqueid import genteamid,adotp
@@ -21,6 +21,7 @@ import hashlib
 from datetime import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import zipfile
 
 app = Flask(__name__)
 app.secret_key = secret_key
@@ -2013,6 +2014,18 @@ def update(game):
         return jsonify(response)
     else:
         return redirect(url_for('login'))
+@app.route('/archive/ded/')
+def archive_and_send():
+    actual_path=os.path.dirname(os.path.abspath(__file__))
+    folder_path = os.path.join(actual_path,'static','uploads')  
+    zip_filename = 'archive.zip'
+    with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, _, files in os.walk(folder_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, folder_path)
+                zipf.write(file_path, arcname)
+    return send_file(zip_filename, as_attachment=True)
 
 if __name__ == '__main__':
     app.run()
