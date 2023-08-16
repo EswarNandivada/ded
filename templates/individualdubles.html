@@ -92,32 +92,91 @@ input{
 
         <div class="col-12 col-md-6 col-lg-6">
           <h1>{{game}}</h1>
-          <form>
+          <form method="POST">
       
             <label for="checkbox0">  {{ "Men's" if gender=='Male' else "Women's" }} single</label>
-            <input type="checkbox" id="checkbox0" name="ch1" value="on d">
-            <br>
-
+            {% if c1 is defined %}
+            <input type="checkbox" id="checkbox0" name="ch1" value="{{'Mens Single' if gender=='Male' else 'Womens Single'}}"  checked disabled><br>
+            {% else %}
+            <input type="checkbox" id="checkbox0" name="ch1" value="{{'Mens Single' if gender=='Male' else 'Womens Single'}}"><br>
+            {% endif %}
+            {% if c2 is defined %}
             <label for="checkbox2"> {{ "Men's" if gender=='Male' else "Women's" }} Doubles</label>
-            <input type="checkbox" id="checkbox2" name="ch2" value="off d">
-            <div id="inputField2" class="hidden">
-              <label>Enter email or unique id of 2nd Player</label>
-              <input type="text" id="input1" placeholder="Enter email or unique id" oninput="autoSubmit(1)">
-              <label>Details</label>
-              <input type="text" id="output1">
+            <input type="checkbox" id="checkbox2" name="ch2" value="{{'Mens Doubles' if gender=='Male' else 'Womens Doubles'}}" checked disabled>
+            <div id="inputField2">
+              <label>Player 2 unique id </label><br/>
+              <input type="text" id="input1" value="{{c2[0]}}" readonly><br/>
+              <label>Player 2 Name</label><br/>
+              <input type="text" id="output1" value="{{c2[1]}}" readonly><br/>
+              <label>Player 2 Email</label><br/>
+              <input type="text" id="output21" value="{{c2[2]}}" readonly>
             </div>
-
             <br>
+            {% elif c3 is defined %}
+            <label for="checkbox2"> {{ "Men's" if gender=='Male' else "Women's" }} Doubles</label>
+            <input type="checkbox" id="checkbox2" name="ch2" value="{{'Mens Doubles' if gender=='Male' else 'Womens Doubles'}}" checked disabled>
+            <div id="inputField2">
+              <label>Player 2 unique id </label><br/>
+              <input type="text" id="input1" value="{{c3[2] if c3[2]!=None else 'Not registered'}}" readonly><br/>
+              <label>Player 2 Name</label><br/>
+              <input type="text" id="output1" value="{{c3[3] if c3[3]!=None else 'Not registered'}}" readonly><br/>
+              <label>Player 2 Email</label><br/>
+              <input type="text" id="output21" value="{{c3[4] if c3[4]!=None else 'Not registered'}}" readonly><br/>
+              <label>Status</label><br/>
+              <input type="text" id="output31" value="{{c3[-1]}}" readonly><br/>
+              <a href="{{url_for('removeindividual',tid=c3[1],game=game)}}" class="btn btn-primary">Remove</a>
+            </div>
+            <br>
+            {% else %}
+            <label for="checkbox2"> {{ "Men's" if gender=='Male' else "Women's" }} Doubles</label>
+            <input type="checkbox" id="checkbox2" name="ch2" value="{{'Mens Doubles' if gender=='Male' else 'Womens Doubles'}}">
+            <div id="inputField2" class="hidden">
+              <label>Enter email or unique id of 2nd Player</label><br/>
+              <input type="text" id="input1"><br/>
+              <label>Details</label><br/>
+              <input type="text" id="output1" ><br/><br/>
+              <button id="getDetailsButton1" class="btn btn-primary" onclick="autoSubmit(1)">get details</button>
+            </div>
+            <br>
+            {% endif %}
+
+
             <label for="checkbox1">Mixed Doubles</label>
-            <input type="checkbox" id="checkbox1">
-            <div id="inputField1" class="hidden">
-              <label>Enter email or unique id of 2nd Player</label>
-              <input type="text" id="input2" placeholder="Enter email or unique id" oninput="autoSubmitcat(2)">
-              <label>Details</label>
-              <input type="text" id="output2" placeholder=" email 1">
+            {% if c4 is defined %}
+            <input type="checkbox" id="checkbox1" checked disabled>
+            <div id="inputField1">
+              <label>Player 2 unique id </label><br/>
+              <input type="text" id="input2" value="{{c4[0]}}" readonly><br/>
+              <label>Player 2 Name</label><br/>
+              <input type="text" id="output2" value="{{c4[1]}}" readonly><br/>
+              <label>Player 2 Email</label><br/>
+              <input type="text" id="output22" value="{{c4[2]}}" readonly>
+            </div><br />
+            {% elif c5 is defined %}
+            <input type="checkbox" id="checkbox1" checked disabled>
+            <div id="inputField1">
+              <label>Player 2 unique id </label><br/>
+              <input type="text" id="input2" value="{{c5[2] if c5[2]!=None else 'Not registered'}}" readonly><br/>
+              <label>Player 2 Name</label><br/>
+              <input type="text" id="output2" value="{{c5[3] if c5[3]!=None else 'Not registered'}}" readonly><br/>
+              <label>Player 2 Email</label><br/>
+              <input type="text" id="output23" value="{{c5[4] if c5[4]!=None else 'Not registered'}}" readonly><br/>
+              <label>Status</label><br/>
+              <input type="text" id="output32" value="{{c5[-1]}}" readonly><br/>
+              <a href="{{url_for('removeindividual',tid=c5[1],game=game)}}" class="btn btn-primary">Remove</a>
 
             </div><br />
-            <button class="btn btn-primary" style="margin-top: 3%;" id="formregister">Submit</button>
+            {% else %}
+            <input type="checkbox" id="checkbox1">
+            <div id="inputField1" class="hidden">
+              <label>Enter email or unique id of 2nd Player</label><br/>
+              <input type="text" id="input2" placeholder="Enter email or unique id"><br/>
+              <label>Details</label><br/>
+              <input type="text" id="output2"><br><br>
+              <button id="getDetailsButton2" class="btn btn-primary" onclick="autoSubmit(2)">get details</button>
+
+            </div><br />
+            {% endif %}
             <br>
           </form>
           <!-- Divs to hold the input fields -->
@@ -168,31 +227,64 @@ input{
             });
 
           </script>
+  <script>
+    const checkbox0 = document.getElementById('checkbox0');
+    checkbox0.addEventListener('change', function () {
+      // If checkbox1 is checked, show its corresponding input field
+      if (checkbox0.checked) {
+        var x=document.getElementsByClassName("checkbox0");
+        $("#buffering").show();
+        $.ajax({
+          url: "{{url_for('registeredgame',game=game)}}",
+          method: 'POST',
+          data: {input:"{{bs}}"
+              },
+          success: function(response) {
+            $("#buffering").hide();
+            alert(response.message)
+            location.href = "{{url_for('registeredgame',game=game)}}";
+
+          },
+          error: function(error) {
+            $("#buffering").hide();
+            alert('Error in registration try again later')
+              console.error(error);
+          }
+      });
+      } 
+    });
+
+  </script>
 
 <script>
   function autoSubmit(inputNumber) {
+      $(`#getDetailsButton${inputNumber}`).prop('disabled',true)
    
       const inputValue = document.getElementById(`input${inputNumber}`).value;
-      // Here, you can perform any necessary processing on the inputValue before setting it in the output field.
-      // For simplicity, we'll just set it directly.
-      document.getElementById(`output${inputNumber}`).value = inputValue;
-
-      // Send the data to the Flask route using AJAX
+      var category = '{{ds}}';
+      if (inputNumber==2){
+        category='Mixed Doubles';
+      }
       $.ajax({
           url: "{{url_for('individual_update',game=game)}}",
           method: 'POST',
           data: {inputValue: inputValue,
             gender:"{{gender}}",
-            category:"{{ds}}"
-
+            category:category
               },
           success: function(response) {
-              // Update the corresponding output field with the response from the server
               document.getElementById(`output${inputNumber}`).value = response.outputValue;
-              if(response.outputValue== "Id not found"|| response.outputValue=="User Registered to other team" || response.outputValue=='You cannot add yourself.' || response.outputValue=='Cannot add other gender in team' || response.outputValue=='age greater than 50 cannot add' ||response.outputValue=='age less than 50 cannot add' )
-                  document.getElementById(`output${inputNumber}`).readOnly=false
-              else   
-                  document.getElementById(`output${inputNumber}`).readOnly=true
+              if(response.outputValue== "Id not found"|| response.outputValue=="User Registered to other team" || response.outputValue=='You cannot add yourself.' || response.outputValue=='Cannot add other gender in team' || response.outputValue=="User doesn't belong to your age group"){
+                alert(response.outputValue)
+                $(`#getDetailsButton${inputNumber}`).prop('disabled',false)
+              }
+              else {  
+                $(`#input${inputNumber}`).prop("readonly",true)
+                $(`#output${inputNumber}`).prop("readonly",true)
+
+                const inviteButton = `<button id="send${inputNumber}"  class="btn btn-primary" onclick="send_invite(${inputNumber})">Invite</button>`;
+                $(`#getDetailsButton${inputNumber}`).replaceWith(inviteButton);
+              }
 
           },
           error: function(error) {
@@ -202,40 +294,8 @@ input{
       });
   }
 </script>
-<script>
-  function autoSubmitcat(inputNumber) {
-      const inputValue = document.getElementById(`input${inputNumber}`).value;
-      // Here, you can perform any necessary processing on the inputValue before setting it in the output field.
-      // For simplicity, we'll just set it directly.
-      document.getElementById(`output${inputNumber}`).value = inputValue;
 
-      // Send the data to the Flask route using AJAX
-      $.ajax({
-          url: "{{url_for('individual_update',game=game)}}",
-          method: 'POST',
-          data: {inputValue: inputValue,
-            gender:"{{gender}}",
-            category:"Mixed Doubles"
-
-              },
-          success: function(response) {
-
-              // Update the corresponding output field with the response from the server
-              document.getElementById(`output${inputNumber}`).value = response.outputValue;
-              if(response.outputValue== "Id not found"|| response.outputValue=="User Registered to other team" || response.outputValue=='You cannot add yourself.' || response.outputValue=='Cannot add other gender in team' || response.outputValue=='age greater than 50 cannot add' ||response.outputValue=='age less than 50 cannot add' )
-                  document.getElementById(`output${inputNumber}`).readOnly=false
-              else   
-                  document.getElementById(`output${inputNumber}`).readOnly=true
-
-          },
-          error: function(error) {
-              // Handle errors if any
-              console.error(error);
-          }
-      });
-  }
-</script>
-<script>
+<!-- <script>
   function isCheckboxChecked(ele) {
     var isTicked = document.getElementById(ele).checked;
     return isTicked;
@@ -258,8 +318,6 @@ input{
       
       }
       else{
-
-     
 
              
       $("#formregister").prop("disabled", true);
@@ -301,6 +359,54 @@ input{
     });
     
   });
+</script>-->
+<script>
+  function send_invite(inputNumber) {
+    const inputValue = $(`#input${inputNumber}`).val();
+    var category = '{{ds}}';
+    if (inputNumber==2){
+      category='Mixed Doubles';
+    }
+    
+
+
+    // Disable the "Invite" button and show buffering indicator
+    $(`#send${inputNumber}`).prop("disabled", true);
+    $("#buffering").show();
+
+    // Send AJAX request to send invitation
+    $.ajax({
+        url: "{{url_for('registeredgame',game=game)}}",
+        method: 'POST',
+        data: {
+            input: inputValue,
+            category:category,
+
+        },
+        success: function(response) {
+            // Enable the "Invite" button and hide buffering indicator
+            $(`#send${inputNumber}`).prop("disabled", false);
+            $("#buffering").hide();
+
+            // Handle response messages and redirection
+            if (response.message != 'Success') {
+                alert(response.message);
+                location.href = "{{url_for('registeredgame',game=game)}}";
+            } else {
+                alert('Invitation sent');
+                location.href = "{{url_for('registeredgame',game=game)}}";
+            }
+        },
+        error: function(error) {
+            // Enable the "Invite" button and hide buffering indicator
+            $(`#send${inputNumber}`).prop("disabled", false);
+            $("#buffering").hide();
+
+            // Handle errors if any
+            console.error(error);
+        }
+    });
+}
 </script>
 
 {% endblock %}
