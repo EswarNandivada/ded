@@ -133,7 +133,7 @@ background-color: #fff;
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
                                         <label class="form-label" for="firstName">Enter Email or Unique Id</label>
-                                        <input type="text" id="input1" name="input1" oninput="autoSubmit(1)"
+                                        <input type="text" id="input1" name="input1" 
                                             class="form-control form-control-lg" />
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send1" class="saar btn btn-primary" onclick="send_invite(1)"  class="btn btn-primary">invite</button>
+                                    <button id="getDetailsButton1" class="btn btn-primary" onclick="autoSubmit(1)" class="btn btn-primary">get details</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -189,7 +189,7 @@ background-color: #fff;
                                 <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
                                         <label class="form-label" for="DetailsAddress">Enter Email or Unique Id</label>
-                                        <input type="Details" id="input2" name="input2" oninput="autoSubmit(2)"
+                                        <input type="Details" id="input2" name="input2"
                                             class="form-control form-control-lg" />
                                     </div>
                                 </div>
@@ -201,7 +201,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send2" onclick="send_invite(2)" class="saar btn btn-primary">invite</button>
+                                    <button id="getDetailsButton2" onclick="autoSubmit(2)" class="btn btn-primary">get details</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -246,7 +246,7 @@ background-color: #fff;
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
                                         <label class="form-label" for="firstName">Enter Email or Unique Id</label>
-                                        <input type="text" id="input3" name="n4" oninput="autoSubmit(3)"
+                                        <input type="text" id="input3" name="n4" 
                                             class="form-control form-control-lg" />
                                         
                                     </div>
@@ -260,7 +260,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send3" onclick="send_invite(3)" class="saar btn btn-primary">invite</button>
+                                    <button id="getDetailsButton3" onclick="autoSubmit(3)" class="btn btn-primary">get details</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -305,7 +305,7 @@ background-color: #fff;
                                     <div class="form-outline">
                                         <label class="form-label" for="DetailsAddress">Enter Email or Unique Id</label>
                                         <input type="Details" id="input4" name="n6" 
-                                            class="form-control form-control-lg" oninput="autoSubmit(4)"/>
+                                            class="form-control form-control-lg" />
                                        
                                     </div>
                                 </div>
@@ -317,7 +317,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send4" onclick="send_invite(4)" class="saar btn btn-primary">invite</button>
+                                    <button id="getDetailsButton4" onclick="autoSubmit(4)" class="btn btn-primary">get details</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -362,7 +362,7 @@ background-color: #fff;
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
                                         <label class="form-label" for="firstName">Enter Email or Unique Id</label>
-                                        <input type="text" id="input5" name="n8" oninput="autoSubmit(5)"
+                                        <input type="text" id="input5" name="n8" 
                                             class="form-control form-control-lg" />
                                         
                                     </div>
@@ -376,7 +376,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send5"  onclick="send_invite(5)" class="saar btn btn-primary">invite</button>
+                                    <button id="getDetailsButton5"  onclick="autoSubmit(5)" class="btn btn-primary">get details</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -421,7 +421,7 @@ background-color: #fff;
                                 <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
                                         <label class="form-label" for="DetailsAddress">Enter Email or Unique Id</label>
-                                        <input type="Details" id="input6" name="n10" oninput="autoSubmit(6)"
+                                        <input type="Details" id="input6" name="n10"
                                             class="form-control form-control-lg" />
                                         
                                     </div>
@@ -434,7 +434,7 @@ background-color: #fff;
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <button id="send6" onclick="send_invite(6)" class="saar btn btn-primary">invite</button>
+                                    <button id="getDetailsButton6" onclick="autoSubmit(6)" class="btn btn-primary">get details</button>
                                 </div>
                             </div>
                             {% endif %}
@@ -458,75 +458,84 @@ background-color: #fff;
     <!-- Add more corresponding input tags here -->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function autoSubmit(inputNumber) {
-            const inputValue = document.getElementById(`input${inputNumber}`).value;
-            // Here, you can perform any necessary processing on the inputValue before setting it in the output field.
-            // For simplicity, we'll just set it directly.
-            document.getElementById(`output${inputNumber}`).value = inputValue;
+<script>
+    function autoSubmit(inputNumber) {
+        const inputValue = $(`#input${inputNumber}`).val();
+        $(`#getDetailsButton${inputNumber}`).prop('disabled',true)
 
-            // Inivite the data to the Flask route using AJAX
-            $.ajax({
-                url: "{{url_for('update',game=game)}}",
-                method: 'POST',
-                data: {inputValue: inputValue,
-                    gender:"{{gender}}",
-                    },
-                success: function(response) {
-                    // Update the corresponding output field with the response from the server
-                    document.getElementById(`output${inputNumber}`).value = response.outputValue;
-                    if (response.outputValue=="Id not found" || inputValue=='' || response.outputValue=="User Gender doesnot match" || response.outputValue=="User registered to other team" || response.outputValue=='User already in two teams' || response.outputValue=='You cannot add yourself.' || response.outputValue=='User registered to other cricket team'){
-                        $(`#send${inputNumber}`).hide();
-                    } else {
-                        $(`#send${inputNumber}`).show();
-                        
-                    }
-    
+        // Send AJAX request
+        $.ajax({
+            url: "{{url_for('update',game=game)}}",
+            method: 'POST',
+            data: {
+                inputValue: inputValue,
+                gender: "{{gender}}"
+            },
+            success: function(response) {
+                // Update the corresponding output field with the response from the server
+                $(`#output${inputNumber}`).val(response.outputValue);
 
-                    //document.getElementById(`input${inputNumber}`).readOnly=true
-                    
+                // Check response conditions and toggle the "Invite" button
+                if (response.outputValue == "Id not found" || inputValue == '' || response.outputValue == "User Gender does not match" || response.outputValue == "User registered to other team" || response.outputValue == 'User already in two teams' || response.outputValue == 'You cannot add yourself.' || response.outputValue == 'User registered to other cricket team') {
+                    alert(response.outputValue)
+                    $(`#getDetailsButton${inputNumber}`).prop('disabled',false)
 
-                },
-                error: function(error) {
-                    // Handle errors if any
-                    console.error(error);
+                } else {
+                    $(`#input${inputNumber}`).prop("readonly",true)
+                    $(`#output${inputNumber}`).prop("readonly",true)
+
+                    // Replace "Get Details" button with "Invite" button
+                    const inviteButton = `<button id="send${inputNumber}"  class="btn btn-primary" onclick="send_invite(${inputNumber})">Invite</button>`;
+                    $(`#getDetailsButton${inputNumber}`).replaceWith(inviteButton);
                 }
-            });
-        }
-    </script>
-    <script>
-        function send_invite(inputNumber){
-            const inputValue = document.getElementById(`input${inputNumber}`).value;
-            document.getElementById(`output${inputNumber}`).value = inputValue;
-            $("#buffering").show();
-            $(`#send${inputNumber}`).prop("disabled", true);
+            },
+            error: function(error) {
+                // Handle errors if any
+                console.error(error);
+            }
+        });
+    }
 
-            $.ajax({
-                url: "{{url_for('registeredgame',game=game)}}",
-                method: 'POST',
-                data: {
-                    input : inputValue,
-                },
-                success: function(response) {
-                    $(`#send${inputNumber}`).prop("disabled", false);
-                    $("#buffering").hide();
-                    if (response.message!='Success'){
-                        alert(response.message)
-                        location.href="{{url_for('registeredgame',game=game)}}"
-                    }else{
-                        alert('Invitation sent')
-                        location.href="{{url_for('registeredgame',game=game)}}"
-                    }
+    function send_invite(inputNumber) {
+        const inputValue = $(`#input${inputNumber}`).val();
 
-                },
-                error: function(error) {
-                    $(`#send${inputNumber}`).prop("disabled", false);
-                    // Handle errors if any
-                    console.error(error);
+        // Disable the "Invite" button and show buffering indicator
+        $(`#send${inputNumber}`).prop("disabled", true);
+        $("#buffering").show();
+
+        // Send AJAX request to send invitation
+        $.ajax({
+            url: "{{url_for('registeredgame',game=game)}}",
+            method: 'POST',
+            data: {
+                input: inputValue,
+            },
+            success: function(response) {
+                // Enable the "Invite" button and hide buffering indicator
+                $(`#send${inputNumber}`).prop("disabled", false);
+                $("#buffering").hide();
+
+                // Handle response messages and redirection
+                if (response.message != 'Success') {
+                    alert(response.message);
+                    location.href = "{{url_for('registeredgame',game=game)}}";
+                } else {
+                    alert('Invitation sent');
+                    location.href = "{{url_for('registeredgame',game=game)}}";
                 }
-            });
-        }
-    </script>
+            },
+            error: function(error) {
+                // Enable the "Invite" button and hide buffering indicator
+                $(`#send${inputNumber}`).prop("disabled", false);
+                $("#buffering").hide();
+
+                // Handle errors if any
+                console.error(error);
+            }
+        });
+    }
+</script>
+
    
 	<!--<script>
 		$(document).ready(function() {
