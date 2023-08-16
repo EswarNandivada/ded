@@ -231,6 +231,7 @@ input{
     const checkbox0 = document.getElementById('checkbox0');
     checkbox0.addEventListener('change', function () {
       // If checkbox1 is checked, show its corresponding input field
+      if (confirm('Are you sure you want to register to Mens Single?')) {
       if (checkbox0.checked) {
         var x=document.getElementsByClassName("checkbox0");
         $("#buffering").show();
@@ -251,8 +252,14 @@ input{
               console.error(error);
           }
       });
-      } 
+      }
+    }
+    else{
+      checkbox0.checked=false
+
+    }
     });
+  
 
   </script>
 
