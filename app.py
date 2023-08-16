@@ -532,7 +532,7 @@ def check_individual(gender,input_value,game,category):
             message="Id not found"
         else:
             cond=True
-            cursor.execute("SELECT count(*) from individual_teams where id=%s and game=%s and sub_category =%s and status=%s",[input_value,game,category,'Accept'])
+            cursor.execute("SELECT count(*) from individual_teams where id=%s and game=%s and category =%s and status=%s",[input_value,game,category,'Accept'])
             count=cursor.fetchone()[0]
             if int(input_value)==session.get('user'):
                 message='You cannot add yourself.'
@@ -554,14 +554,32 @@ def check_individual(gender,input_value,game,category):
             age=cursor.fetchone()[0]
             cursor.execute('SELECT age from register where id=%s',[session.get('user')])
             lead_age=cursor.fetchone()[0]
-            if age>=50:
-                if lead_age<50:
-                    cond=False
-                    message='age greater than 50 cannot add'
-            if age<50:
-                if lead_age>50:
-                    cond=False
-                    message='age less than 50 cannot add'
+            if game=='CARROMS':
+                if age>=50:
+                    if lead_age<50:
+                        cond=False
+                        message="User doesn't belong to your age group"
+                if age<50:
+                    if lead_age>50:
+                        cond=False
+                        message="User doesn't belong to your age group"
+            if game!='CARROMS':
+                if age<35:
+                    if lead_age>35:
+                        cond=False
+                        message="User doesn't belong to your age group"
+                elif age>=35 and age<=45:
+                    if not (lead_age>=35 and lead_age<=45):
+                        cond=False
+                        message="User doesn't belong to your age group"
+                elif age>=46 and age<=55:
+                    if not (lead_age>=46 and lead_age<=55):
+                        cond=False
+                        message="User doesn't belong to your age group"
+                elif age>55:
+                    if lead_age<55:
+                        cond=False
+                        message="User doesn't belong to your age group"
             if cond==True and  message!="You cannot add yourself.":
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[input_value])
                 message=cursor.fetchone()[0]
@@ -599,20 +617,37 @@ def check_individual(gender,input_value,game,category):
             age=cursor.fetchone()[0]
             cursor.execute('SELECT age from register  where id=%s',[session.get('user')])
             lead_age=cursor.fetchone()[0]
-            if age>=50:
-                if lead_age<50:
-                    cond=False
-                    message='Cannot add the people less than 50'
-            if age<50:
-                if lead_age>50:
-                    cond=False
-                    message='Cannot add the people greater than 50'
+            if game=='CARROMS':
+                if age>=50:
+                    if lead_age<50:
+                        cond=False
+                        message="User doesn't belong to your age group"
+                if age<50:
+                    if lead_age>50:
+                        cond=False
+                        message="User doesn't belong to your age group"
+            if game!='CARROMS':
+                if age<35:
+                    if lead_age>35:
+                        cond=False
+                        message="User doesn't belong to your age group"
+                elif age>=35 and age<=45:
+                    if not (lead_age>=35 and lead_age<=45):
+                        cond=False
+                        message="User doesn't belong to your age group"
+                elif age>=46 and age<=55:
+                    if not (lead_age>=46 and lead_age<=55):
+                        cond=False
+                        message="User doesn't belong to your age group"
+                elif age>55:
+                    if lead_age<55:
+                        cond=False
+                        message="User doesn't belong to your age group"
             if cond==True and  message!="You cannot add yourself.":
                 cursor.execute("SELECT concat_ws(' ',FirstName,LastName) as fullname from register where id=%s",[eid])
                 message=cursor.fetchone()[0]
     cursor.close()
     return message
-
 @app.route('/registeronteam')
 def registeronteam():
      if session.get('user'):
@@ -1436,65 +1471,125 @@ def registeredgame(game):
 
     elif game in ('BADMINTON','TABLETENNIS','LAWNTENNIS','CARROMS'):
         ds="Mens Doubles" if gender=="Male" else "Womens Doubles"
-        singles=["Womens Single","Mens Single"]
+        bs="Mens Single" if gender=="Male" else "Womens Single"
+        dic={}
         cursor = mydb.cursor(buffered=True)
-        cursor.execute("SELECT count(*) from sub_games where game=%s",[game])
-        count=cursor.fetchone()[0]
-        print(count)
+        cursor.execute('SELECT CONCAT(FirstName," ",LastName),email FROM register WHERE id=%s',[session.get('user')])
+        name,email_id=cursor.fetchone()
+        cursor.execute("SELECT count(*) from sub_games where id=%s and  game=%s and category=%s",[session.get('user'),game,bs])
+        c=cursor.fetchone()[0]
+        if c!=0:
+            dic['c1']=True
+        cursor.execute('SELECT count(*) from sub_games where category=%s and game=%s and id=%s',[ds,game,session.get('user')])
+        d_count=cursor.fetchone()[0]
+        cursor.execute('SELECT count(*) from sub_games where category=%s and game=%s and id=%s',['Mixed Doubles',game,session.get('user')])
+        m_count=cursor.fetchone()[0]
+        if d_count==0:
+            cursor.execute('Select count(*) from individual_teams where id=%s and game=%s and category=%s and status="Accepted"',[session.get('user'),game,ds])
+            sub_count=cursor.fetchone()[0]
+            if sub_count!=0:
+                cursor.execute('Select teamid from individual_teams where id=%s and game=%s and category=%s and status="Accepted"',[session.get('user'),game,ds])
+                did=cursor.fetchone()[0]
+                cursor.execute('Select id from sub_games where team_number=%s',[did])
+                teid=cursor.fetchone()[0]
+                cursor.execute('SELECT id,concat(FirstName," ",LastName),email from register where id=%s',[teid])
+                deeta=cursor.fetchone()
+                dic['c2']=deeta
+        else:
+            cursor.execute('SELECT team_number from sub_games where category=%s and game=%s and id=%s',[ds,game,session.get('user')])
+            tid=cursor.fetchone()[0]
+            cursor.execute("select * from individual_teams where teamid=%s",[tid])
+            deeta2=cursor.fetchone()
+            dic['c3']=deeta2
+        if m_count==0:
+            cursor.execute('Select count(*) from individual_teams where id=%s and game=%s and category=%s and status="Accepted"',[session.get('user'),game,'Mixed Doubles'])
+            sub_count=cursor.fetchone()[0]
+            if sub_count!=0:
+                cursor.execute('Select teamid from individual_teams where id=%s and game=%s and category=%s and status="Accepted"',[session.get('user'),game,'Mixed Doubles'])
+                did=cursor.fetchone()[0]
+                cursor.execute('Select id from sub_games where team_number=%s',[did])
+                teid=cursor.fetchone()[0]
+                cursor.execute('SELECT id,concat(FirstName,' ',LastName),email from register where id=%s',[teid])
+                deeta11=cursor.fetchone()
+                dic['c4']=deeta11
+        else:
+            cursor.execute('SELECT team_number from sub_games where category=%s and game=%s and id=%s',['Mixed Doubles',game,session.get('user')])
+            tid=cursor.fetchone()[0]
+            cursor.execute("select * from individual_teams where teamid=%s",[tid])
+            deeta22=cursor.fetchone()
+            dic['c5']=deeta22
+        cursor.close()
         if request.method=='POST':
-            dicts=request.form.to_dict()
-            for i in dicts:
-                print(dicts)
-                if i=='Mens Single' and dicts[i]!=False:
-                    cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),i])
-                    mydb.commit()
-                if i.startswith('input') and dicts[i].startswith('input')!='' :
-                    team_id=genteamid()
-                    if request.form[i].isdigit():
-                        uid=request.form[i]
-                        requestid=adotp()
-                        cursor.execute("insert into individual_teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
-                        mydb.commit()
-                        cursor.execute("SELECT email from register where id=%s",[uid])
-                        r_email=cursor.fetchone()[0]
-                        one_time_token=token2(team_id,requestid,salt=salt2)
-                        link=url_for('accept',token=one_time_token,_external=True)
-                        subject=f'Team Request for {game}'
-                        body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
-                        sendmail(r_email,subject=subject,body=body)
-                    else:
-                        cursor.execute("SELECT count(*) from register where email=%s",[request.form[i]])
-                        count=cursor.fetchone()[0]
-                        if count!=0:
-                            cursor.execute("SELECT id from register where email=%s",[request.form[i]])
-                            uid=cursor.fetchone()[0]
-                            requestid=adotp()
-                            cursor.execute("insert into individual_teams (reqid,teamid,id,game) values(%s,%s,%s,%s)",[requestid,team_id,uid,game])
-                            mydb.commit()
-                            one_time_token=token2(team_id,requestid,salt=salt2)
-                            link=url_for('accept',token=one_time_token,_external=True)
-                            subject=f'Team Request for {game}'
-                            body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
-                            sendmail(request.form[i],subject=subject,body=body)
-                        else:
-                            requestid=adotp()
-                            cursor.execute("insert into individual_teams (reqid,teamid,game) values(%s,%s,%s)",[requestid,team_id,game])
-                            mydb.commit()
-                            one_time_token=token2(team_id,requestid,salt=salt2,email=request.form[i])
-                            link=url_for('accept',token=one_time_token,_external=True)
-                            subject=f'Team Request for {game}'
-                            body=f"Hello,\n\n Register to doctors olympiad and join our team by using this using the below url.\nPlease click on this link to join -{link}"
-                            sendmail(request.form[i],subject=subject,body=body)
+            cursor = mydb.cursor(buffered=True)
+            if request.form['input']=='Mens Single' or request.form['input']=='Womens Single':
+                cursor.execute('insert into sub_games (game,id,category) values(%s,%s,%s)',[game,session.get('user'),request.form['input']])
+                mydb.commit()
+                cursor.close()
+                subject='Doctors Olympiad Games registration'
+                body=f'Hi {name},\n\nYou are successfully registered to {request.form["input"]} in Badminton\n\n\nThanks and regards\nDoctors Olympiad 2023'
+                sendmail(email_id,subject,body)
+                return jsonify({'message':'Registration Success!'})
             else:
-                flash('Request sent')
-                return redirect(url_for('dashboard'))
-        return render_template('individualdubles.html',gender=gender,game=game,ds=ds)
-            
+                category=request.form['category']
+                cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s and category=%s",[session.get('user'),game,category])
+                count1=cursor.fetchone()[0]
+                if count1==0:
+                    team_id=genteamid()
+                    cursor.execute('INSERT INTO sub_games (game,id,team_number,category) values(%s,%s,%s,%s)',[game,session.get('user'),team_id,category])            
+                    mydb.commit()
+                else:
+                    cursor.execute('SELECT team_number from sub_games where id=%s and game=%s and category=%s',[session.get('user'),game,category])
+                    team_id=cursor.fetchone()[0]
+                if request.form['input'].isdigit():
+                    uid=request.form['input']
+                    cursor.execute('SELECT concat(FirstName," ",LastName),email from register where id=%s',[uid])
+                    uname,uemail=cursor.fetchone()
+                    requestid=adotp()
+                    cursor.execute("insert into individual_teams (reqid,teamid,id,fullname,email,game,category) values(%s,%s,%s,%s,%s,%s,%s)",[requestid,team_id,uid,uname,uemail,game,category])
+                    mydb.commit()
+                    one_time_token=token2(team_id,requestid,salt=salt2)
+                    link=url_for('individual_accept',token=one_time_token,_external=True)
+                    subject=f'Team Request for {category} in {game} from {name}'
+                    body=f"Hello,{uname}\n\nYou can join my {category} team in {game} by using the below url.\n\n click on this link to join -{link}"
+                    sendmail(uemail,subject=subject,body=body)
+                    cursor.close()
+                    return jsonify({'message':'Invitation Sent!'})
+                else:
+                    cursor.execute("SELECT count(*) from register where email=%s",[request.form[i]])
+                    count=cursor.fetchone()[0]
+                    if count!=0:
+                        cursor.execute("SELECT id,concat(FirstName," ",LastName),email from register where email=%s",[request.form[i]])
+                        uid,uname,uemail=cursor.fetchone()
+                        requestid=adotp()
+                        cursor.execute("insert into individual_teams (reqid,teamid,id,fullname,email,game,category) values(%s,%s,%s,%s,%s,%s)",[requestid,team_id,uid,uname,uemail,game,category])
+                        mydb.commit()
+                        cursor.close()
+                        one_time_token=token2(team_id,requestid,salt=salt2)
+                        link=url_for('individual_accept',token=one_time_token,_external=True)
+                        subject=f'Team Request for {category} in {game} from {name}'
+                        body=f"Hello,{uname}\n\nYou can join my {category} team in {game} by using the below url.\n\n click on this link to join -{link}"
+                        sendmail(request.form['input'],subject=subject,body=body)
+                        return jsonify({'message':'Invitation Sent!'})
+                    else:
+                        requestid=adotp()
+                        cursor.execute("insert into individual_teams (reqid,teamid,email,game,category) values(%s,%s,%s,%s,%s)",[requestid,team_id,email_id,game,category])
+                        mydb.commit()
+                        cursor.close()
+                        one_time_token=token2(team_id,requestid,salt=salt2,email=request.form[i])
+                        link=url_for('individual_accept',token=one_time_token,_external=True)
+                        subject=f'Team Request for {category} in {game} from {name}'
+                        body=f"Hello,\n\nRegister to Doctors olympiad 2023 and join my {category} team in {game} by using this using the below url.\nPlease click on this link to join -{link}"
+                        sendmail(request.form['input'],subject=subject,body=body)
+                        return jsonify({'message':'Invitation Sent!'})
+        return render_template('individualdubles.html',gender=gender,game=game,ds=ds,bs=bs,**dic)
+
     else:
         #return '<h1> Updates are On the Way....!</h1>'
         cursor=mydb.cursor(buffered=True)
         cursor.execute("SELECT count(*) from sub_games where id=%s and game=%s",[session.get('user'),game])
         count=cursor.fetchone()[0]
+        cursor.execute("SELECT concat(Firstname,' ',LastName) from register  where id=%s",[session.get('user')])
+        fullname=cursor.fetchone()[0]
         if count==0:
             team_id=genteamid()
             cursor.execute('INSERT INTO sub_games (game,id,team_number) values(%s,%s,%s)',[game,session.get('user'),team_id])            
@@ -1522,7 +1617,7 @@ def registeredgame(game):
                     mydb.commit()
                     one_time_token=token2(team_id,requestid,salt=salt2)
                     link=url_for('accept',token=one_time_token,_external=True)
-                    subject=f'Team Request for {game}'
+                    subject=f'Team Request for {game} from {fullname}'
                     body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
                     sendmail(r_email,subject=subject,body=body)
                 else:
@@ -1541,23 +1636,24 @@ def registeredgame(game):
                         mydb.commit()
                         one_time_token=token2(team_id,requestid,salt=salt2)
                         link=url_for('accept',token=one_time_token,_external=True)
-                        subject=f'Team Request for {game}'
+                        subject=f'Team Request for {game} from {fullname}'
                         body=f"Hello,\n\n You can join our team by using the below url.\nPlease click on this link to join -{link}"
                         sendmail(request.form[i],subject=subject,body=body)
                     else:
                         return jsonify({'message':f'{uid} already in team'})
                 else:
                     requestid=adotp()
-                    cursor.execute("insert into teams (reqid,teamid,email,game) values(%s,%s,%s)",[requestid,team_id,request.form['input'],game])
+                    cursor.execute("insert into teams (reqid,teamid,email,game) values(%s,%s,%s,%s)",[requestid,team_id,request.form['input'],game])
                     mydb.commit()
                     one_time_token=token2(team_id,requestid,salt=salt2,email=request.form['input'])
                     link=url_for('accept',token=one_time_token,_external=True)
-                    subject=f'Team Request for {game}'
+                    subject=f'Team Request for {game} from {fullname}'
                     body=f"Hello,\n\n Register to doctors olympiad and join our team by using this using the below url.\nPlease click on this link to join -{link}"
                     sendmail(request.form['input'],subject=subject,body=body)
             cursor.close()
             return jsonify({'message':'Success','url':url_for('registeredgame',game=game,_external=True)})
-        return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,count=count,**args)
+        return render_template(f'/games-individual-team/Team/{game}.html',gender=gender,game=game,fullname=fullname,count=count,**args)
+
 @app.route('/remove/<rid>/<game>')
 def remove(rid,game):
     if session.get('user'):
@@ -1648,6 +1744,8 @@ def registeron(token):
             count1 = cursor.fetchone()[0]
             cursor.execute('SELECT COUNT(*) FROM register WHERE mobileno = %s', [mobile])
             count2 = cursor.fetchone()[0]
+            cursor.execute('SELECT count(*) from teams where reqid=%s',[rid])
+            i_count=cursor.fetchone()[0]
             cursor.close()
             if count2 == 1:
                 message='Mobile number already exists.'
@@ -1665,6 +1763,11 @@ def registeron(token):
             if session.get('email')!=request.form['email']:
                 message='Email address changed verify otp again'
                 return render_template('register.html',message=message)
+            if i_count==0:
+                criteria=individual_doubles_check_t(rid,tid,gender,age)
+                if not criteria['cond']:
+                    message=criteria['message']
+                    return render_template('register.html',message=message)
             # Get the uploaded certificate and photo files
             certificate_file = request.files['certificate']
             photo_file = request.files['photo']
@@ -1782,10 +1885,12 @@ def success_c(rid):
                 cursor.execute("UPDATE teams SET fullname=%s,email=%s,status='Accept' where reqid=%s",[name,email,rid])
                 mydb.commit()
             elif i_count!=0:
-                cursor.execute("UPDATE individual_teams SET status='Accept' where reqid=%s",[rid])
+                cursor.execute("UPDATE individual_teams SET  fullname=%s,email=%s,status='Accept' where reqid=%s",[name,email,rid])
                 mydb.commit()
-            else:
+            elif t_count==0:
                 message=' Request Removed by captain,contact other captain'
+            elif  i_count==0:
+                message=' Request removed by co player..create your own team or join others'
             cursor.close()
             
             html = f"""
