@@ -2026,6 +2026,254 @@ def archive_and_send():
                 arcname = os.path.relpath(file_path, folder_path)
                 zipf.write(file_path, arcname)
     return send_file(zip_filename, as_attachment=True)
+@app.route('/individual_accept/<token>')
+def individual_accept(token):
+    data=link_validator(token)
+    if data=='link expired':
+         return '<h1>Link Expired</h1>'
+    else:
+        if data.get('email','NA')=='NA':
+            rid=data.get('rid')
+            tid=data.get('teamid')
+            cursor=mydb.cursor(buffered=True)
+            cursor.execute('SELECT count(*) from individual_teams where reqid=%s',[rid])
+            i_count=cursor.fetchone()[0]
+            if i_count==0:
+                flash('Team request revoked by co-player')
+                return redirect(url_for('dashboard'))
+            cursor.execute('SELECT id,game,status,category from individual_teams where reqid=%s',[rid])
+            eid,game,status,category=cursor.fetchone()
+            cursor.execute('SELECT count(*) from game where id=%s and game=%s',[eid,game])
+            add_p=cursor.fetchone()[0]
+            if add_p!=0:
+                cursor.execute('SELECT id from sub_games where team_number=%s',[tid])
+                leadid=cursor.fetchone()[0]
+                cursor.execute('SELECT email,concat(FirstName," ",LastName) from register where id=%s',[leadid])
+                email,name=cursor.fetchone()
+                cursor.execute('SELECT concat(FirstName," ",LastName) from register where id=%s',[eid])
+                participant=cursor.fetchone()[0]
+                if status=='Accept':
+                    cursor.close()
+                    flash("Request already Accepted")
+                    return redirect(url_for('dashboard'))
+                else:
+                    cursor.execute('SELECT count(*) from individual_teams where reqid=%s',[rid])
+                    i_count=cursor.fetchone()[0]
+                    if i_count!=0:
+                        cursor.execute("UPDATE individual_teams SET status='Accepted' where reqid=%s",[rid])
+                        mydb.commit()
+                        subject=f"{participant} Accepted your {game} team request"
+                        body=f"Hi,\n\n{name}\n\n\n{participant} just accepted your {category} request for {game}"
+                        sendmail(to=email,subject=subject,body=body)
+                        flash('Request Accepted')
+                        return(redirect(url_for('dashboard')))
+                    else:
+                        flash('Team request revoked by the co player')
+                        return redirect(url_for('dashboard'))
+            else:
+                return redirect(url_for('addondoubles',rid=rid,eid=eid,game=game))
+        else:
+            return redirect(url_for('registeron',token=token))
+
+
+@app.route('/addondoubles/<rid>/<eid>/<game>',methods=['GET','POST'])
+def addondoubles(rid,eid,game):
+    cursor = mydb.cursor(buffered=True)
+    cursor.execute("SELECT ID, CONCAT(FirstName, ' ', LastName) AS FullName, Email, MobileNo, member FROM register WHERE id=%s", [eid])
+    data1 = cursor.fetchall()
+    amount=1500
+    # print(payment_url)
+    if request.method=='POST':
+        print('hi')
+        ref=random.randint(1000000,99999999)
+        eazypay_integration = Eazypay(url_for('addondoublessuccess',eid=eid,game=game,rid=rid,_external=True))
+        payment_url=eazypay_integration.get_payment_url(ref,amount,data1[0][1],data1[0][2],data1[0][3])
+        cursor  = mydb.cursor(buffered=True)
+        cursor.execute('select count(*) from games where game_name=%s',[game])
+        cursor.execute('insert into payments (ordid,id,game,amount) values(%s,%s,%s,%s)',[ref,eid,game,amount])
+        mydb.commit()
+        cursor.close()
+        return jsonify({'status':'success','payment_url':payment_url})
+    return render_template('addondoubles.html', data1=data1,game=game,amount=amount,eid=eid,name=data1[0][1],email=data1[0][2],rid=rid)
+    
+@app.route('/addondoublessuccess/<rid>/<eid>/<game>')
+def addondoublessuccess(rid,eid,game):
+    response = request.form.to_dict()
+    response_code_value = response.get('Response Code','na')
+    if response_code_value != 'na':
+        if payment_success_exec():
+            uid=eid
+            ref = int(response['ReferenceNo'])
+            amount = float(response['Total Amount'])
+            transaction_id = int(response['Unique Ref Number'])
+            cursor = mydb.cursor(buffered=True)
+            cursor.execute('SELECT concat(FirstName," ",LastName) as name,email from register where id=%s',[uid])
+            name,email=cursor.fetchone()[0]
+            cursor.execute('UPDATE  payments SET status=%s,amount=%s,id=%s,transactionid=%s WHERE ordid=%s',['Successfull',amount,uid,transaction_id,ref])
+            cursor.execute('INSERT INTO game (id,game,amount) VALUES (%s,%s,%s)', [uid,game,amount])
+            mydb.commit()
+            cursor.execute('SELECT count(*) from individual_teams where reqid=%s')
+            i_count=cursor.fetchone()[0]
+            message=''
+            if i_count!=0:
+                cursor.execute("UPDATE individual_teams SET status='Accepted' where reqid=%s",[rid])
+                mydb.commit()
+            else:
+                message='Request Removed by co player'
+            cursor.close()
+            html = f"""
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Registration Confirmation</title>
+                <style>
+                    table {{
+                        margin: auto;
+                    }}
+                    img {{
+                        margin-left: 30%;
+                    }}
+                    h1 {{
+                        text-align: center;
+                    }}
+                    table, tr, th, td {{
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                    }}
+                    th {{
+                        text-align: left;
+                    }}
+                    td {{
+                        width: 60%;
+                    }}
+                </style>
+            </head>
+            <body>
+                <img src="https://i0.wp.com/codegnanprojects.wpcomstaging.com/wp-content/uploads/2023/07/IMA-NATIONAL-SPORTS-MEET-2023-LOGO.jpg?fit=768%2C421&ssl=1" width="40%"/>
+                <h1>Hi {name},<br><br>Thanks for registering to {game} in Doctors Olympiad 2023.<br><br>Your Payment details</h1>
+                <table cellpadding="10">
+                    <tr>
+                        <th>UNIQUE REFERENCE ID</th>
+                        <td>{uid}</td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td>{name}</td>
+                    </tr>
+                    <tr>
+                        <th>email</th>
+                        <td>{email}</td>
+                    </tr>
+                    <tr>
+                        <th>Game</th>
+                        <td>{game}</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <td>{transaction_id}</td>
+                    </tr>
+                    <tr>
+                        <th>Payment</th>
+                        <td>{amount}</td>
+                    </tr>
+                </table>
+            </body>
+            </html>
+            """
+            session['user']=uid
+            # subject = 'Payment Successful! From Doctors Olympiad 2023'
+            # mail_with_atc(email,subject,html)
+            subject='Registration Successful for Doctors Olympiad 2023'
+            # body=f'Hi {name},\n\nThanks for registering to {game} in Doctors Olympiad 2023\n\n\n\nunique reference id:{uid}\nName: {name}\ndef accept game: {game}\nTransaction id: {transaction_id}\n\n\n\n\nThanks and Regards\nDoctors Olympiad 2023\n\n\nContact:+91 9759634567'
+            mail_with_atc(to=email, subject=subject, html=html)
+            
+            flash('Payment Successful'+message)
+            return redirect(url_for('dashboard'))
+            # print(response)
+            # Payment is successful
+            # return render_template('thank-you.html')
+        else:
+            # Payment failed, show failure message
+            response_msg = get_response_message(response['Response Code'])
+            return f"<h1>Transaction failed. Error: {response_msg}</h1>"
+    else:
+        # 'Response_Code' key is missing in the response
+        return "Invalid response received from payment gateway."
+
+@app.route('/removeindividual/<tid>/<game>')
+def removeindividual(tid,game):
+    if session.get('user'):
+        eid=session['user']
+        cursor=mydb.cursor()
+        cursor.execute('delete from individual_teams where teamid=%s',[tid])
+        cursor.execute('delete from sub_games where team_number=%s',[tid])
+        mydb.commit()
+        return redirect(url_for('registeredgame',game=game))
+    else:
+        return redirect(url_for('login'))
+def individual_doubles_check_t(rid,team_id,gender,uage):
+    cond=True
+    message=''
+    cursor=mydb.cursor(bufferd=True)
+    cursor.execute('select count(*) from individual_teams where reqid=%s',[rid])
+    r_count=cursor.fetchone()[0]
+    cursor.close()
+    if r_count==0:
+        cond=False
+        message='Request Removed by co player..Register as normal user'
+        return {'cond':cond,'message':message}
+    cursor=mydb.cursor(bufferd=True)
+    cursor.execute('SELECT game,category from individual_teams where reqid=%s',[rid])
+    game,category=cursor.fetchone()[0]
+    cursor.execute('SELECT id from sub_games where team_number=%s',[team_id])
+    lead_id=cursor.fetchone()[0]
+    cursor.execute('SELECT age,gender from register where id=%s',[lead_id])
+    lead_age,lead_gender=cursor.fetchone()
+    cursor.close()
+    if category!="Mixed Doubles":
+        if lead_gender!=gender:
+            cond=False
+            message='Cannot add other gender in team'
+            return {'cond':cond,'message':message}
+
+    age=uage
+    if game=='CARROMS':
+        if age>=50:
+            if lead_age<50:
+                cond=False
+                message="User doesn't belong to your age group"
+                return {'cond':cond,'message':message}
+
+        if age<50:
+            if lead_age>50:
+                cond=False
+                message="User doesn't belong to your age group"
+                return {'cond':cond,'message':message}
+
+    if game!='CARROMS':
+        if age<35:
+            if lead_age>35:
+                cond=False
+                message="User doesn't belong to your age group"
+                return {'cond':cond,'message':message}
+        elif age>=35 and age<=45:
+            if not (lead_age>=35 and lead_age<=45):
+                cond=False
+                message="User doesn't belong to your age group"
+                return {'cond':cond,'message':message}
+        elif age>=46 and age<=55:
+            if not (lead_age>=46 and lead_age<=55):
+                cond=False
+                message="User doesn't belong to your age group"
+                return {'cond':cond,'message':message}
+
+        elif age>55:
+            if lead_age<55:
+                cond=False
+                message="User doesn't belong to your age group"
+                return {'cond':cond,'message':message}
 
 if __name__ == '__main__':
     app.run()
